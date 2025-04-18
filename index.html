@@ -83,8 +83,9 @@
         <div class="main-content">
             <div class="content-box">
                 <h2>版本</h2>
-                <p><b>v2.1.0</b></p>
-                <p>若有新版本，请您刷新界面，谢谢！</p>
+                <p><b>v2.1.1</b></p>
+                <p>由于网站问题，添加大型互动装置会出现卡顿，</p>
+                <p>所以我们仅会增加一些小型互动装置，抱歉。</p>
             </div>
             <div class="content-box">
                 <h2>项目组</h2>
@@ -99,15 +100,27 @@
             </div>
             <div>
                 <div class="content-box">
-                    <h2>我们的创新</h2>
+                    <h2>我们的未来安排</h2>
                     <p>我们会在后期加入讲解视频，</p>
                     <p>以帮助人们更好的理解物理。</p>
+                </div>
+            </div>
+            <div>
+                <div class="content-box">
+                    <h2>小型互动装置个数</h2>
+                    <p>数量：1个</p>
+                </div>
+            </div>
+            <div>
+                <div class="content-box">
+                    <h2>报告</h2>
+                    <p>由于网站原因，无法添加信息量大的互动装置，在此致歉。</p>
                 </div>
             </div>
         </div>
     </div>
     <h3>简介：</h3>
-    <h4>大家好，这里是MB实验室创始人（微信同号：物理课学化学）的介绍</h4>
+    <h4>大家好，这里是MB实验室的介绍</h4>
     <h4>我的名字是：（缩写）SDY，在将来我会与大家共同学习物理与化学（物理占多数）我们会讲解初中物理的基本概念，我们会阅读您的反馈、建议，希望我们能够一起打造风趣的物理课堂！</h4>
     <h4>为了方便，请您添加我们的QQ：1252729040</h4>
     <h1><a style="color: rgb(255, 0, 0);">初中物理概念/知识点：</a></h1>
@@ -220,5 +233,59 @@
     <footer>
         <p>&copy; 2025 MB实验室官网 保留所有权利.</p>
     </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<div id="3d-background"></div>
+<!--01号互动装置开头-->
+<script>
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ alpha: true });
+  
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.getElementById('3d-background').appendChild(renderer.domElement);
+  
+  const geometry = new THREE.BoxGeometry();
+  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+  const cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
+  
+  camera.position.z = 5;
+  
+  function animate() {
+    requestAnimationFrame(animate);
+    
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
+    
+    renderer.render(scene, camera);
+  }
+  
+  animate();
+  
+  window.addEventListener('resize', function() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+</script>
+<!--01号互动装置结尾-->
+<script>
+    // 禁用右键菜单
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+    
+    // 禁用F12和Ctrl+Shift+I
+    document.onkeydown = function(e) {
+        if (e.key === "F12" || 
+            (e.ctrlKey && e.shiftKey && e.key === "I") || 
+            (e.ctrlKey && e.shiftKey && e.key === "J") ||
+            (e.ctrlKey && e.key === "U")) {
+            return false;
+        }
+    };
+    </script>
 </body>
 </html>
+<!--网站链接:https://sdey666.github.io/mb/-->
