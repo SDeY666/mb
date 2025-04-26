@@ -3,157 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MB实验室官方网站 - 专注于物理教育研究与开发">
     <title>MB实验室官方网站</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        /* 原网站样式 */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #509749;
+            --text-color: #333;
+            --light-color: #f5f5f5;
+            --white: #fff;
+            --warning-color: rgb(255, 0, 0);
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            line-height: 1.6;
         }
+        
         header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 15px 0;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 20px 0;
             text-align: center;
         }
+        
         nav {
-            background-color: #34495e;
-            padding: 10px 0;
+            background-color: var(--secondary-color);
+            padding: 12px 0;
         }
+        
         nav ul {
             display: flex;
             justify-content: center;
             list-style: none;
+            flex-wrap: wrap;
         }
+        
         nav ul li {
-            margin: 0 15px;
+            margin: 5px 15px;
         }
+        
         nav ul li a {
-            color: white;
+            color: var(--white);
             text-decoration: none;
-            padding: 5px 10px;
+            padding: 8px 12px;
             border-radius: 4px;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease;
         }
+        
         nav ul li a:hover {
-            background-color: #2c3e50;
+            background-color: var(--primary-color);
         }
+        
         .container {
             max-width: 1200px;
             margin: 20px auto;
-            padding: 0 15px;
+            padding: 0 20px;
         }
+        
         .main-content {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
+            margin-bottom: 30px;
         }
+        
         .content-box {
-            flex: 1;
-            min-width: 300px;
-            background-color: white;
+            background-color: var(--white);
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             padding: 20px;
-            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+        
+        .content-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .content-box h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 8px;
+        }
+        
+        .content-box p {
+            margin-bottom: 10px;
+        }
+        
+        .physics-section {
+            background-color: var(--white);
+            padding: 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .physics-section h1, 
+        .physics-section h2 {
+            margin: 20px 0 15px;
+        }
+        
+        .physics-section h1 {
+            color: var(--warning-color);
+        }
+        
+        .physics-section h2 {
+            color: chocolate;
+        }
+        
+        .physics-section h3 {
+            color: var(--accent-color);
+            margin: 15px 0 10px;
+        }
+        
+        .physics-section h4 {
+            margin-bottom: 8px;
+            font-weight: normal;
+        }
+        
         footer {
-            background-color: #2c3e50;
-            color: white;
+            background-color: var(--primary-color);
+            color: var(--white);
             text-align: center;
-            padding: 15px 0;
-            margin-top: 20px;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        #threejs-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav ul li {
+                margin: 5px 0;
+            }
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <!-- 原网站结构 -->
+    <div id="threejs-container"></div>
+    
     <header>
         <h1>MB实验室官网</h1>
-        <p>您好！</p>
+        <p>For physics,never give up.</p>
     </header>
+    
     <div class="container">
-        <div class="main-content">
-            <div class="content-box">
-                <h2>版本</h2>
-                <p><b>v2.1.1</b></p>
-                <p>由于网站问题，添加大型互动装置会出现卡顿，</p>
-                <p>所以我们仅会增加一些小型互动装置，抱歉。</p>
-            </div>
-            <div class="content-box">
-                <h2>项目组</h2>
-                <p>【物理课程项目组】</p>
-                <p>【网站管理组】</p>
-                <p>【系统建设与系统开发组】</p>
-            </div>
-            <div class="content-box">
-                <h2>我们对自己的要求</h2>
+        <section id="about" class="main-content">
+            <article class="content-box">
+                <h2>版本信息</h2>
+                <p><strong>v2.2.1</strong></p>
+            </article>
+            
+            <article class="content-box">
+                <h2>我们的价值观</h2>
                 <p>认真，求实。</p>
                 <p>用心，专注。</p>
-            </div>
-            <div>
-                <div class="content-box">
-                    <h2>我们的未来安排</h2>
-                    <p>我们会在后期加入讲解视频，</p>
-                    <p>以帮助人们更好的理解物理。</p>
-                </div>
-            </div>
-            <div>
-                <div class="content-box">
-                    <h2>小型互动装置个数</h2>
-                    <p>数量：1个</p>
-                </div>
-            </div>
-            <div>
-                <div class="content-box">
-                    <h2>报告</h2>
-                    <p>由于网站原因，无法添加信息量大的互动装置，在此致歉。</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <h3>简介：</h3>
-    <h4>大家好，这里是MB实验室的介绍</h4>
-    <h4>我的名字是：（缩写）SDY，在将来我会与大家共同学习物理与化学（物理占多数）我们会讲解初中物理的基本概念，我们会阅读您的反馈、建议，希望我们能够一起打造风趣的物理课堂！</h4>
-    <h4>为了方便，请您添加我们的QQ：1252729040</h4>
-    <h1><a style="color: rgb(255, 0, 0);">初中物理概念/知识点：</a></h1>
-    <!--初中物理区-->
-    <!--简略力学板块-->
-    <h2><a style="color: chocolate;" >01.力学（简略）：</a></h2>
-
-    <h3><a style="color: #509749;" >运动描述：</a></h3>
-
-    <h4>1.机械运动：物体位置的变化称为机械运动，例如汽车在公路上行驶、人在路上行走等。</h4>
-    <h4>2.参照物：判断物体运动还是静止时，被选作标准的物体。例如，坐在行驶的汽车里的人，以汽车为参照物，他是静止的；以路边的树木为参照物，他是运动的。</h4>
-    <h4>3.运动和静止的相对性：运动和静止都是相对的，取决于所选择的参照物。</h4>
-    <h4>4.速度：表示物体运动快慢的物理量，计算公式为v=s/t，其中v是速度，s是路程，t是时间。速度的单位是米每秒（m/s），常用单位还有千米每小时（km/h），1 m/s=3.6 km/h。</h4>
-    <!--声板块-->
-    <h2><a style="color: chocolate;" >02.声现象：</a></h2>
-
-    <h3><a style="color: #509749;" >声音的产生与传播：</a></h3>
-
-    <h4>1.声音是由物体振动产生的。例如，敲击鼓面，鼓面振动发出声音。</h4>
-    <h4>2.声音的传播需要介质，固体、液体和气体都可以传声，真空不能传声。例如，声音在空气中以声波的形式传播。</h4>
-
-    <h3><a style="color: #509749;" >声音的特性：</a></h3>
-
-    <h4>1.音调：声音的高低，由发声体振动的频率决定。频率越高，音调越高。例如，女高音的音调比男低音高。</h4>
-    <h4>2.响度：声音的强弱，与发声体振动的振幅有关。振幅越大，响度越大。例如，用力敲鼓比轻轻敲鼓声音更响亮。</h4>
-    <h4>3.音色：不同发声体的材料、结构不同，发出声音的音色也就不同。例如，小提琴和二胡发出的声音音色不同。</h4>
-
-    <h3><a style="color: #509749;" >噪声及其防治：</a></h3>
-
-    <h4>1.从物理学角度，噪声是发声体做无规则振动发出的声音；从环保角度，凡是妨碍人们正常休息、学习和工作的声音，以及对人们要听的声音产生干扰的声音，都属于噪声。</h4>
-    <h4>2.防治噪声的途径包括在声源处减弱、在传播过程中减弱、在人耳处减弱。例如，在工厂车间安装隔音设备，是在传播过程中减弱噪声；佩戴耳塞是在人耳处减弱噪声。</h4>
-    <!--物态变化-->
-    <h2><a style="color: chocolate;" >03.物态变化：</a></h2>
+            </article>
+            
+            <article class="content-box">
+                <h2>未来计划</h2>
+                <p>我们将逐步添加教学视频资源，帮助大家更好地理解物理概念。</p>
+            </article>
+            
+            <article class="content-box">
+                <h2>互动装置</h2>
+                <p>当前数量：0个</p>
+                <p>由于技术限制，暂时无法添加复杂互动内容，敬请谅解。</p>
+            </article>
+        </section>
+        
+        <section id="projects" class="content-box">
+            <h2>项目组</h2>
+            <ul style="list-style-position: inside;">
+                <li>物理课程项目组</li>
+                <li>网站管理组</li>
+                <li>系统建设与系统开发组</li>
+            </ul>
+        </section>
+        
+        <section id="intro" class="content-box" style="margin-top: 20px;">
+            <h2>实验室简介</h2>
+            <p>大家好，欢迎来到MB实验室！</p>
+            <p>我是SDY（缩写），未来我将与大家一起探索物理与化学的奥秘（以物理为主）。我们将讲解初中物理的基本概念，并认真听取大家的反馈和建议，共同打造生动有趣的物理学习平台！</p>
+            <p>如有问题反馈，欢迎通过QQ联系我们：1252729040</p>
+        </section>
+        
+        <section id="physics" class="physics-section">
+            <h1 style="color: var(--warning-color);">初中物理概念/知识点：</h1>
+            
+            <article>
+                <h2>01.力学（简略）</h2>
+                <h3>运动描述：</h3>
+                <p>1.机械运动：物体位置的变化称为机械运动，例如汽车在公路上行驶、人在路上行走等。</p>
+                <p>2.参照物：判断物体运动还是静止时，被选作标准的物体。例如，坐在行驶的汽车里的人，以汽车为参照物，他是静止的；以路边的树木为参照物，他是运动的。</p>
+                <p>3.运动和静止的相对性：运动和静止都是相对的，取决于所选择的参照物。</p>
+                <p>4.速度：表示物体运动快慢的物理量，计算公式为v=s/t，其中v是速度，s是路程，t是时间。速度的单位是米每秒（m/s），常用单位还有千米每小时（km/h），1 m/s=3.6 km/h。</p>
+            </article>
+            
+            <article>
+                <h2>02.声现象</h2>
+                <h3>声音的产生与传播：</h3>
+                <p>1.声音是由物体振动产生的。例如，敲击鼓面，鼓面振动发出声音。</p>
+                <p>2.声音的传播需要介质，固体、液体和气体都可以传声，真空不能传声。例如，声音在空气中以声波的形式传播。</p>
+                
+                <h3>声音的特性：</h3>
+                <p>1.音调：声音的高低，由发声体振动的频率决定。频率越高，音调越高。例如，女高音的音调比男低音高。</p>
+                <p>2.响度：声音的强弱，与发声体振动的振幅有关。振幅越大，响度越大。例如，用力敲鼓比轻轻敲鼓声音更响亮。</p>
+                <p>3.音色：不同发声体的材料、结构不同，发出声音的音色也就不同。例如，小提琴和二胡发出的声音音色不同。</p>
+                
+                <h3>噪声及其防治：</h3>
+                <p>1.从物理学角度，噪声是发声体做无规则振动发出的声音；从环保角度，凡是妨碍人们正常休息、学习和工作的声音，以及对人们要听的声音产生干扰的声音，都属于噪声。</p>
+                <p>2.防治噪声的途径包括在声源处减弱、在传播过程中减弱、在人耳处减弱。例如，在工厂车间安装隔音设备，是在传播过程中减弱噪声；佩戴耳塞是在人耳处减弱噪声。</p>
+            </article>
+            <article>
+                <h2><a style="color: chocolate;" >03.物态变化：</a></h2>
 
     <h3><a style="color: #509749;" >温度：</a></h3>
 
@@ -175,8 +266,9 @@
 
     <h4>1.升华：物质由固态直接变成气态的过程，升华过程要吸热。例如，冬天冰冻的衣服变干是升华现象。</h4>
     <h4>2.凝华：物质由气态直接变成固态的过程，凝华过程要放热。例如，冬天窗户上出现的冰花是凝华现象。</h4>
-    <!--光学板块-->
-    <h2><a style="color: chocolate;" >04.光学：</a></h2>
+            </article>
+            <article>
+                <h2><a style="color: chocolate;" >04.光学：</a></h2>
 
     <h3><a style="color: #509749;" >光的直线传播：</a></h3>
 
@@ -191,8 +283,9 @@
 
     <h4>1.凸透镜对光线有会聚作用，凹透镜对光线有发散作用。例如，放大镜是利用凸透镜成像的原理制成的。</h4>
     <h4>2.凸透镜成像规律：当物距大于2倍焦距时，成倒立、缩小的实像，像距在1倍焦距和2倍焦距之间；当物距在1倍焦距和2倍焦距之间时，成倒立、放大的实像，像距大于2倍焦距；当物距小于1倍焦距时，成正立、放大的虚像。</h4>
-    <!--电学板块-->
-    <h2><a style="color: chocolate;" >05.电流和电路：</a></h2>
+            </article>
+            <article>
+                <h2><a style="color: chocolate;" >05.电流和电路：</a></h2>
 
     <h3><a style="color: #509749;" >电荷：</a></h3>
 
@@ -228,49 +321,22 @@
     <h3><a style="color: #509749;" >欧姆定律：</a></h3>
 
     <h4>1.欧姆定律的内容是：导体中的电流，跟导体两端的电压成正比，跟导体的电阻成反比。公式为I=U/R，其中I是电流，U是电压，R是电阻。</h4>
-    <!--详细力学板块-->
-    <h1><a style="color: rgb(61, 154, 154);">详细力学部分【系统建设与系统开发组】正在制作，敬请期待！</a></h1>
+            </article>
+            <!-- 其他物理知识部分保持相同结构 -->
+            <!-- 为简洁起见，这里省略了部分内容，实际使用时请保留 -->
+            
+            <article>
+                <h1 style="color: rgb(61, 154, 154);">详细力学部分【系统建设与系统开发组】正在制作，敬请期待！</h1>
+            </article>
+        </section>
+    </div>
+    
     <footer>
-        <p>&copy; 2025 MB实验室官网 保留所有权利.</p>
+        <p>&copy; 2025 MB实验室官方网站 保留所有权利</p>
     </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-<div id="3d-background"></div>
-<!--01号互动装置开头-->
-<script>
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({ alpha: true });
-  
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.getElementById('3d-background').appendChild(renderer.domElement);
-  
-  const geometry = new THREE.BoxGeometry();
-  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-  const cube = new THREE.Mesh(geometry, material);
-  scene.add(cube);
-  
-  camera.position.z = 5;
-  
-  function animate() {
-    requestAnimationFrame(animate);
-    
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
-    
-    renderer.render(scene, camera);
-  }
-  
-  animate();
-  
-  window.addEventListener('resize', function() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-</script>
-<!--01号互动装置结尾-->
-<script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
     // 禁用右键菜单
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
@@ -287,5 +353,5 @@
     };
     </script>
 </body>
+<!--网站名称：https://sdey666.github.io/mb/-->
 </html>
-<!--网站链接:https://sdey666.github.io/mb/-->
