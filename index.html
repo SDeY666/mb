@@ -168,6 +168,127 @@
     </style>
 </head>
 <body>
+
+    <!--开启动画-->
+<div class="physics-loader">
+    <div class="pendulum">
+      <div class="ball"></div>
+      <div class="string"></div>
+      <div class="shadow"></div>
+    </div>
+    <div class="loading-text">初始化中...</div>
+  </div>
+  
+  <style>
+  .physics-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    color: white;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .pendulum {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 30px;
+  }
+  
+  .string {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 100px;
+    background: white;
+    transform-origin: top center;
+    animation: swing 2s ease-in-out infinite alternate;
+  }
+  
+  .ball {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin-left: -15px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  }
+  
+  .shadow {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 30px;
+    height: 10px;
+    margin-left: -15px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 50%;
+    filter: blur(3px);
+    animation: shadow 2s ease-in-out infinite alternate;
+  }
+  
+  .loading-text {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    text-align: center;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes swing {
+    0% { transform: rotate(30deg); }
+    100% { transform: rotate(-30deg); }
+  }
+  
+  @keyframes shadow {
+    0% { transform: translateX(20px) scale(0.8); }
+    100% { transform: translateX(-20px) scale(0.8); }
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+  
+  /* 页面加载完成后隐藏加载动画 */
+  body.loaded .physics-loader {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease-out, visibility 0s 0.5s;
+  }
+  </style>
+  
+  <script>
+  // 在页面加载完成后移除加载动画
+  window.addEventListener('load', function() {
+    document.body.classList.add('loaded');
+    setTimeout(function() {
+      document.querySelector('.physics-loader').remove();
+    }, 500);
+  });
+  
+  // 如果加载时间过长(5秒)，显示备用信息
+  setTimeout(function() {
+    if (!document.body.classList.contains('loaded')) {
+      document.querySelector('.loading-text').textContent = '正在进入，请稍后...';
+    }
+  }, 5000);
+
+
+
+  </script>
+
     <div id="threejs-container"></div>
     
     <header>
@@ -183,7 +304,7 @@
             </article>
             
             <article class="content-box">
-                <h2>我们的价值观</h2>
+                <h2>我们保证</h2>
                 <p>认真，求实。</p>
                 <p>用心，专注。</p>
             </article>
@@ -212,7 +333,7 @@
         <section id="intro" class="content-box" style="margin-top: 20px;">
             <h2>实验室简介</h2>
             <p>大家好，欢迎来到MB实验室！</p>
-            <p>我是SDY（缩写），未来我将与大家一起探索物理与化学的奥秘（以物理为主）。我们将讲解初中物理的基本概念，并认真听取大家的反馈和建议，共同打造生动有趣的物理学习平台！</p>
+            <p>我是SDeY（缩写），未来我将与大家一起探索物理与化学的奥秘（以物理为主）。我们将讲解初中物理的基本概念，并认真听取大家的反馈和建议，共同打造生动有趣的物理学习平台！</p>
             <p>如有问题反馈，欢迎通过QQ联系我们：1252729040</p>
         </section>
         
@@ -220,6 +341,7 @@
             <h1 style="color: var(--warning-color);">初中物理概念/知识点：</h1>
             
             <article>
+                <!--力学-->
                 <h2>01.力学（简略）</h2>
                 <h3>运动描述：</h3>
                 <p>1.机械运动：物体位置的变化称为机械运动，例如汽车在公路上行驶、人在路上行走等。</p>
@@ -229,6 +351,7 @@
             </article>
             
             <article>
+                <!--声学-->
                 <h2>02.声现象</h2>
                 <h3>声音的产生与传播：</h3>
                 <p>1.声音是由物体振动产生的。例如，敲击鼓面，鼓面振动发出声音。</p>
@@ -243,88 +366,92 @@
                 <p>1.从物理学角度，噪声是发声体做无规则振动发出的声音；从环保角度，凡是妨碍人们正常休息、学习和工作的声音，以及对人们要听的声音产生干扰的声音，都属于噪声。</p>
                 <p>2.防治噪声的途径包括在声源处减弱、在传播过程中减弱、在人耳处减弱。例如，在工厂车间安装隔音设备，是在传播过程中减弱噪声；佩戴耳塞是在人耳处减弱噪声。</p>
             </article>
+
             <article>
+                <!--物态变化-->
                 <h2><a style="color: chocolate;" >03.物态变化：</a></h2>
 
-    <h3><a style="color: #509749;" >温度：</a></h3>
+                <h3><a style="color: #509749;" >温度：</a></h3>
 
-    <h4>1.温度是表示物体冷热程度的物理量。例如，冰水混合物的温度是0℃。</h4>
-    <h4>2.常用温度计是根据液体的热胀冷缩原理制成的。温度计上的刻度表示温度的高低，单位是摄氏度（℃）</h4>
+                <h4>1.温度是表示物体冷热程度的物理量。例如，冰水混合物的温度是0℃。</h4>
+                <h4>2.常用温度计是根据液体的热胀冷缩原理制成的。温度计上的刻度表示温度的高低，单位是摄氏度（℃）</h4>
     
-    <h3><a style="color: #509749;" >熔化和凝固：</a></h3>
+                <h3><a style="color: #509749;" >熔化和凝固：</a></h3>
 
-    <h4>1.熔化：物质由固态变成液态的过程，熔化过程要吸热。例如，冰在0℃时熔化成水。</h4>
-    <h4>2.凝固：物质由液态变成固态的过程，凝固过程要放热。例如，水在0℃时凝固成冰。</h4>
-    <h4>3.晶体和非晶体的区别在于晶体有固定的熔化温度（熔点），非晶体没有。例如，海波是晶体，玻璃是非晶体。</h4>
+                <h4>1.熔化：物质由固态变成液态的过程，熔化过程要吸热。例如，冰在0℃时熔化成水。</h4>
+                <h4>2.凝固：物质由液态变成固态的过程，凝固过程要放热。例如，水在0℃时凝固成冰。</h4>
+                <h4>3.晶体和非晶体的区别在于晶体有固定的熔化温度（熔点），非晶体没有。例如，海波是晶体，玻璃是非晶体。</h4>
    
-    <h3><a style="color: #509749;" >汽化和液化：</a></h3>
+                <h3><a style="color: #509749;" >汽化和液化：</a></h3>
 
-    <h4>1.汽化：物质由液态变成气态的过程，汽化过程要吸热。汽化有两种方式：蒸发和沸腾。例如，湿衣服晾干是蒸发现象。</h4>
-    <h4>2.液化：物质由气态变成液态的过程，液化过程要放热。液化的方法有降低温度和压缩体积。例如，冬天呼出的白气是水蒸气遇冷液化形成的。</h4>
+                <h4>1.汽化：物质由液态变成气态的过程，汽化过程要吸热。汽化有两种方式：蒸发和沸腾。例如，湿衣服晾干是蒸发现象。</h4>
+                <h4>2.液化：物质由气态变成液态的过程，液化过程要放热。液化的方法有降低温度和压缩体积。例如，冬天呼出的白气是水蒸气遇冷液化形成的。</h4>
     
-    <h3><a style="color: #509749;" >升华和凝华：</a></h3>
+                <h3><a style="color: #509749;" >升华和凝华：</a></h3>
 
-    <h4>1.升华：物质由固态直接变成气态的过程，升华过程要吸热。例如，冬天冰冻的衣服变干是升华现象。</h4>
-    <h4>2.凝华：物质由气态直接变成固态的过程，凝华过程要放热。例如，冬天窗户上出现的冰花是凝华现象。</h4>
+                <h4>1.升华：物质由固态直接变成气态的过程，升华过程要吸热。例如，冬天冰冻的衣服变干是升华现象。</h4>
+                <h4>2.凝华：物质由气态直接变成固态的过程，凝华过程要放热。例如，冬天窗户上出现的冰花是凝华现象。</h4>
             </article>
+
             <article>
+                <!--光学-->
                 <h2><a style="color: chocolate;" >04.光学：</a></h2>
 
-    <h3><a style="color: #509749;" >光的直线传播：</a></h3>
+                <h3><a style="color: #509749;" >光的直线传播：</a></h3>
 
-    <h4>1.光在同种均匀介质中沿直线传播。例如，小孔成像、影子的形成、日食和月食等现象都可以用光的直线传播来解释。</h4>
+                <h4>1.光在同种均匀介质中沿直线传播。例如，小孔成像、影子的形成、日食和月食等现象都可以用光的直线传播来解释。</h4>
     
-    <h3><a style="color: #509749;" >光的反射：</a></h3>
+                <h3><a style="color: #509749;" >光的反射：</a></h3>
 
-    <h4>1.光的反射定律：反射光线、入射光线与法线在同一平面内；反射光线和入射光线分别位于法线两侧；反射角等于入射角。例如，平面镜成像就是光的反射现象。</h4>
-    <h4>2.平面镜成像的特点：平面镜所成的像是虚像；物体和像大小相同；物体到平面镜的距离和像到平面镜的距离相等；物体和像的连线与镜面垂直。</h4>
+                <h4>1.光的反射定律：反射光线、入射光线与法线在同一平面内；反射光线和入射光线分别位于法线两侧；反射角等于入射角。例如，平面镜成像就是光的反射现象。</h4>
+                <h4>2.平面镜成像的特点：平面镜所成的像是虚像；物体和像大小相同；物体到平面镜的距离和像到平面镜的距离相等；物体和像的连线与镜面垂直。</h4>
     
-    <h3><a style="color: #509749;" >透镜：</a></h3>
+                <h3><a style="color: #509749;" >透镜：</a></h3>
 
-    <h4>1.凸透镜对光线有会聚作用，凹透镜对光线有发散作用。例如，放大镜是利用凸透镜成像的原理制成的。</h4>
-    <h4>2.凸透镜成像规律：当物距大于2倍焦距时，成倒立、缩小的实像，像距在1倍焦距和2倍焦距之间；当物距在1倍焦距和2倍焦距之间时，成倒立、放大的实像，像距大于2倍焦距；当物距小于1倍焦距时，成正立、放大的虚像。</h4>
+                <h4>1.凸透镜对光线有会聚作用，凹透镜对光线有发散作用。例如，放大镜是利用凸透镜成像的原理制成的。</h4>
+                <h4>2.凸透镜成像规律：当物距大于2倍焦距时，成倒立、缩小的实像，像距在1倍焦距和2倍焦距之间；当物距在1倍焦距和2倍焦距之间时，成倒立、放大的实像，像距大于2倍焦距；当物距小于1倍焦距时，成正立、放大的虚像。</h4>
             </article>
+
             <article>
+                <!--电学-->
                 <h2><a style="color: chocolate;" >05.电流和电路：</a></h2>
 
-    <h3><a style="color: #509749;" >电荷：</a></h3>
+                <h3><a style="color: #509749;" >电荷：</a></h3>
 
-    <h4>1.自然界中存在两种电荷：正电荷和负电荷。例如，用丝绸摩擦过的玻璃棒带正电，用毛皮摩擦过的橡胶棒带负电。</h4>
-    <h4>2.电荷间的作用规律是同种电荷相互排斥，异种电荷相互吸引。</h4>
+                <h4>1.自然界中存在两种电荷：正电荷和负电荷。例如，用丝绸摩擦过的玻璃棒带正电，用毛皮摩擦过的橡胶棒带负电。</h4>
+                <h4>2.电荷间的作用规律是同种电荷相互排斥，异种电荷相互吸引。</h4>
     
-    <h3><a style="color: #509749;" >电流和电路：</a></h3>
+                <h3><a style="color: #509749;" >电流和电路：</a></h3>
 
-    <h4>1.电流的形成：电荷的定向移动形成电流。例如，电源的正极流出的电流，经过用电器后，回到电源的负极。</h4>
-    <h4>2.电路的组成包括电源、用电器、开关和导线。例如，手电筒的电路由电池（电源）、灯泡（用电器）、开关和导线组成。</h4>
-    <h4>3.电路的状态有通路、断路和短路。例如，当电路中的开关断开时，电路处于断路状态。</h4>
+                <h4>1.电流的形成：电荷的定向移动形成电流。例如，电源的正极流出的电流，经过用电器后，回到电源的负极。</h4>
+                <h4>2.电路的组成包括电源、用电器、开关和导线。例如，手电筒的电路由电池（电源）、灯泡（用电器）、开关和导线组成。</h4>
+                <h4>3.电路的状态有通路、断路和短路。例如，当电路中的开关断开时，电路处于断路状态。</h4>
     
-    <h3><a style="color: #509749;" >串联和并联：</a></h3>
+                <h3><a style="color: #509749;" >串联和并联：</a></h3>
 
-    <h4>1.串联电路中电流只有一条路径，各用电器相互影响；并联电路中电流有多条路径，各用电器互不影响。例如，家庭电路中的电器大多是并联的，而手电筒中的灯泡和开关是串联的。</h4>
+                <h4>1.串联电路中电流只有一条路径，各用电器相互影响；并联电路中电流有多条路径，各用电器互不影响。例如，家庭电路中的电器大多是并联的，而手电筒中的灯泡和开关是串联的。</h4>
     
-    <h3><a style="color: #509749;" >电流的强弱：</a></h3>
+                <h3><a style="color: #509749;" >电流的强弱：</a></h3>
 
-    <h4>1.电流的单位是安培（A），常用的单位还有毫安（mA）和微安（μA），1 A=1000 mA，1 mA=1000 μA。</h4>
-    <h4>2.测量电流的仪器是电流表，使用电流表时，要将其串联在电路中，电流从正接线柱流入，负接线柱流出，且被测电流不能超过电流表的量程。</h4>
+                <h4>1.电流的单位是安培（A），常用的单位还有毫安（mA）和微安（μA），1 A=1000 mA，1 mA=1000 μA。</h4>
+                <h4>2.测量电流的仪器是电流表，使用电流表时，要将其串联在电路中，电流从正接线柱流入，负接线柱流出，且被测电流不能超过电流表的量程。</h4>
     
-    <h3><a style="color: #509749;" >电压：</a></h3>
+                <h3><a style="color: #509749;" >电压：</a></h3>
 
-    <h4>1.电压是形成电流的原因，单位是伏特（V），常用的单位还有千伏（kV）、毫伏（mV），1 kV=1000 V，1 V=1000 mV。</h4>
-    <h4>2.测量电压的仪器是电压表，使用电压表时，要将其并联在被测电路两端，电流从正接线柱流入，负接线柱流出，且被测电压不能超过电压表的量程。</h4>
+                <h4>1.电压是形成电流的原因，单位是伏特（V），常用的单位还有千伏（kV）、毫伏（mV），1 kV=1000 V，1 V=1000 mV。</h4>
+                <h4>2.测量电压的仪器是电压表，使用电压表时，要将其并联在被测电路两端，电流从正接线柱流入，负接线柱流出，且被测电压不能超过电压表的量程。</h4>
     
-    <h3><a style="color: #509749;" >电阻：</a></h3>
+                <h3><a style="color: #509749;" >电阻：</a></h3>
 
-    <h4>1.电阻是导体本身的一种性质，与导体的材料、长度、横截面积和温度有关。例如，一般情况下，导体越长，电阻越大；导体横截面积越大，电阻越小。</h4>
-    <h4>2.电阻的单位是欧姆（Ω），常用的单位还有千欧（kΩ）和兆欧（MΩ），1 kΩ=1000 Ω，1 MΩ=1000 kΩ。</h4>
-    <h4>3.变阻器是一种能够改变电阻大小的元件，例如，滑动变阻器是通过改变接入电路的电阻丝的长度来改变电阻大小的。</h4>
+                <h4>1.电阻是导体本身的一种性质，与导体的材料、长度、横截面积和温度有关。例如，一般情况下，导体越长，电阻越大；导体横截面积越大，电阻越小。</h4>
+                <h4>2.电阻的单位是欧姆（Ω），常用的单位还有千欧（kΩ）和兆欧（MΩ），1 kΩ=1000 Ω，1 MΩ=1000 kΩ。</h4>
+                <h4>3.变阻器是一种能够改变电阻大小的元件，例如，滑动变阻器是通过改变接入电路的电阻丝的长度来改变电阻大小的。</h4>
     
-    <h3><a style="color: #509749;" >欧姆定律：</a></h3>
+                <h3><a style="color: #509749;" >欧姆定律：</a></h3>
 
-    <h4>1.欧姆定律的内容是：导体中的电流，跟导体两端的电压成正比，跟导体的电阻成反比。公式为I=U/R，其中I是电流，U是电压，R是电阻。</h4>
+                <h4>1.欧姆定律的内容是：导体中的电流，跟导体两端的电压成正比，跟导体的电阻成反比。公式为I=U/R，其中I是电流，U是电压，R是电阻。</h4>
             </article>
-            <!-- 其他物理知识部分保持相同结构 -->
-            <!-- 为简洁起见，这里省略了部分内容，实际使用时请保留 -->
-            
+            <!-- 其他物理知识部分保持相同结构 -->            
             <article>
                 <h1 style="color: rgb(61, 154, 154);">详细力学部分【系统建设与系统开发组】正在制作，敬请期待！</h1>
             </article>
@@ -336,22 +463,30 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!--||||||||防护系统||||||||-->
     <script>
-    // 禁用右键菜单
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-    });
-    
-    // 禁用F12和Ctrl+Shift+I
-    document.onkeydown = function(e) {
-        if (e.key === "F12" || 
-            (e.ctrlKey && e.shiftKey && e.key === "I") || 
-            (e.ctrlKey && e.shiftKey && e.key === "J") ||
-            (e.ctrlKey && e.key === "U")) {
-            return false;
-        }
-    };
+        const blockedKeys = new Set(['F12', 'I', 'J', 'U']);
+            const blockedCombos = [
+                { ctrl: true, shift: true, key: 'I' },
+                { ctrl: true, shift: true, key: 'J' },
+                { ctrl: true, key: 'U' }
+            ];
+            
+            document.addEventListener('keydown', function(e) {
+                if (blockedKeys.has(e.key) || 
+                    blockedCombos.some(combo => 
+                        e.ctrlKey === combo.ctrl && 
+                        e.shiftKey === combo.shift && 
+                        e.key === combo.key)) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            }, { passive: false });
     </script>
+    <!--||||||||防护系统||||||||-->
 </body>
 <!--网站名称：https://sdey666.github.io/mb/-->
 </html>
