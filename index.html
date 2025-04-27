@@ -169,7 +169,149 @@
 </head>
 <body>
 
-    <!--开启动画-->
+    <!--钟表模块-->
+<div class="physics-clock">
+    <div class="time-display">
+      <span class="digit" id="hour-tens"></span>
+      <span class="digit" id="hour-ones"></span>
+      <span class="stop">:</span>
+      <span class="digit" id="min-tens"></span>
+      <span class="digit" id="min-ones"></span>
+      <span class="stop">:</span>
+      <span class="digit" id="sec-tens"></span>
+      <span class="digit" id="sec-ones"></span>
+    </div>
+  </div>
+  
+  <style>
+  .physics-clock {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 10px;
+    border-radius: 8px;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+  }
+  
+  .time-display {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .digit {
+    display: inline-block;
+    width: 24px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    margin: 0 2px;
+    padding: 2px;
+  }
+  
+  .colon {
+    margin: 0 2px;
+    animation: blink 1s step-end infinite;
+  }
+  
+  .clock-label {
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 5px;
+    opacity: 0.8;
+  }
+  
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  </style>
+  
+  <script>
+  function updatePhysicsClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+    document.getElementById('hour-tens').textContent = hours[0];
+    document.getElementById('hour-ones').textContent = hours[1];
+    document.getElementById('min-tens').textContent = minutes[0];
+    document.getElementById('min-ones').textContent = minutes[1];
+    document.getElementById('sec-tens').textContent = seconds[0];
+    document.getElementById('sec-ones').textContent = seconds[1];
+  }
+  
+  // 立即执行并每秒更新
+  updatePhysicsClock();
+  setInterval(updatePhysicsClock, 1000);
+  </script>
+<!--钟表模块-->
+<script>
+<!--全屏申请-->
+function requestFullscreen() {
+    const element = document.documentElement;
+    
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.webkitRequestFullscreen) { /* Safari */
+        element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) { /* IE11 */
+        element.msRequestFullscreen();
+    }
+}
+
+// 退出全屏函数
+function exitFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) { /* Safari */
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { /* IE11 */
+        document.msExitFullscreen();
+    }
+}
+
+// 检测是否全屏
+function isFullscreen() {
+    return document.fullscreenElement || 
+           document.webkitFullscreenElement || 
+           document.msFullscreenElement;
+}
+
+// 自动尝试全屏（需要用户交互后才会生效）
+document.addEventListener('click', function() {
+    if (!isFullscreen()) {
+        requestFullscreen();
+    }
+}, { once: true });
+
+// 手动切换按钮
+document.getElementById('fullscreen-btn').addEventListener('click', function() {
+    if (isFullscreen()) {
+        exitFullscreen();
+    } else {
+        requestFullscreen();
+    }
+});
+
+// 检测全屏变化
+document.addEventListener('fullscreenchange', handleFullscreenChange);
+document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+function handleFullscreenChange() {
+    console.log('全屏状态变化:', isFullscreen() ? '进入全屏' : '退出全屏');
+}
+//全屏申请
+</script>
+
+<!--开启动画-->
 <div class="physics-loader">
     <div class="pendulum">
       <div class="ball"></div>
@@ -285,7 +427,7 @@
     }
   }, 5000);
 
-
+  //开启动画结尾
 
   </script>
 
@@ -300,7 +442,7 @@
         <section id="about" class="main-content">
             <article class="content-box">
                 <h2>版本信息</h2>
-                <p><strong>v2.2.1</strong></p>
+                <p><strong>v2.2.2</strong></p>
             </article>
             
             <article class="content-box">
@@ -319,6 +461,12 @@
                 <p>当前数量：0个</p>
                 <p>由于技术限制，暂时无法添加复杂互动内容，敬请谅解。</p>
             </article>
+
+            <article class="content-box">
+                <h2>公告</h2>
+                <p>点击屏幕可全屏，按下"Esc"可退出全屏</p>
+            </article>
+
         </section>
         
         <section id="projects" class="content-box">
@@ -488,5 +636,5 @@
     </script>
     <!--||||||||防护系统||||||||-->
 </body>
-<!--网站名称：https://sdey666.github.io/mb/-->
+<!--网站名称：  https://sdey666.github.io/mb/  -->
 </html>
