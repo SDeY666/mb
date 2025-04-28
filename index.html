@@ -6,6 +6,27 @@
     <meta name="description" content="MB实验室官方网站 - 专注于物理教育研究与开发">
     <title>MB实验室官方网站</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!--全屏按钮大小开始-->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #2c3e50;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .content-huan {
+            padding-top: 1vh;
+        }
+        button {
+            padding: 5px 10px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+    <!--全屏按钮大小控制结束-->
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -168,8 +189,11 @@
     </style>
 </head>
 <body>
-
-    <!--钟表模块-->
+    <div class="content-huan">
+        <h1>全屏切换</h1>
+        <button id="fullscreen-btn">切换</button>
+    </div>
+    <!--钟表模块开始-->
 <div class="physics-clock">
     <div class="time-display">
       <span class="digit" id="hour-tens"></span>
@@ -251,9 +275,11 @@
   updatePhysicsClock();
   setInterval(updatePhysicsClock, 1000);
   </script>
-<!--钟表模块-->
+<!--钟表模块结束-->
 <script>
-<!--全屏申请-->
+
+
+//全屏申请开始
 function requestFullscreen() {
     const element = document.documentElement;
     
@@ -308,7 +334,7 @@ document.addEventListener('msfullscreenchange', handleFullscreenChange);
 function handleFullscreenChange() {
     console.log('全屏状态变化:', isFullscreen() ? '进入全屏' : '退出全屏');
 }
-//全屏申请
+//全屏申请结束
 </script>
 
 <!--开启动画-->
@@ -466,7 +492,6 @@ function handleFullscreenChange() {
                 <h2>公告</h2>
                 <p>点击屏幕可全屏，按下"Esc"可退出全屏</p>
             </article>
-
         </section>
         
         <section id="projects" class="content-box">
@@ -636,5 +661,5 @@ function handleFullscreenChange() {
     </script>
     <!--||||||||防护系统||||||||-->
 </body>
-<!--网站名称：  https://sdey666.github.io/mb/  -->
+<!--          https://sdey666.github.io/mb/          -->
 </html>
