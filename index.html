@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MB实验室官方网站 - 专注于物理教育研究与开发">
+    <meta name="description" content="MB实验室官方网站 - 专注于物理教育 - For physics,never give up.">
     <title>MB实验室官方网站</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <!--全屏按钮大小开始-->
@@ -15,9 +15,6 @@
             color: white;
             font-family: Arial, sans-serif;
             text-align: center;
-        }
-        .content-huan {
-            padding-top: 1vh;
         }
         button {
             padding: 5px 10px;
@@ -190,8 +187,7 @@
 </head>
 <body>
     <div class="content-huan">
-        <h1>全屏切换</h1>
-        <button id="fullscreen-btn">切换</button>
+        <button id="fullscreen-btn">全屏切换</button>
     </div>
     <!--钟表模块开始-->
 <div class="physics-clock">
@@ -277,12 +273,10 @@
   </script>
 <!--钟表模块结束-->
 <script>
-
-
 //全屏申请开始
 function requestFullscreen() {
     const element = document.documentElement;
-    
+            
     if (element.requestFullscreen) {
         element.requestFullscreen();
     } else if (element.webkitRequestFullscreen) { /* Safari */
@@ -291,14 +285,13 @@ function requestFullscreen() {
         element.msRequestFullscreen();
     }
 }
-
 // 退出全屏函数
 function exitFullscreen() {
     if (document.exitFullscreen) {
         document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) { /* Safari */
+    } else if (document.webkitExitFullscreen) {
         document.webkitExitFullscreen();
-    } else if (document.msExitFullscreen) { /* IE11 */
+    } else if (document.msExitFullscreen) {
         document.msExitFullscreen();
     }
 }
@@ -309,14 +302,6 @@ function isFullscreen() {
            document.webkitFullscreenElement || 
            document.msFullscreenElement;
 }
-
-// 自动尝试全屏（需要用户交互后才会生效）
-document.addEventListener('click', function() {
-    if (!isFullscreen()) {
-        requestFullscreen();
-    }
-}, { once: true });
-
 // 手动切换按钮
 document.getElementById('fullscreen-btn').addEventListener('click', function() {
     if (isFullscreen()) {
@@ -468,7 +453,7 @@ function handleFullscreenChange() {
         <section id="about" class="main-content">
             <article class="content-box">
                 <h2>版本信息</h2>
-                <p><strong>v2.2.2</strong></p>
+                <p><strong>v2.2.3</strong></p>
             </article>
             
             <article class="content-box">
@@ -490,7 +475,7 @@ function handleFullscreenChange() {
 
             <article class="content-box">
                 <h2>公告</h2>
-                <p>点击屏幕可全屏，按下"Esc"可退出全屏</p>
+                <p>按下"<strong>Esc</strong>"或按"<strong>全屏切换</strong>"按钮可<strong>进入/退出</strong>全屏</p>
             </article>
         </section>
         
