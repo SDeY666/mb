@@ -1,799 +1,650 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>提问平台</title>
+    <meta name="description" content="MB实验室官方网站 - 专注于物理教育 - For physics,never give up.">
+    <title>MB实验室官方网站</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!--全屏按钮大小开始-->
     <style>
-        :root {
-            --bg: #F5F5F7;
-            --primary: #007AFF;
-            --text-100: rgba(0, 0, 0, 1);
-            --text-80: rgba(0, 0, 0, 0.8);
-            --shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
             margin: 0;
             padding: 0;
-        }
-
-        /* 登录和注册界面 */
-        .auth-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .auth-box {
-            background: white;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            width: 300px;
+            background-color: #2c3e50;
+            color: white;
+            font-family: Arial, sans-serif;
             text-align: center;
         }
-
-        .auth-input {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-
-        .auth-switch {
-            margin-top: 16px;
-            color: var(--primary);
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        /* 主界面 */
-        .main-container {
-            display: none;
-            padding: 24px;
-        }
-
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .nav-title {
-            font-weight: 600;
-            font-size: 20px;
-            color: var(--text-100);
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: var(--primary);
-            margin-right: 8px;
-            flex-shrink: 0;
-        }
-
-        .username {
-            font-weight: 500;
-            color: var(--text-100);
-            font-size: 17px;
-        }
-
-        .timestamp {
-            color: var(--text-80);
-            font-size: 13px;
-        }
-
-        /* 评论区域 */
-        .comments {
-            margin-top: 12px;
-            border-top: 1px solid #eee;
-            padding-top: 12px;
-        }
-
-        .comment {
-            display: flex;
-            margin-bottom: 8px;
-            padding: 8px;
-            background: #f9f9f9;
-            border-radius: 8px;
-        }
-
-        .comment-avatar {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            margin-right: 8px;
-            flex-shrink: 0;
-        }
-
-        .comment-content {
-            flex-grow: 1;
-        }
-
-        .comment-user {
-            font-weight: 500;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .comment-text {
-            font-size: 14px;
-            color: var(--text-80);
-        }
-
-        .comment-input {
-            display: flex;
-            margin-top: 8px;
-        }
-
-        .comment-input input {
-            flex-grow: 1;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 16px;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .comment-input button {
-            margin-left: 8px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 16px;
-            padding: 0 12px;
-            font-size: 14px;
+        button {
+            padding: 5px 10px;
+            font-size: 16px;
+            margin: 5px;
             cursor: pointer;
         }
-
-        /* 用户框样式 */
-        .user-box {
-            display: flex;
-            align-items: center;
-            padding: 6px 12px;
-            border: 1px solid #ddd;
-            border-radius: 18px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .user-box:hover {
-            background-color: #f0f0f0;
-        }
-
-        .user-avatar {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--primary);
-            margin-right: 8px;
-        }
-
-        /* 个人页面 */
-        .profile-container {
-            display: none;
-            position: fixed;
-            top: 80px;
-            right: 24px;
-            width: 300px;
-            background: white;
-            padding: 16px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            z-index: 100;
-        }
-
-        .profile-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .profile-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--primary);
-            margin-right: 12px;
-        }
-
-        .profile-name {
-            font-weight: 600;
-            font-size: 18px;
-            margin-bottom: 4px;
-        }
-
-        .profile-email {
-            color: var(--text-80);
-            font-size: 14px;
-        }
-
-        /* 头像颜色选择器 */
-        .color-picker {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 12px 0;
-        }
-
-        .color-option {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-
-        .color-option.selected {
-            border-color: #000;
-        }
-
-        /* 右下角发布按钮 */
-        .post-button {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            width: 56px;
-            height: 56px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 90;
-        }
-
-        /* 右下角发布框 */
-        .post-box {
-            display: none;
-            position: fixed;
-            bottom: 96px;
-            right: 24px;
-            width: 300px;
-            background: white;
-            padding: 16px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            z-index: 100;
-        }
-
-        textarea {
-            width: 100%;
-            border: 1px solid #ddd;
-            resize: none;
-            font-size: 14px;
-            min-height: 100px;
-            padding: 8px;
-            margin-bottom: 12px;
-            border-radius: 6px;
-        }
-
-        .button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .button.secondary {
-            background: white;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-            margin-top: 8px;
-        }
-
-        .wall-container {
-            margin-right: 0;
+    </style>
+    <!--全屏按钮大小控制结束-->
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #509749;
+            --text-color: #333;
+            --light-color: #f5f5f5;
+            --white: #fff;
+            --warning-color: rgb(255, 0, 0);
         }
         
-        /* 错误提示 */
-        .error-message {
-            color: #ff3b30;
-            font-size: 13px;
-            margin-top: 4px;
-            text-align: left;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 20px 0;
+            text-align: center;
+        }
+        
+        nav {
+            background-color: var(--secondary-color);
+            padding: 12px 0;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        
+        nav ul li {
+            margin: 5px 15px;
+        }
+        
+        nav ul li a {
+            color: var(--white);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        nav ul li a:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .content-box {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .content-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .content-box h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 8px;
+        }
+        
+        .content-box p {
+            margin-bottom: 10px;
+        }
+        
+        .physics-section {
+            background-color: var(--white);
+            padding: 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .physics-section h1, 
+        .physics-section h2 {
+            margin: 20px 0 15px;
+        }
+        
+        .physics-section h1 {
+            color: var(--warning-color);
+        }
+        
+        .physics-section h2 {
+            color: chocolate;
+        }
+        
+        .physics-section h3 {
+            color: var(--accent-color);
+            margin: 15px 0 10px;
+        }
+        
+        .physics-section h4 {
+            margin-bottom: 8px;
+            font-weight: normal;
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: var(--white);
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        #threejs-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav ul li {
+                margin: 5px 0;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 登录页面 -->
-    <div class="auth-container" id="loginContainer">
-        <div class="auth-box">
-            <h2>登录</h2>
-            <input type="text" class="auth-input" id="loginUsername" placeholder="用户名">
-            <input type="password" class="auth-input" id="loginPassword" placeholder="密码">
-            <div id="loginError" class="error-message"></div>
-            <button class="button" onclick="login()">登录</button>
-            <div class="auth-switch" onclick="showRegister()">没有账号？立即注册</div>
-        </div>
+    <div class="content-huan">
+        <button id="fullscreen-btn">全屏切换</button>
     </div>
-
-    <!-- 注册页面 -->
-    <div class="auth-container" id="registerContainer" style="display: none;">
-        <div class="auth-box">
-            <h2>注册</h2>
-            <input type="text" class="auth-input" id="registerUsername" placeholder="用户名">
-            <input type="password" class="auth-input" id="registerPassword" placeholder="密码">
-            <input type="password" class="auth-input" id="registerConfirmPassword" placeholder="确认密码">
-            <div class="color-picker" id="colorPicker">
-                <div class="color-option" style="background: #FF3B30;" data-color="#FF3B30"></div>
-                <div class="color-option" style="background: #FF9500;" data-color="#FF9500"></div>
-                <div class="color-option" style="background: #FFCC00;" data-color="#FFCC00"></div>
-                <div class="color-option" style="background: #34C759;" data-color="#34C759"></div>
-                <div class="color-option" style="background: #5AC8FA;" data-color="#5AC8FA"></div>
-                <div class="color-option" style="background: #007AFF;" data-color="#007AFF"></div>
-                <div class="color-option" style="background: #5856D6;" data-color="#5856D6"></div>
-                <div class="color-option" style="background: #AF52DE;" data-color="#AF52DE"></div>
-            </div>
-            <div id="registerError" class="error-message"></div>
-            <button class="button" onclick="register()">注册</button>
-            <div class="auth-switch" onclick="showLogin()">已有账号？立即登录</div>
-        </div>
+    <!--钟表模块开始-->
+<div class="physics-clock">
+    <div class="time-display">
+      <span class="digit" id="hour-tens"></span>
+      <span class="digit" id="hour-ones"></span>
+      <span class="stop">:</span>
+      <span class="digit" id="min-tens"></span>
+      <span class="digit" id="min-ones"></span>
+      <span class="stop">:</span>
+      <span class="digit" id="sec-tens"></span>
+      <span class="digit" id="sec-ones"></span>
     </div>
+  </div>
+  
+  <style>
+  .physics-clock {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 10px;
+    border-radius: 8px;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+  }
+  
+  .time-display {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .digit {
+    display: inline-block;
+    width: 24px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    margin: 0 2px;
+    padding: 2px;
+  }
+  
+  .colon {
+    margin: 0 2px;
+    animation: blink 1s step-end infinite;
+  }
+  
+  .clock-label {
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 5px;
+    opacity: 0.8;
+  }
+  
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  </style>
+  
+  <script>
+  function updatePhysicsClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+    document.getElementById('hour-tens').textContent = hours[0];
+    document.getElementById('hour-ones').textContent = hours[1];
+    document.getElementById('min-tens').textContent = minutes[0];
+    document.getElementById('min-ones').textContent = minutes[1];
+    document.getElementById('sec-tens').textContent = seconds[0];
+    document.getElementById('sec-ones').textContent = seconds[1];
+  }
+  
+  // 立即执行并每秒更新
+  updatePhysicsClock();
+  setInterval(updatePhysicsClock, 1000);
+  </script>
+<!--钟表模块结束-->
+<script>
+//全屏申请开始
+function requestFullscreen() {
+    const element = document.documentElement;
+            
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.webkitRequestFullscreen) { /* Safari */
+        element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) { /* IE11 */
+        element.msRequestFullscreen();
+    }
+}
+// 退出全屏函数
+function exitFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+    }
+}
 
-    <!-- 主页面 -->
-    <div class="main-container" id="mainContainer">
-        <div class="nav">
-            <div class="nav-title">提问平台</div>
-            <div class="user-box" id="userBox" onclick="toggleProfile()">
-                <div class="user-avatar" id="userAvatar"></div>
-                <div class="username" id="currentUser"></div>
-            </div>
-        </div>
+// 检测是否全屏
+function isFullscreen() {
+    return document.fullscreenElement || 
+           document.webkitFullscreenElement || 
+           document.msFullscreenElement;
+}
+// 手动切换按钮
+document.getElementById('fullscreen-btn').addEventListener('click', function() {
+    if (isFullscreen()) {
+        exitFullscreen();
+    } else {
+        requestFullscreen();
+    }
+});
+
+// 检测全屏变化
+document.addEventListener('fullscreenchange', handleFullscreenChange);
+document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+function handleFullscreenChange() {
+    console.log('全屏状态变化:', isFullscreen() ? '进入全屏' : '退出全屏');
+}
+//全屏申请结束
+</script>
+
+<!--开启动画-->
+<div class="physics-loader">
+    <div class="pendulum">
+      <div class="ball"></div>
+      <div class="string"></div>
+      <div class="shadow"></div>
+    </div>
+    <div class="loading-text">初始化中...</div>
+  </div>
+  
+  <style>
+  .physics-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    color: white;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .pendulum {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 30px;
+  }
+  
+  .string {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 100px;
+    background: white;
+    transform-origin: top center;
+    animation: swing 2s ease-in-out infinite alternate;
+  }
+  
+  .ball {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin-left: -15px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  }
+  
+  .shadow {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 30px;
+    height: 10px;
+    margin-left: -15px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 50%;
+    filter: blur(3px);
+    animation: shadow 2s ease-in-out infinite alternate;
+  }
+  
+  .loading-text {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    text-align: center;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes swing {
+    0% { transform: rotate(30deg); }
+    100% { transform: rotate(-30deg); }
+  }
+  
+  @keyframes shadow {
+    0% { transform: translateX(20px) scale(0.8); }
+    100% { transform: translateX(-20px) scale(0.8); }
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+  
+  /* 页面加载完成后隐藏加载动画 */
+  body.loaded .physics-loader {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease-out, visibility 0s 0.5s;
+  }
+  </style>
+  
+  <script>
+  // 在页面加载完成后移除加载动画
+  window.addEventListener('load', function() {
+    document.body.classList.add('loaded');
+    setTimeout(function() {
+      document.querySelector('.physics-loader').remove();
+    }, 500);
+  });
+  
+  // 如果加载时间过长(5秒)，显示备用信息
+  setTimeout(function() {
+    if (!document.body.classList.contains('loaded')) {
+      document.querySelector('.loading-text').textContent = '正在进入，请稍后...';
+    }
+  }, 5000);
+
+  //开启动画结尾
+
+  </script>
+
+    <div id="threejs-container"></div>
+    
+    <header>
+        <h1>MB实验室官网</h1>
+        <p>For physics,never give up.</p>
+    </header>
+    
+    <div class="container">
+        <section id="about" class="main-content">
+            <article class="content-box">
+                <h2>版本信息</h2>
+                <p><strong>v2.2.3</strong></p>
+            </article>
+            
+            <article class="content-box">
+                <h2>我们保证</h2>
+                <p>认真，求实。</p>
+                <p>用心，专注。</p>
+            </article>
+            
+            <article class="content-box">
+                <h2>未来计划</h2>
+                <p>我们将逐步添加教学视频资源，帮助大家更好地理解物理概念。</p>
+            </article>
+            
+            <article class="content-box">
+                <h2>互动装置</h2>
+                <p>当前数量：0个</p>
+                <p>由于技术限制，暂时无法添加复杂互动内容，敬请谅解。</p>
+            </article>
+
+            <article class="content-box">
+                <h2>公告</h2>
+                <p>按下"<strong>Esc</strong>"或按"<strong>全屏切换</strong>"按钮可<strong>进入/退出</strong>全屏</p>
+            </article>
+        </section>
         
-        <div class="wall-container">
-            <div id="wall"></div>
-        </div>
+        <section id="projects" class="content-box">
+            <h2>项目组</h2>
+            <ul style="list-style-position: inside;">
+                <li>物理课程项目组</li>
+                <li>网站管理组</li>
+                <li>系统建设与系统开发组</li>
+            </ul>
+        </section>
+        
+        <section id="intro" class="content-box" style="margin-top: 20px;">
+            <h2>实验室简介</h2>
+            <p>大家好，欢迎来到MB实验室！</p>
+            <p>我是SDeY（缩写），未来我将与大家一起探索物理与化学的奥秘（以物理为主）。我们将讲解初中物理的基本概念，并认真听取大家的反馈和建议，共同打造生动有趣的物理学习平台！</p>
+            <p>如有问题反馈，欢迎通过QQ联系我们：1252729040</p>
+        </section>
+        
+        <section id="physics" class="physics-section">
+            <h1 style="color: var(--warning-color);">初中物理概念/知识点：</h1>
+            
+            <article>
+                <!--力学-->
+                <h2>01.力学（简略）</h2>
+                <h3>运动描述：</h3>
+                <p>1.机械运动：物体位置的变化称为机械运动，例如汽车在公路上行驶、人在路上行走等。</p>
+                <p>2.参照物：判断物体运动还是静止时，被选作标准的物体。例如，坐在行驶的汽车里的人，以汽车为参照物，他是静止的；以路边的树木为参照物，他是运动的。</p>
+                <p>3.运动和静止的相对性：运动和静止都是相对的，取决于所选择的参照物。</p>
+                <p>4.速度：表示物体运动快慢的物理量，计算公式为v=s/t，其中v是速度，s是路程，t是时间。速度的单位是米每秒（m/s），常用单位还有千米每小时（km/h），1 m/s=3.6 km/h。</p>
+            </article>
+            
+            <article>
+                <!--声学-->
+                <h2>02.声现象</h2>
+                <h3>声音的产生与传播：</h3>
+                <p>1.声音是由物体振动产生的。例如，敲击鼓面，鼓面振动发出声音。</p>
+                <p>2.声音的传播需要介质，固体、液体和气体都可以传声，真空不能传声。例如，声音在空气中以声波的形式传播。</p>
+                
+                <h3>声音的特性：</h3>
+                <p>1.音调：声音的高低，由发声体振动的频率决定。频率越高，音调越高。例如，女高音的音调比男低音高。</p>
+                <p>2.响度：声音的强弱，与发声体振动的振幅有关。振幅越大，响度越大。例如，用力敲鼓比轻轻敲鼓声音更响亮。</p>
+                <p>3.音色：不同发声体的材料、结构不同，发出声音的音色也就不同。例如，小提琴和二胡发出的声音音色不同。</p>
+                
+                <h3>噪声及其防治：</h3>
+                <p>1.从物理学角度，噪声是发声体做无规则振动发出的声音；从环保角度，凡是妨碍人们正常休息、学习和工作的声音，以及对人们要听的声音产生干扰的声音，都属于噪声。</p>
+                <p>2.防治噪声的途径包括在声源处减弱、在传播过程中减弱、在人耳处减弱。例如，在工厂车间安装隔音设备，是在传播过程中减弱噪声；佩戴耳塞是在人耳处减弱噪声。</p>
+            </article>
 
-        <!-- 个人页面 -->
-        <div class="profile-container" id="profileContainer">
-            <div class="profile-header">
-                <div class="profile-avatar" id="profileAvatar"></div>
-                <div>
-                    <div class="profile-name" id="profileName"></div>
-                    <div class="profile-email" id="profileEmail"></div>
-                </div>
-            </div>
-            <div class="color-picker" id="profileColorPicker">
-                <div class="color-option" style="background: #FF3B30;" data-color="#FF3B30"></div>
-                <div class="color-option" style="background: #FF9500;" data-color="#FF9500"></div>
-                <div class="color-option" style="background: #FFCC00;" data-color="#FFCC00"></div>
-                <div class="color-option" style="background: #34C759;" data-color="#34C759"></div>
-                <div class="color-option" style="background: #5AC8FA;" data-color="#5AC8FA"></div>
-                <div class="color-option" style="background: #007AFF;" data-color="#007AFF"></div>
-                <div class="color-option" style="background: #5856D6;" data-color="#5856D6"></div>
-                <div class="color-option" style="background: #AF52DE;" data-color="#AF52DE"></div>
-            </div>
-            <button class="button" onclick="logout()">退出登录</button>
-        </div>
+            <article>
+                <!--物态变化-->
+                <h2><a style="color: chocolate;" >03.物态变化：</a></h2>
 
-        <!-- 右下角发布按钮 -->
-        <button class="post-button" id="postButton" onclick="togglePostBox()">+</button>
+                <h3><a style="color: #509749;" >温度：</a></h3>
 
-        <!-- 右下角发布框 -->
-        <div class="post-box" id="postBox">
-            <textarea placeholder="输入你的消息..." id="postContent"></textarea>
-            <button class="button" onclick="postMessage()">发送</button>
-        </div>
+                <h4>1.温度是表示物体冷热程度的物理量。例如，冰水混合物的温度是0℃。</h4>
+                <h4>2.常用温度计是根据液体的热胀冷缩原理制成的。温度计上的刻度表示温度的高低，单位是摄氏度（℃）</h4>
+    
+                <h3><a style="color: #509749;" >熔化和凝固：</a></h3>
+
+                <h4>1.熔化：物质由固态变成液态的过程，熔化过程要吸热。例如，冰在0℃时熔化成水。</h4>
+                <h4>2.凝固：物质由液态变成固态的过程，凝固过程要放热。例如，水在0℃时凝固成冰。</h4>
+                <h4>3.晶体和非晶体的区别在于晶体有固定的熔化温度（熔点），非晶体没有。例如，海波是晶体，玻璃是非晶体。</h4>
+   
+                <h3><a style="color: #509749;" >汽化和液化：</a></h3>
+
+                <h4>1.汽化：物质由液态变成气态的过程，汽化过程要吸热。汽化有两种方式：蒸发和沸腾。例如，湿衣服晾干是蒸发现象。</h4>
+                <h4>2.液化：物质由气态变成液态的过程，液化过程要放热。液化的方法有降低温度和压缩体积。例如，冬天呼出的白气是水蒸气遇冷液化形成的。</h4>
+    
+                <h3><a style="color: #509749;" >升华和凝华：</a></h3>
+
+                <h4>1.升华：物质由固态直接变成气态的过程，升华过程要吸热。例如，冬天冰冻的衣服变干是升华现象。</h4>
+                <h4>2.凝华：物质由气态直接变成固态的过程，凝华过程要放热。例如，冬天窗户上出现的冰花是凝华现象。</h4>
+            </article>
+
+            <article>
+                <!--光学-->
+                <h2><a style="color: chocolate;" >04.光学：</a></h2>
+
+                <h3><a style="color: #509749;" >光的直线传播：</a></h3>
+
+                <h4>1.光在同种均匀介质中沿直线传播。例如，小孔成像、影子的形成、日食和月食等现象都可以用光的直线传播来解释。</h4>
+    
+                <h3><a style="color: #509749;" >光的反射：</a></h3>
+
+                <h4>1.光的反射定律：反射光线、入射光线与法线在同一平面内；反射光线和入射光线分别位于法线两侧；反射角等于入射角。例如，平面镜成像就是光的反射现象。</h4>
+                <h4>2.平面镜成像的特点：平面镜所成的像是虚像；物体和像大小相同；物体到平面镜的距离和像到平面镜的距离相等；物体和像的连线与镜面垂直。</h4>
+    
+                <h3><a style="color: #509749;" >透镜：</a></h3>
+
+                <h4>1.凸透镜对光线有会聚作用，凹透镜对光线有发散作用。例如，放大镜是利用凸透镜成像的原理制成的。</h4>
+                <h4>2.凸透镜成像规律：当物距大于2倍焦距时，成倒立、缩小的实像，像距在1倍焦距和2倍焦距之间；当物距在1倍焦距和2倍焦距之间时，成倒立、放大的实像，像距大于2倍焦距；当物距小于1倍焦距时，成正立、放大的虚像。</h4>
+            </article>
+
+            <article>
+                <!--电学-->
+                <h2><a style="color: chocolate;" >05.电流和电路：</a></h2>
+
+                <h3><a style="color: #509749;" >电荷：</a></h3>
+
+                <h4>1.自然界中存在两种电荷：正电荷和负电荷。例如，用丝绸摩擦过的玻璃棒带正电，用毛皮摩擦过的橡胶棒带负电。</h4>
+                <h4>2.电荷间的作用规律是同种电荷相互排斥，异种电荷相互吸引。</h4>
+    
+                <h3><a style="color: #509749;" >电流和电路：</a></h3>
+
+                <h4>1.电流的形成：电荷的定向移动形成电流。例如，电源的正极流出的电流，经过用电器后，回到电源的负极。</h4>
+                <h4>2.电路的组成包括电源、用电器、开关和导线。例如，手电筒的电路由电池（电源）、灯泡（用电器）、开关和导线组成。</h4>
+                <h4>3.电路的状态有通路、断路和短路。例如，当电路中的开关断开时，电路处于断路状态。</h4>
+    
+                <h3><a style="color: #509749;" >串联和并联：</a></h3>
+
+                <h4>1.串联电路中电流只有一条路径，各用电器相互影响；并联电路中电流有多条路径，各用电器互不影响。例如，家庭电路中的电器大多是并联的，而手电筒中的灯泡和开关是串联的。</h4>
+    
+                <h3><a style="color: #509749;" >电流的强弱：</a></h3>
+
+                <h4>1.电流的单位是安培（A），常用的单位还有毫安（mA）和微安（μA），1 A=1000 mA，1 mA=1000 μA。</h4>
+                <h4>2.测量电流的仪器是电流表，使用电流表时，要将其串联在电路中，电流从正接线柱流入，负接线柱流出，且被测电流不能超过电流表的量程。</h4>
+    
+                <h3><a style="color: #509749;" >电压：</a></h3>
+
+                <h4>1.电压是形成电流的原因，单位是伏特（V），常用的单位还有千伏（kV）、毫伏（mV），1 kV=1000 V，1 V=1000 mV。</h4>
+                <h4>2.测量电压的仪器是电压表，使用电压表时，要将其并联在被测电路两端，电流从正接线柱流入，负接线柱流出，且被测电压不能超过电压表的量程。</h4>
+    
+                <h3><a style="color: #509749;" >电阻：</a></h3>
+
+                <h4>1.电阻是导体本身的一种性质，与导体的材料、长度、横截面积和温度有关。例如，一般情况下，导体越长，电阻越大；导体横截面积越大，电阻越小。</h4>
+                <h4>2.电阻的单位是欧姆（Ω），常用的单位还有千欧（kΩ）和兆欧（MΩ），1 kΩ=1000 Ω，1 MΩ=1000 kΩ。</h4>
+                <h4>3.变阻器是一种能够改变电阻大小的元件，例如，滑动变阻器是通过改变接入电路的电阻丝的长度来改变电阻大小的。</h4>
+    
+                <h3><a style="color: #509749;" >欧姆定律：</a></h3>
+
+                <h4>1.欧姆定律的内容是：导体中的电流，跟导体两端的电压成正比，跟导体的电阻成反比。公式为I=U/R，其中I是电流，U是电压，R是电阻。</h4>
+            </article>
+            <!-- 其他物理知识部分保持相同结构 -->            
+            <article>
+                <h1 style="color: rgb(61, 154, 154);">详细力学以及物理竞赛基础部分【系统建设与系统开发组】正在制作，敬请期待！</h1>
+            </article>
+        </section>
     </div>
+    
+    <footer>
+        <p>&copy; 2025 MB实验室官方网站 保留所有权利</p>
+    </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!--||最新||防护系统||最新||-->
     <script>
-        // 用户登录状态
-        let currentUser = null;
-        // 模拟服务器存储
-        let serverMessages = [];
-        // 模拟用户数据库
-        let userDatabase = {};
-        // 轮询间隔
-        const POLL_INTERVAL = 5000;
-        // 预设颜色选项
-        const presetColors = ['#FF3B30', '#FF9500', '#FFCC00', '#34C759', '#5AC8FA', '#007AFF', '#5856D6', '#AF52DE'];
-
-        // 显示注册界面
-        function showRegister() {
-            document.getElementById('loginContainer').style.display = 'none';
-            document.getElementById('registerContainer').style.display = 'flex';
-            document.getElementById('registerError').textContent = '';
-            document.getElementById('registerUsername').value = '';
-            document.getElementById('registerPassword').value = '';
-            document.getElementById('registerConfirmPassword').value = '';
+        const blockedKeys = new Set(['F12', 'I', 'J', 'U']);
+            const blockedCombos = [
+                { ctrl: true, shift: true, key: 'I' },
+                { ctrl: true, shift: true, key: 'J' },
+                { ctrl: true, key: 'U' }
+            ];
             
-            // 重置颜色选择器
-            const colorOptions = document.querySelectorAll('#colorPicker .color-option');
-            colorOptions.forEach(option => option.classList.remove('selected'));
-            colorOptions[5].classList.add('selected'); // 默认选中蓝色
-        }
-
-        // 显示登录界面
-        function showLogin() {
-            document.getElementById('registerContainer').style.display = 'none';
-            document.getElementById('loginContainer').style.display = 'flex';
-            document.getElementById('loginError').textContent = '';
-            document.getElementById('loginUsername').value = '';
-            document.getElementById('loginPassword').value = '';
-        }
-
-        // 注册函数
-        function register() {
-            const username = document.getElementById('registerUsername').value.trim();
-            const password = document.getElementById('registerPassword').value;
-            const confirmPassword = document.getElementById('registerConfirmPassword').value;
-            const errorElement = document.getElementById('registerError');
-            const selectedColorOption = document.querySelector('#colorPicker .color-option.selected');
-            
-            // 验证输入
-            if (!username) {
-                errorElement.textContent = '请输入用户名';
-                return;
-            }
-            
-            if (username.length < 3) {
-                errorElement.textContent = '用户名至少需要3个字符';
-                return;
-            }
-            
-            if (!password) {
-                errorElement.textContent = '请输入密码';
-                return;
-            }
-            
-            if (password.length < 6) {
-                errorElement.textContent = '密码至少需要6个字符';
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                errorElement.textContent = '两次输入的密码不一致';
-                return;
-            }
-            
-            // 检查用户名是否已存在
-            if (userDatabase[username]) {
-                errorElement.textContent = '用户名已存在';
-                return;
-            }
-            
-            // 获取选择的颜色
-            const userColor = selectedColorOption ? selectedColorOption.dataset.color : '#007AFF';
-            
-            // 注册用户
-            userDatabase[username] = {
-                password: password,
-                email: `${username}@example.com`,
-                color: userColor
-            };
-            
-            // 自动登录
-            loginUser(username, userColor);
-        }
-
-        // 登录函数
-        function login() {
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            const errorElement = document.getElementById('loginError');
-            
-            if (!username || !password) {
-                errorElement.textContent = '请输入用户名和密码';
-                return;
-            }
-            
-            // 验证用户
-            const user = userDatabase[username];
-            if (!user || user.password !== password) {
-                errorElement.textContent = '用户名或密码错误';
-                return;
-            }
-            
-            loginUser(username, user.color || stringToColor(username));
-        }
-
-        // 用户登录通用函数
-        function loginUser(username, color) {
-            currentUser = username;
-            document.getElementById('currentUser').textContent = currentUser;
-            document.getElementById('profileName').textContent = currentUser;
-            document.getElementById('profileEmail').textContent = userDatabase[username].email || `${username}@example.com`;
-            document.getElementById('loginContainer').style.display = 'none';
-            document.getElementById('registerContainer').style.display = 'none';
-            document.getElementById('mainContainer').style.display = 'block';
-            
-            // 设置用户头像颜色
-            updateUserColor(color);
-            
-            // 初始化个人资料页面的颜色选择器
-            initProfileColorPicker(color);
-            
-            // 初始加载消息
-            fetchMessages();
-            // 开始轮询
-            setInterval(fetchMessages, POLL_INTERVAL);
-        }
-
-        // 更新用户颜色
-        function updateUserColor(color) {
-            document.getElementById('userAvatar').style.backgroundColor = color;
-            document.getElementById('profileAvatar').style.backgroundColor = color;
-            
-            // 更新用户数据库中的颜色
-            if (currentUser && userDatabase[currentUser]) {
-                userDatabase[currentUser].color = color;
-            }
-        }
-
-        // 初始化个人资料页面的颜色选择器
-        function initProfileColorPicker(currentColor) {
-            const colorOptions = document.querySelectorAll('#profileColorPicker .color-option');
-            colorOptions.forEach(option => {
-                option.classList.remove('selected');
-                if (option.dataset.color === currentColor) {
-                    option.classList.add('selected');
-                }
-                
-                option.addEventListener('click', function() {
-                    colorOptions.forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                    updateUserColor(this.dataset.color);
-                });
-            });
-        }
-
-        // 退出登录
-        function logout() {
-            currentUser = null;
-            document.getElementById('mainContainer').style.display = 'none';
-            document.getElementById('loginContainer').style.display = 'flex';
-            document.getElementById('loginUsername').value = '';
-            document.getElementById('loginPassword').value = '';
-            document.getElementById('profileContainer').style.display = 'none';
-        }
-
-        // 切换个人页面显示
-        function toggleProfile() {
-            const profile = document.getElementById('profileContainer');
-            if (profile.style.display === 'block') {
-                profile.style.display = 'none';
-            } else {
-                profile.style.display = 'block';
-                // 隐藏发布框
-                document.getElementById('postBox').style.display = 'none';
-            }
-        }
-
-        // 切换发布框显示
-        function togglePostBox() {
-            const postBox = document.getElementById('postBox');
-            if (postBox.style.display === 'block') {
-                postBox.style.display = 'none';
-            } else {
-                postBox.style.display = 'block';
-                // 隐藏个人页面
-                document.getElementById('profileContainer').style.display = 'none';
-                // 聚焦到输入框
-                document.getElementById('postContent').focus();
-            }
-        }
-
-        // 从服务器获取消息
-        function fetchMessages() {
-            // 这里应该是从服务器获取数据的AJAX请求
-            // 模拟服务器响应
-            const response = {
-                success: true,
-                messages: serverMessages
-            };
-            
-            if (response.success) {
-                displayMessages(response.messages);
-            }
-        }
-
-        // 显示消息
-        function displayMessages(messages) {
-            const wall = document.getElementById('wall');
-            wall.innerHTML = messages.map(msg => {
-                const userColor = userDatabase[msg.user]?.color || stringToColor(msg.user);
-                const commentsHtml = msg.comments ? msg.comments.map(comment => {
-                    const commentUserColor = userDatabase[comment.user]?.color || stringToColor(comment.user);
-                    return `
-                        <div class="comment">
-                            <div class="comment-avatar" style="background: ${commentUserColor}"></div>
-                            <div class="comment-content">
-                                <div class="comment-user">${comment.user}</div>
-                                <div class="comment-text">${comment.content}</div>
-                            </div>
-                        </div>
-                    `;
-                }).join('') : '';
-                
-                return `
-                    <div class="card" data-id="${msg.id}">
-                        <div class="card-header">
-                            <div class="avatar" style="background: ${userColor}"></div>
-                            <div>
-                                <div class="username">${msg.user || '匿名用户'}</div>
-                                <div class="timestamp">${new Date(msg.time).toLocaleString()}</div>
-                            </div>
-                        </div>
-                        <div>${msg.content}</div>
-                        <div class="comments">
-                            ${commentsHtml}
-                            <div class="comment-input">
-                                <input type="text" placeholder="添加评论..." data-post-id="${msg.id}">
-                                <button onclick="postComment('${msg.id}')">发送</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // 发布消息
-        function postMessage() {
-            const content = document.getElementById('postContent').value;
-            if (content.trim() && currentUser) {
-                const newMessage = {
-                    id: generateId(),
-                    user: currentUser,
-                    content: content.replace(/\n/g, '<br>'),
-                    time: Date.now(),
-                    comments: []
-                };
-                
-                // 这里应该是发送到服务器的AJAX请求
-                // 模拟服务器存储
-                serverMessages.unshift(newMessage);
-                
-                // 清空输入框并隐藏发布框
-                document.getElementById('postContent').value = '';
-                document.getElementById('postBox').style.display = 'none';
-                
-                // 刷新消息显示
-                fetchMessages();
-            }
-        }
-
-        // 发布评论
-        function postComment(postId) {
-            const commentInput = document.querySelector(`.comment-input input[data-post-id="${postId}"]`);
-            const commentContent = commentInput.value.trim();
-            
-            if (commentContent && currentUser) {
-                // 找到对应的帖子
-                const post = serverMessages.find(msg => msg.id === postId);
-                if (post) {
-                    const newComment = {
-                        user: currentUser,
-                        content: commentContent,
-                        time: Date.now()
-                    };
-                    
-                    if (!post.comments) {
-                        post.comments = [];
-                    }
-                    
-                    post.comments.push(newComment);
-                    
-                    // 清空评论输入框
-                    commentInput.value = '';
-                    
-                    // 刷新消息显示
-                    fetchMessages();
-                }
-            }
-        }
-
-        // 生成唯一ID
-        function generateId() {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2);
-        }
-
-        // 辅助函数：根据用户名生成颜色
-        function stringToColor(str) {
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                hash = str.charCodeAt(i) + ((hash << 5) - hash);
-            }
-            const color = `hsl(${hash % 360}, 70%, 60%)`;
-            return color;
-        }
-
-        // 初始化颜色选择器和键盘事件
-        document.addEventListener('DOMContentLoaded', function() {
-            // 注册页面的颜色选择器
-            const registerColorOptions = document.querySelectorAll('#colorPicker .color-option');
-            registerColorOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    registerColorOptions.forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                });
-            });
-            
-            // 默认选中蓝色
-            registerColorOptions[5].classList.add('selected');
-            
-            // 监听评论输入框的按键事件
             document.addEventListener('keydown', function(e) {
-                // 评论输入框的Enter键发送
-                if (e.target.matches('.comment-input input') && e.key === 'Enter') {
-                    e.preventDefault(); // 阻止默认行为
-                    const postId = e.target.dataset.postId;
-                    postComment(postId);
+                if (blockedKeys.has(e.key) || 
+                    blockedCombos.some(combo => 
+                        e.ctrlKey === combo.ctrl && 
+                        e.shiftKey === combo.shift && 
+                        e.key === combo.key)) {
+                    e.preventDefault();
                 }
-                
-                // 评论输入框的向下箭头换行
-                if (e.target.matches('.comment-input input') && e.key === 'ArrowDown') {
-                    // 允许默认行为（不阻止）
-                    return;
-                }
-            });
+            }, { passive: false });
             
-            // 主消息输入框的按键事件
-            document.getElementById('postContent').addEventListener('keydown', function(e) {
-                // 按下回车键（Enter）发送
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault(); // 阻止默认的换行行为
-                    postMessage(); // 发送消息
-                }
-                // 按下向下箭头键（ArrowDown）换行
-                else if (e.key === 'ArrowDown') {
-                    // 插入换行符
-                    const start = this.selectionStart;
-                    const end = this.selectionEnd;
-                    this.value = this.value.substring(0, start) + '\n' + this.value.substring(end);
-                    this.selectionStart = this.selectionEnd = start + 1;
-                }
-            });
-        });
-
-        // 点击页面其他位置关闭弹出框
-        document.addEventListener('click', function(e) {
-            const profileContainer = document.getElementById('profileContainer');
-            const postBox = document.getElementById('postBox');
-            const postButton = document.getElementById('postButton');
-            const userBox = document.getElementById('userBox');
-            
-            // 如果点击的不是个人页面相关元素
-            if (!profileContainer.contains(e.target) && e.target !== userBox && !userBox.contains(e.target)) {
-                profileContainer.style.display = 'none';
-            }
-            
-            // 如果点击的不是发布框或发布按钮
-            if (!postBox.contains(e.target) && e.target !== postButton) {
-                postBox.style.display = 'none';
-            }
-        });
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            }, { passive: false });
     </script>
+    <!--||最新||防护系统||最新||-->
 </body>
+<!--          https://sdey666.github.io/mb/          -->
 </html>
