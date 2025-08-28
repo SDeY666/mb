@@ -6,25 +6,8 @@
     <meta name="description" content="MB实验室官方网站 - 专注于物理教育 - For physics,never give up.">
     <title>MB实验室官方网站</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <!--全屏按钮大小开始-->
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #2c3e50;
-            color: white;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        button {
-            padding: 5px 10px;
-            font-size: 16px;
-            margin: 5px;
-            cursor: pointer;
-        }
-    </style>
-    <!--全屏按钮大小控制结束-->
-    <style>
+        /* === 变量定义 === */
         :root {
             --primary-color: #2c3e50;
             --secondary-color: #34495e;
@@ -33,8 +16,11 @@
             --light-color: #f5f5f5;
             --white: #fff;
             --warning-color: rgb(255, 0, 0);
+            --chocolate-color: chocolate;
+            --aqua-color: rgb(61, 154, 154);
         }
         
+        /* === 基础样式 === */
         * {
             margin: 0;
             padding: 0;
@@ -46,8 +32,22 @@
             background-color: var(--light-color);
             color: var(--text-color);
             line-height: 1.6;
+            transition: opacity 0.5s ease;
         }
         
+        body.hidden {
+            opacity: 0;
+            overflow: hidden;
+        }
+        
+        /* === 布局组件 === */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        /* === 头部样式 === */
         header {
             background-color: var(--primary-color);
             color: var(--white);
@@ -83,12 +83,7 @@
             background-color: var(--primary-color);
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-        
+        /* === 内容区域样式 === */
         .main-content {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -138,7 +133,7 @@
         }
         
         .physics-section h2 {
-            color: chocolate;
+            color: var(--chocolate-color);
         }
         
         .physics-section h3 {
@@ -151,6 +146,7 @@
             font-weight: normal;
         }
         
+        /* === 页脚样式 === */
         footer {
             background-color: var(--primary-color);
             color: var(--white);
@@ -159,6 +155,159 @@
             margin-top: 40px;
         }
         
+        /* === 全屏按钮样式 === */
+        .content-huan {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+        
+        #fullscreen-btn {
+            padding: 8px 15px;
+            font-size: 14px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        #fullscreen-btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        /* === 时钟样式 === */
+        .physics-clock {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 10px;
+            border-radius: 8px;
+            font-family: 'Arial', sans-serif;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+        
+        .time-display {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .digit {
+            display: inline-block;
+            width: 24px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+            margin: 0 2px;
+            padding: 2px;
+        }
+        
+        .stop {
+            margin: 0 2px;
+            animation: blink 1s step-end infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        /* === 加载动画样式 === */
+        .physics-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            transition: opacity 1s ease-out, visibility 1s;
+        }
+        
+        .physics-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .pendulum {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 30px;
+        }
+        
+        .string {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 100px;
+            background: white;
+            transform-origin: top center;
+            animation: swing 2s ease-in-out infinite alternate;
+        }
+        
+        .ball {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            margin-left: -15px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        
+        .shadow {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 30px;
+            height: 10px;
+            margin-left: -15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 50%;
+            filter: blur(3px);
+            animation: shadow 2s ease-in-out infinite alternate;
+        }
+        
+        .loading-text {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            text-align: center;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes swing {
+            0% { transform: rotate(30deg); }
+            100% { transform: rotate(-30deg); }
+        }
+        
+        @keyframes shadow {
+            0% { transform: translateX(20px) scale(0.8); }
+            100% { transform: translateX(-20px) scale(0.8); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        /* === Three.js 容器 === */
         #threejs-container {
             position: fixed;
             top: 0;
@@ -169,6 +318,7 @@
             opacity: 0.3;
         }
         
+        /* === 响应式设计 === */
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -182,268 +332,89 @@
             nav ul li {
                 margin: 5px 0;
             }
+            
+            .physics-clock {
+                bottom: 10px;
+                right: 10px;
+                padding: 8px;
+            }
+            
+            .time-display {
+                font-size: 1.2rem;
+            }
+            
+            .digit {
+                width: 20px;
+            }
+            
+            .content-huan {
+                top: 5px;
+                right: 5px;
+            }
+            
+            #fullscreen-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .physics-section {
+                padding: 15px;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .time-display {
+                font-size: 1rem;
+            }
+            
+            .digit {
+                width: 18px;
+            }
         }
     </style>
 </head>
-<body>
+<body class="hidden">
+    <!-- 全屏按钮 -->
     <div class="content-huan">
         <button id="fullscreen-btn">全屏切换</button>
     </div>
-    <!--钟表模块开始-->
-<div class="physics-clock">
-    <div class="time-display">
-      <span class="digit" id="hour-tens"></span>
-      <span class="digit" id="hour-ones"></span>
-      <span class="stop">:</span>
-      <span class="digit" id="min-tens"></span>
-      <span class="digit" id="min-ones"></span>
-      <span class="stop">:</span>
-      <span class="digit" id="sec-tens"></span>
-      <span class="digit" id="sec-ones"></span>
-    </div>
-  </div>
-  
-  <style>
-  .physics-clock {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: var(--primary-color);
-    color: var(--white);
-    padding: 10px;
-    border-radius: 8px;
-    font-family: 'Arial', sans-serif;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-    z-index: 100;
-  }
-  
-  .time-display {
-    display: flex;
-    align-items: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
-  .digit {
-    display: inline-block;
-    width: 24px;
-    text-align: center;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 3px;
-    margin: 0 2px;
-    padding: 2px;
-  }
-  
-  .colon {
-    margin: 0 2px;
-    animation: blink 1s step-end infinite;
-  }
-  
-  .clock-label {
-    font-size: 0.8rem;
-    text-align: center;
-    margin-top: 5px;
-    opacity: 0.8;
-  }
-  
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-  </style>
-  
-  <script>
-  function updatePhysicsClock() {
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
     
-    document.getElementById('hour-tens').textContent = hours[0];
-    document.getElementById('hour-ones').textContent = hours[1];
-    document.getElementById('min-tens').textContent = minutes[0];
-    document.getElementById('min-ones').textContent = minutes[1];
-    document.getElementById('sec-tens').textContent = seconds[0];
-    document.getElementById('sec-ones').textContent = seconds[1];
-  }
-  
-  // 立即执行并每秒更新
-  updatePhysicsClock();
-  setInterval(updatePhysicsClock, 1000);
-  </script>
-<!--钟表模块结束-->
-<script>
-//全屏申请开始
-function requestFullscreen() {
-    const element = document.documentElement;
-            
-    if (element.requestFullscreen) {
-        element.requestFullscreen();
-    } else if (element.webkitRequestFullscreen) { /* Safari */
-        element.webkitRequestFullscreen();
-    } else if (element.msRequestFullscreen) { /* IE11 */
-        element.msRequestFullscreen();
-    }
-}
-// 退出全屏函数
-function exitFullscreen() {
-    if (document.exitFullscreen) {
-        document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-    } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-    }
-}
-
-// 检测是否全屏
-function isFullscreen() {
-    return document.fullscreenElement || 
-           document.webkitFullscreenElement || 
-           document.msFullscreenElement;
-}
-// 手动切换按钮
-document.getElementById('fullscreen-btn').addEventListener('click', function() {
-    if (isFullscreen()) {
-        exitFullscreen();
-    } else {
-        requestFullscreen();
-    }
-});
-
-// 检测全屏变化
-document.addEventListener('fullscreenchange', handleFullscreenChange);
-document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-document.addEventListener('msfullscreenchange', handleFullscreenChange);
-
-function handleFullscreenChange() {
-    console.log('全屏状态变化:', isFullscreen() ? '进入全屏' : '退出全屏');
-}
-//全屏申请结束
-</script>
-
-<!--开启动画-->
-<div class="physics-loader">
-    <div class="pendulum">
-      <div class="ball"></div>
-      <div class="string"></div>
-      <div class="shadow"></div>
+    <!-- 时钟模块 -->
+    <div class="physics-clock">
+        <div class="time-display">
+            <span class="digit" id="hour-tens"></span>
+            <span class="digit" id="hour-ones"></span>
+            <span class="stop">:</span>
+            <span class="digit" id="min-tens"></span>
+            <span class="digit" id="min-ones"></span>
+            <span class="stop">:</span>
+            <span class="digit" id="sec-tens"></span>
+            <span class="digit" id="sec-ones"></span>
+        </div>
     </div>
-    <div class="loading-text">初始化中...</div>
-  </div>
-  
-  <style>
-  .physics-loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--primary-color);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    color: white;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  .pendulum {
-    position: relative;
-    width: 200px;
-    height: 200px;
-    margin-bottom: 30px;
-  }
-  
-  .string {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 2px;
-    height: 100px;
-    background: white;
-    transform-origin: top center;
-    animation: swing 2s ease-in-out infinite alternate;
-  }
-  
-  .ball {
-    position: absolute;
-    top: 100px;
-    left: 50%;
-    width: 30px;
-    height: 30px;
-    margin-left: -15px;
-    background: var(--accent-color);
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  }
-  
-  .shadow {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 30px;
-    height: 10px;
-    margin-left: -15px;
-    background: rgba(0,0,0,0.2);
-    border-radius: 50%;
-    filter: blur(3px);
-    animation: shadow 2s ease-in-out infinite alternate;
-  }
-  
-  .loading-text {
-    margin-top: 20px;
-    font-size: 1.2rem;
-    text-align: center;
-    animation: pulse 1.5s ease-in-out infinite;
-  }
-  
-  @keyframes swing {
-    0% { transform: rotate(30deg); }
-    100% { transform: rotate(-30deg); }
-  }
-  
-  @keyframes shadow {
-    0% { transform: translateX(20px) scale(0.8); }
-    100% { transform: translateX(-20px) scale(0.8); }
-  }
-  
-  @keyframes pulse {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-  }
-  
-  /* 页面加载完成后隐藏加载动画 */
-  body.loaded .physics-loader {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 1s ease-out, visibility 0s 0.5s;
-  }
-  </style>
-  
-  <script>
-  // 在页面加载完成后移除加载动画
-  window.addEventListener('load', function() {
-    document.body.classList.add('loaded');
-    setTimeout(function() {
-      document.querySelector('.physics-loader').remove();
-    }, 500);
-  });
-  
-  // 如果加载时间过长(5秒)，显示备用信息
-  setTimeout(function() {
-    if (!document.body.classList.contains('loaded')) {
-      document.querySelector('.loading-text').textContent = '正在进入，请稍后...';
-    }
-  }, 5000);
-
-  //开启动画结尾
-
-  </script>
-
+    
+    <!-- 加载动画 -->
+    <div class="physics-loader">
+        <div class="pendulum">
+            <div class="ball"></div>
+            <div class="string"></div>
+            <div class="shadow"></div>
+        </div>
+        <div class="loading-text">初始化中...</div>
+    </div>
+    
+    <!-- Three.js 容器 -->
     <div id="threejs-container"></div>
     
+    <!-- 页面内容 -->
     <header>
         <h1>MB实验室官网</h1>
         <p>For physics,never give up.</p>
@@ -527,25 +498,25 @@ function handleFullscreenChange() {
 
             <article>
                 <!--物态变化-->
-                <h2><a style="color: chocolate;" >03.物态变化：</a></h2>
+                <h2><a style="color: var(--chocolate-color);" >03.物态变化：</a></h2>
 
-                <h3><a style="color: #509749;" >温度：</a></h3>
+                <h3><a style="color: var(--accent-color);" >温度：</a></h3>
 
                 <h4>1.温度是表示物体冷热程度的物理量。例如，冰水混合物的温度是0℃。</h4>
                 <h4>2.常用温度计是根据液体的热胀冷缩原理制成的。温度计上的刻度表示温度的高低，单位是摄氏度（℃）</h4>
     
-                <h3><a style="color: #509749;" >熔化和凝固：</a></h3>
+                <h3><a style="color: var(--accent-color);" >熔化和凝固：</a></h3>
 
                 <h4>1.熔化：物质由固态变成液态的过程，熔化过程要吸热。例如，冰在0℃时熔化成水。</h4>
                 <h4>2.凝固：物质由液态变成固态的过程，凝固过程要放热。例如，水在0℃时凝固成冰。</h4>
                 <h4>3.晶体和非晶体的区别在于晶体有固定的熔化温度（熔点），非晶体没有。例如，海波是晶体，玻璃是非晶体。</h4>
    
-                <h3><a style="color: #509749;" >汽化和液化：</a></h3>
+                <h3><a style="color: var(--accent-color);" >汽化和液化：</a></h3>
 
                 <h4>1.汽化：物质由液态变成气态的过程，汽化过程要吸热。汽化有两种方式：蒸发和沸腾。例如，湿衣服晾干是蒸发现象。</h4>
                 <h4>2.液化：物质由气态变成液态的过程，液化过程要放热。液化的方法有降低温度和压缩体积。例如，冬天呼出的白气是水蒸气遇冷液化形成的。</h4>
     
-                <h3><a style="color: #509749;" >升华和凝华：</a></h3>
+                <h3><a style="color: var(--accent-color);" >升华和凝华：</a></h3>
 
                 <h4>1.升华：物质由固态直接变成气态的过程，升华过程要吸热。例如，冬天冰冻的衣服变干是升华现象。</h4>
                 <h4>2.凝华：物质由气态直接变成固态的过程，凝华过程要放热。例如，冬天窗户上出现的冰花是凝华现象。</h4>
@@ -553,18 +524,18 @@ function handleFullscreenChange() {
 
             <article>
                 <!--光学-->
-                <h2><a style="color: chocolate;" >04.光学：</a></h2>
+                <h2><a style="color: var(--chocolate-color);" >04.光学：</a></h2>
 
-                <h3><a style="color: #509749;" >光的直线传播：</a></h3>
+                <h3><a style="color: var(--accent-color);" >光的直线传播：</a></h3>
 
                 <h4>1.光在同种均匀介质中沿直线传播。例如，小孔成像、影子的形成、日食和月食等现象都可以用光的直线传播来解释。</h4>
     
-                <h3><a style="color: #509749;" >光的反射：</a></h3>
+                <h3><a style="color: var(--accent-color);" >光的反射：</a></h3>
 
                 <h4>1.光的反射定律：反射光线、入射光线与法线在同一平面内；反射光线和入射光线分别位于法线两侧；反射角等于入射角。例如，平面镜成像就是光的反射现象。</h4>
                 <h4>2.平面镜成像的特点：平面镜所成的像是虚像；物体和像大小相同；物体到平面镜的距离和像到平面镜的距离相等；物体和像的连线与镜面垂直。</h4>
     
-                <h3><a style="color: #509749;" >透镜：</a></h3>
+                <h3><a style="color: var(--accent-color);" >透镜：</a></h3>
 
                 <h4>1.凸透镜对光线有会聚作用，凹透镜对光线有发散作用。例如，放大镜是利用凸透镜成像的原理制成的。</h4>
                 <h4>2.凸透镜成像规律：当物距大于2倍焦距时，成倒立、缩小的实像，像距在1倍焦距和2倍焦距之间；当物距在1倍焦距和2倍焦距之间时，成倒立、放大的实像，像距大于2倍焦距；当物距小于1倍焦距时，成正立、放大的虚像。</h4>
@@ -572,46 +543,46 @@ function handleFullscreenChange() {
 
             <article>
                 <!--电学-->
-                <h2><a style="color: chocolate;" >05.电流和电路：</a></h2>
+                <h2><a style="color: var(--chocolate-color);" >05.电流和电路：</a></h2>
 
-                <h3><a style="color: #509749;" >电荷：</a></h3>
+                <h3><a style="color: var(--accent-color);" >电荷：</a></h3>
 
                 <h4>1.自然界中存在两种电荷：正电荷和负电荷。例如，用丝绸摩擦过的玻璃棒带正电，用毛皮摩擦过的橡胶棒带负电。</h4>
                 <h4>2.电荷间的作用规律是同种电荷相互排斥，异种电荷相互吸引。</h4>
     
-                <h3><a style="color: #509749;" >电流和电路：</a></h3>
+                <h3><a style="color: var(--accent-color);" >电流和电路：</a></h3>
 
                 <h4>1.电流的形成：电荷的定向移动形成电流。例如，电源的正极流出的电流，经过用电器后，回到电源的负极。</h4>
                 <h4>2.电路的组成包括电源、用电器、开关和导线。例如，手电筒的电路由电池（电源）、灯泡（用电器）、开关和导线组成。</h4>
                 <h4>3.电路的状态有通路、断路和短路。例如，当电路中的开关断开时，电路处于断路状态。</h4>
     
-                <h3><a style="color: #509749;" >串联和并联：</a></h3>
+                <h3><a style="color: var(--accent-color);" >串联和并联：</a></h3>
 
                 <h4>1.串联电路中电流只有一条路径，各用电器相互影响；并联电路中电流有多条路径，各用电器互不影响。例如，家庭电路中的电器大多是并联的，而手电筒中的灯泡和开关是串联的。</h4>
     
-                <h3><a style="color: #509749;" >电流的强弱：</a></h3>
+                <h3><a style="color: var(--accent-color);" >电流的强弱：</a></h3>
 
                 <h4>1.电流的单位是安培（A），常用的单位还有毫安（mA）和微安（μA），1 A=1000 mA，1 mA=1000 μA。</h4>
                 <h4>2.测量电流的仪器是电流表，使用电流表时，要将其串联在电路中，电流从正接线柱流入，负接线柱流出，且被测电流不能超过电流表的量程。</h4>
     
-                <h3><a style="color: #509749;" >电压：</a></h3>
+                <h3><a style="color: var(--accent-color);" >电压：</a></h3>
 
                 <h4>1.电压是形成电流的原因，单位是伏特（V），常用的单位还有千伏（kV）、毫伏（mV），1 kV=1000 V，1 V=1000 mV。</h4>
                 <h4>2.测量电压的仪器是电压表，使用电压表时，要将其并联在被测电路两端，电流从正接线柱流入，负接线柱流出，且被测电压不能超过电压表的量程。</h4>
     
-                <h3><a style="color: #509749;" >电阻：</a></h3>
+                <h3><a style="color: var(--accent-color);" >电阻：</a></h3>
 
                 <h4>1.电阻是导体本身的一种性质，与导体的材料、长度、横截面积和温度有关。例如，一般情况下，导体越长，电阻越大；导体横截面积越大，电阻越小。</h4>
                 <h4>2.电阻的单位是欧姆（Ω），常用的单位还有千欧（kΩ）和兆欧（MΩ），1 kΩ=1000 Ω，1 MΩ=1000 kΩ。</h4>
                 <h4>3.变阻器是一种能够改变电阻大小的元件，例如，滑动变阻器是通过改变接入电路的电阻丝的长度来改变电阻大小的。</h4>
     
-                <h3><a style="color: #509749;" >欧姆定律：</a></h3>
+                <h3><a style="color: var(--accent-color);" >欧姆定律：</a></h3>
 
                 <h4>1.欧姆定律的内容是：导体中的电流，跟导体两端的电压成正比，跟导体的电阻成反比。公式为I=U/R，其中I是电流，U是电压，R是电阻。</h4>
             </article>
-            <!-- 其他物理知识部分保持相同结构 -->            
+            
             <article>
-                <h1 style="color: rgb(61, 154, 154);">详细力学以及物理竞赛基础部分【系统建设与系统开发组】正在制作，敬请期待！</h1>
+                <h1 style="color: var(--aqua-color);">详细力学以及物理竞赛基础部分【系统建设与系统开发组】正在制作，敬请期待！</h1>
             </article>
         </section>
     </div>
@@ -621,30 +592,205 @@ function handleFullscreenChange() {
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!--||最新||防护系统||最新||-->
     <script>
+        // 页面加载管理
+        window.addEventListener('load', function() {
+            const loader = document.querySelector('.physics-loader');
+            const body = document.body;
+            
+            // 隐藏加载动画
+            setTimeout(function() {
+                loader.classList.add('hidden');
+                body.classList.remove('hidden');
+                
+                // 完全移除加载元素
+                setTimeout(function() {
+                    loader.remove();
+                }, 1000);
+            }, 1000); // 减少加载时间至1秒
+        });
+        
+        // 如果加载时间过长(5秒)，显示备用信息
+        setTimeout(function() {
+            const loadingText = document.querySelector('.loading-text');
+            if (loadingText && !document.body.classList.contains('loaded')) {
+                loadingText.textContent = '正在进入，请稍后...';
+            }
+        }, 5000);
+        
+        // 时钟功能
+        function updatePhysicsClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            document.getElementById('hour-tens').textContent = hours[0];
+            document.getElementById('hour-ones').textContent = hours[1];
+            document.getElementById('min-tens').textContent = minutes[0];
+            document.getElementById('min-ones').textContent = minutes[1];
+            document.getElementById('sec-tens').textContent = seconds[0];
+            document.getElementById('sec-ones').textContent = seconds[1];
+        }
+        
+        // 立即执行并每秒更新
+        updatePhysicsClock();
+        setInterval(updatePhysicsClock, 1000);
+        
+        // 全屏功能
+        function requestFullscreen() {
+            const element = document.documentElement;
+                    
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.webkitRequestFullscreen) { /* Safari */
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) { /* IE11 */
+                element.msRequestFullscreen();
+            }
+        }
+        
+        function exitFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+        
+        function isFullscreen() {
+            return document.fullscreenElement || 
+                   document.webkitFullscreenElement || 
+                   document.msFullscreenElement;
+        }
+        
+        document.getElementById('fullscreen-btn').addEventListener('click', function() {
+            if (isFullscreen()) {
+                exitFullscreen();
+            } else {
+                requestFullscreen();
+            }
+        });
+        
+        function handleFullscreenChange() {
+            console.log('全屏状态变化:', isFullscreen() ? '进入全屏' : '退出全屏');
+        }
+        
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('msfullscreenchange', handleFullscreenChange);
+        
+        // 保护系统
         const blockedKeys = new Set(['F12', 'I', 'J', 'U']);
-            const blockedCombos = [
-                { ctrl: true, shift: true, key: 'I' },
-                { ctrl: true, shift: true, key: 'J' },
-                { ctrl: true, key: 'U' }
-            ];
-            
-            document.addEventListener('keydown', function(e) {
-                if (blockedKeys.has(e.key) || 
-                    blockedCombos.some(combo => 
-                        e.ctrlKey === combo.ctrl && 
-                        e.shiftKey === combo.shift && 
-                        e.key === combo.key)) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-            
-            document.addEventListener('contextmenu', function(e) {
+        const blockedCombos = [
+            { ctrl: true, shift: true, key: 'I' },
+            { ctrl: true, shift: true, key: 'J' },
+            { ctrl: true, key: 'U' }
+        ];
+        
+        document.addEventListener('keydown', function(e) {
+            if (blockedKeys.has(e.key) || 
+                blockedCombos.some(combo => 
+                    e.ctrlKey === combo.ctrl && 
+                    e.shiftKey === combo.shift && 
+                    e.key === combo.key)) {
                 e.preventDefault();
-            }, { passive: false });
+            }
+        }, { passive: false });
+        
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+        
+        // 简单的Three.js背景效果
+        function initThreeJS() {
+            const container = document.getElementById('threejs-container');
+            if (!container) return;
+            
+            // 检查Three.js是否加载成功
+            if (typeof THREE === 'undefined') {
+                console.log('Three.js未加载成功，跳过背景动画');
+                return;
+            }
+            
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            
+            // 创建场景、相机和渲染器
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            
+            renderer.setSize(width, height);
+            container.appendChild(renderer.domElement);
+            
+            // 创建粒子系统
+            const particles = createParticles();
+            scene.add(particles);
+            
+            camera.position.z = 5;
+            
+            // 动画循环
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.001;
+                
+                renderer.render(scene, camera);
+            }
+            
+            // 响应窗口大小变化
+            window.addEventListener('resize', function() {
+                const width = container.clientWidth;
+                const height = container.clientHeight;
+                
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                
+                renderer.setSize(width, height);
+            });
+            
+            animate();
+        }
+        
+        function createParticles() {
+            const particles = new THREE.Group();
+            
+            // 创建随机粒子
+            const geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            
+            for (let i = 0; i < 1000; i++) {
+                const x = (Math.random() - 0.5) * 10;
+                const y = (Math.random() - 0.5) * 10;
+                const z = (Math.random() - 0.5) * 10;
+                
+                vertices.push(x, y, z);
+            }
+            
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            
+            const material = new THREE.PointsMaterial({
+                color: 0x509749,
+                size: 0.05,
+                transparent: true,
+                opacity: 0.6
+            });
+            
+            const particleSystem = new THREE.Points(geometry, material);
+            particles.add(particleSystem);
+            
+            return particles;
+        }
+        
+        // 初始化Three.js背景
+        document.addEventListener('DOMContentLoaded', function() {
+            // 延迟初始化Three.js，确保页面主要内容先加载
+            setTimeout(initThreeJS, 1000);
+        });
     </script>
-    <!--||最新||防护系统||最新||-->
 </body>
-<!--          https://sdey666.github.io/mb/          -->
 </html>
