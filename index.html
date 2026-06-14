@@ -297,7 +297,7 @@
     });
     
     // ========== 密码验证配置 ==========
-    const correctPassword = "20120315";
+    const correctPassword = "SDeY@github_mb_2026";
     const targetUrl = "https://sdey666.github.io/mb/main.html";
     
     let attemptCount = 0;
@@ -362,11 +362,11 @@
             
             const remaining = MAX_ATTEMPTS - attemptCount;
             if (remaining === 0) {
-                errorMsg.innerHTML = '❌ 密码错误次数已达上限，访问已锁定！';
+                errorMsg.innerHTML = '密码错误次数已达上限，访问已锁定！';
                 passwordInput.disabled = true;
                 submitBtn.disabled = true;
             } else {
-                errorMsg.innerHTML = `❌ 密码错误！还剩 ${remaining} 次尝试机会`;
+                errorMsg.innerHTML = `密码错误！还剩 ${remaining} 次尝试机会`;
                 passwordInput.value = '';
                 passwordInput.focus();
             }
