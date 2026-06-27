@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>MB实验室入口</title>
     <style>
+        /* 全局重置 & 字体 */
         * {
             margin: 0;
             padding: 0;
@@ -26,6 +27,7 @@
             overflow-x: hidden;
         }
 
+        /* 粒子背景 */
         .bg-particles {
             position: fixed;
             top: 0;
@@ -58,6 +60,7 @@
             }
         }
 
+        /* 主卡片 — 毛玻璃质感 */
         .verify-card {
             background: rgba(44, 62, 80, 0.92);
             backdrop-filter: blur(12px);
@@ -78,39 +81,11 @@
             transform: scale(0.99);
         }
 
-        .logo {
-            font-size: 2.8rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, #e0f2e0, #a3d9a5);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 0.25rem;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-
-        .sub {
-            color: #cbd5e6;
-            font-size: 0.8rem;
-            border-bottom: 1px dashed #509749;
-            display: inline-block;
-            padding-bottom: 6px;
-            margin-bottom: 18px;
-            letter-spacing: 0.5px;
-        }
-
         h2 {
             color: white;
             font-weight: 500;
             margin: 12px 0 10px;
             font-size: 1.6rem;
-        }
-
-        .lock-icon {
-            font-size: 2.8rem;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
-            margin-bottom: 6px;
         }
 
         .footer-note {
@@ -120,17 +95,7 @@
             letter-spacing: 0.5px;
         }
 
-        .security-badge {
-            position: fixed;
-            bottom: 12px;
-            left: 12px;
-            font-size: 10px;
-            color: rgba(255,255,255,0.15);
-            z-index: 20;
-            pointer-events: none;
-        }
-
-        /* ========== 密码输入框 - 移动优先 ========== */
+        /* ===== 密码输入组 ===== */
         .password-input-group {
             margin: 20px 0 16px;
             text-align: left;
@@ -204,6 +169,7 @@
             box-shadow: none;
         }
 
+        /* 错误信息 */
         .error-message {
             color: #ff6b6b;
             font-size: 0.85rem;
@@ -211,20 +177,6 @@
             min-height: 28px;
             text-align: center;
             font-weight: 400;
-        }
-
-        .attempt-count {
-            color: #7f8c8d;
-            font-size: 0.8rem;
-            margin-top: 8px;
-            text-align: center;
-        }
-
-        .hint-text {
-            color: #5a7a8a;
-            font-size: 0.7rem;
-            margin-top: 14px;
-            text-align: center;
         }
 
         .contact-link {
@@ -244,7 +196,7 @@
             opacity: 0.7;
         }
 
-        /* ========== 平板/桌面微调 ========== */
+        /* ===== 响应式 ===== */
         @media (min-width: 480px) {
             .verify-card {
                 padding: 2.5rem 2rem;
@@ -267,9 +219,6 @@
             .verify-card {
                 padding: 1.5rem 1rem;
             }
-            .logo {
-                font-size: 2.2rem;
-            }
             h2 {
                 font-size: 1.3rem;
             }
@@ -283,30 +232,21 @@
             }
         }
 
-        /* 横屏提醒 (可选) */
+        /* 横屏优化 */
         @media (max-height: 500px) and (orientation: landscape) {
             .verify-card {
                 padding: 1.2rem 1.5rem;
                 max-width: 420px;
             }
-            .logo {
-                font-size: 2rem;
-            }
             h2 {
                 margin: 4px 0 6px;
                 font-size: 1.2rem;
-            }
-            .lock-icon {
-                font-size: 2rem;
             }
             .password-input-group {
                 margin: 10px 0 8px;
             }
             .footer-note {
                 margin-top: 12px;
-            }
-            .sub {
-                margin-bottom: 8px;
             }
         }
     </style>
@@ -316,10 +256,8 @@
 <div class="bg-particles" id="particles-zone"></div>
 
 <div class="verify-card">
-    
     <h2>密码验证</h2>
     
-    <!-- 内嵌密码输入框（移动端优化） -->
     <div class="password-input-group">
         <label class="password-label">请输入访问密码</label>
         <div class="password-input-wrapper">
@@ -327,7 +265,6 @@
             <button class="submit-btn" id="submitBtn">验证</button>
         </div>
         <div class="error-message" id="errorMsg"></div>
-        <div class="attempt-count" id="attemptCount">剩余尝试次数：10</div>
         <div class="contact-link">
             <a href="mailto:sdeymb@163.com?subject=网站登录密码申请&body=登录密码是什么？">
                 联系管理员
@@ -341,198 +278,171 @@
 </div>
 
 <script>
-    // ========== 右键防护（完整禁用） ==========
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-    }, { passive: false, capture: true });
+    (function() {
+        "use strict";
 
-    window.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        return false;
-    });
+        // ========== 防护：右键 / 拖拽 / 选择 ==========
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }, { passive: false, capture: true });
+        window.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        document.oncontextmenu = function() { return false; };
 
-    document.oncontextmenu = function() { return false; };
-    
-    // ========== 键盘快捷键防护 ==========
-    document.onkeydown = function(e) {
-        const key = e.key;
-        if (key === 'F12') {
-            e.preventDefault();
-            return false;
-        }
-        if (e.ctrlKey && e.shiftKey && (key === 'I' || key === 'J' || key === 'C')) {
-            e.preventDefault();
-            return false;
-        }
-        if (e.ctrlKey && (key === 'u' || key === 'U')) {
-            e.preventDefault();
-            return false;
-        }
-        if (e.ctrlKey && e.shiftKey && key === 'K') {
-            e.preventDefault();
-            return false;
-        }
-        if (e.ctrlKey && (key === 's' || key === 'S')) {
-            e.preventDefault();
-            return false;
-        }
-        // 支持回车键提交
-        if (key === 'Enter') {
-            const passwordInput = document.getElementById('passwordInput');
-            if (document.activeElement === passwordInput) {
+        // 键盘快捷键屏蔽 (F12, Ctrl+Shift+I/J/C, Ctrl+U, Ctrl+S, Ctrl+Shift+K)
+        document.onkeydown = function(e) {
+            const key = e.key;
+            if (key === 'F12') {
                 e.preventDefault();
-                verifyPassword();
+                return false;
             }
-        }
-        return true;
-    };
-
-    // 禁用拖拽和选中
-    document.addEventListener('dragstart', function(e) { e.preventDefault(); return false; });
-    document.addEventListener('selectstart', function(e) { e.preventDefault(); return false; });
-    
-    // 移动端长按菜单禁用 (优化)
-    let longPressTimer;
-    document.addEventListener('touchstart', function(e) {
-        if (e.touches.length === 1) {
-            longPressTimer = setTimeout(() => {
+            if (e.ctrlKey && e.shiftKey && (key === 'I' || key === 'J' || key === 'C')) {
                 e.preventDefault();
-            }, 600);
-        }
-    }, { passive: true });
-    document.addEventListener('touchend', function() {
-        clearTimeout(longPressTimer);
-    }, { passive: true });
-    document.addEventListener('touchmove', function() {
-        clearTimeout(longPressTimer);
-    }, { passive: true });
-    
-    // ========== 密码验证配置 ==========
-    const correctPassword = "SDeY@github_666";
-    const targetUrl = "https://sdey666.github.io/mb/main.html";
-    
-    let attemptCount = 0;
-    const MAX_ATTEMPTS = 10;
-    
-    // 获取DOM元素
-    const passwordInput = document.getElementById('passwordInput');
-    const submitBtn = document.getElementById('submitBtn');
-    const errorMsg = document.getElementById('errorMsg');
-    const attemptCountSpan = document.getElementById('attemptCount');
-    
-    // 更新剩余次数显示
-    function updateAttemptDisplay() {
-        const remaining = MAX_ATTEMPTS - attemptCount;
-        attemptCountSpan.textContent = `剩余尝试次数：${remaining}`;
-        if (remaining <= 3 && remaining > 0) {
-            attemptCountSpan.style.color = '#ffaa44';
-        } else if (remaining === 0) {
-            attemptCountSpan.style.color = '#ff6b6b';
-        } else {
-            attemptCountSpan.style.color = '#7f8c8d';
-        }
-    }
-    
-    // 验证密码函数
-    function verifyPassword() {
-        const userPassword = passwordInput.value;
-        
-        errorMsg.style.color = '#ff6b6b';
-        
-        if (attemptCount >= MAX_ATTEMPTS) {
-            errorMsg.innerHTML = '访问已锁定';
-            passwordInput.disabled = true;
-            submitBtn.disabled = true;
-            return;
-        }
-        
-        if (!userPassword) {
-            errorMsg.innerHTML = '请输入密码';
-            passwordInput.focus();
-            return;
-        }
-        
-        if (userPassword === correctPassword) {
-            errorMsg.style.color = '#509749';
-            errorMsg.innerHTML = '验证成功，正在跳转...';
-            passwordInput.disabled = true;
-            submitBtn.disabled = true;
-            
-            setTimeout(() => {
-                window.location.href = targetUrl;
-            }, 500);
-        } else {
-            attemptCount++;
-            updateAttemptDisplay();
-            
-            const remaining = MAX_ATTEMPTS - attemptCount;
-            if (remaining === 0) {
-                errorMsg.innerHTML = '访问已锁定';
+                return false;
+            }
+            if (e.ctrlKey && (key === 'u' || key === 'U')) {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && key === 'K') {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && (key === 's' || key === 'S')) {
+                e.preventDefault();
+                return false;
+            }
+            // 回车键提交密码
+            if (key === 'Enter') {
+                const passwordInput = document.getElementById('passwordInput');
+                if (document.activeElement === passwordInput) {
+                    e.preventDefault();
+                    verifyPassword();
+                }
+            }
+            return true;
+        };
+
+        // 禁止拖拽/选择
+        document.addEventListener('dragstart', function(e) { e.preventDefault(); return false; });
+        document.addEventListener('selectstart', function(e) { e.preventDefault(); return false; });
+
+        // 移动端长按菜单禁用 (优化)
+        let longPressTimer;
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 1) {
+                longPressTimer = setTimeout(() => {
+                    e.preventDefault();
+                }, 600);
+            }
+        }, { passive: true });
+        document.addEventListener('touchend', function() {
+            clearTimeout(longPressTimer);
+        }, { passive: true });
+        document.addEventListener('touchmove', function() {
+            clearTimeout(longPressTimer);
+        }, { passive: true });
+
+        // ========== 密码验证逻辑 (无次数限制) ==========
+        const correctPassword = "SDeY@github_666";
+        const targetUrl = "https://sdey666.github.io/mb/main.html";
+
+        const passwordInput = document.getElementById('passwordInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorMsg = document.getElementById('errorMsg');
+
+        // 核心验证函数
+        function verifyPassword() {
+            const userPassword = passwordInput.value;
+            errorMsg.style.color = '#ff6b6b';
+
+            if (!userPassword) {
+                errorMsg.innerHTML = '请输入密码';
+                passwordInput.focus();
+                return;
+            }
+
+            if (userPassword === correctPassword) {
+                // 正确：跳转
+                errorMsg.style.color = '#509749';
+                errorMsg.innerHTML = '验证成功，正在跳转...';
                 passwordInput.disabled = true;
                 submitBtn.disabled = true;
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 500);
             } else {
-                errorMsg.innerHTML = `密码错误，还剩 ${remaining} 次机会`;
+                // 错误：仅提示密码错误，无次数限制，不锁定
+                errorMsg.innerHTML = '密码错误';
                 passwordInput.value = '';
                 passwordInput.focus();
             }
         }
-    }
-    
-    // 绑定验证事件
-    submitBtn.addEventListener('click', verifyPassword);
-    
-    // 自动聚焦 (移动端不自动弹出键盘以免遮挡，但保留)
-    if (window.innerWidth >= 480) {
-        passwordInput.focus();
-    } else {
-        // 移动端轻触输入框时聚焦
-        passwordInput.addEventListener('touchstart', function() {
-            this.focus();
+
+        // 绑定事件
+        submitBtn.addEventListener('click', verifyPassword);
+        submitBtn.addEventListener('touchstart', function(e) {
+            // 防止重复触发
         }, { passive: true });
-    }
-    
-    // ========== 粒子背景生成 ==========
-    function generateParticles() {
-        const container = document.getElementById('particles-zone');
-        const particleCount = 50;
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            const size = Math.random() * 6 + 2;
-            particle.style.width = size + 'px';
-            particle.style.height = size + 'px';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDuration = Math.random() * 10 + 8 + 's';
-            particle.style.animationDelay = Math.random() * 5 + 's';
-            particle.style.opacity = Math.random() * 0.4 + 0.1;
-            container.appendChild(particle);
+
+        // 自动聚焦（桌面端）
+        if (window.innerWidth >= 480) {
+            passwordInput.focus();
+        } else {
+            // 移动端轻触聚焦
+            passwordInput.addEventListener('touchstart', function() {
+                this.focus();
+            }, { passive: true });
         }
-    }
-    
-    // 窗口失焦时重新强化右键防护
-    window.addEventListener('focus', () => {
-        document.oncontextmenu = function() { return false; };
-        document.addEventListener('contextmenu', (e) => e.preventDefault(), { capture: true });
-    });
-    
-    // 初始化
-    generateParticles();
-    updateAttemptDisplay();
-    
-    // iframe 防护
-    if (window.self !== window.top) {
-        try {
-            window.top.location.href = window.location.href;
-        } catch(e) {}
-    }
 
-    // 移动端点击提交按钮时，防止触发两次
-    submitBtn.addEventListener('touchstart', function(e) {
-        // 只是防止双击触发，不做其他
-    }, { passive: true });
+        // ========== 粒子背景生成 ==========
+        function generateParticles() {
+            const container = document.getElementById('particles-zone');
+            const particleCount = 50;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const size = Math.random() * 6 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = Math.random() * 10 + 8 + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.opacity = Math.random() * 0.4 + 0.1;
+                container.appendChild(particle);
+            }
+        }
+
+        // 窗口失焦/聚焦 重新强化右键防护
+        window.addEventListener('focus', () => {
+            document.oncontextmenu = function() { return false; };
+            document.addEventListener('contextmenu', (e) => e.preventDefault(), { capture: true });
+        });
+
+        // 初始化
+        generateParticles();
+
+        // iframe 防护（防止嵌套）
+        if (window.self !== window.top) {
+            try {
+                window.top.location.href = window.location.href;
+            } catch(e) {}
+        }
+
+        // 输入时清空错误提示（美化体验）
+        passwordInput.addEventListener('input', function() {
+            if (errorMsg.innerHTML === '密码错误' || errorMsg.innerHTML === '请输入密码') {
+                errorMsg.innerHTML = '';
+            }
+        });
+
+        // 暴露 verifyPassword 供调试
+        window.__verify = verifyPassword;
+    })();
 </script>
-
 </body>
-</html>
+</html》
