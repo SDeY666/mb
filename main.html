@@ -5,14 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <meta name="description" content="MB实验室官方网站 - 初中物理全部知识点汇总 - For physics, never give up.">
     <title>MB实验室</title>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* ===== 基础样式 (沿用原有风格) ===== */
+        * { margin:0; padding:0; box-sizing:border-box; }
         :root {
             --primary-color: #1e2f3c;
             --secondary-color: #2c3e50;
@@ -23,16 +20,13 @@
             --warning-color: #c0392b;
             --physics-highlight: #1f6392;
         }
-
         body {
-            font-family: 'Segoe UI', Roboto, 'Arial', sans-serif;
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
             background-color: var(--light-color);
             color: var(--text-color);
             line-height: 1.55;
             scroll-behavior: smooth;
         }
-
-        /* 全屏按钮 */
         .fullscreen-wrapper {
             position: fixed;
             top: 20px;
@@ -52,26 +46,21 @@
             font-size: 0.9rem;
             backdrop-filter: blur(2px);
         }
-        #fullscreen-btn:hover {
-            background: #3d7a3a;
-            transform: scale(1.02);
-        }
-
-        /* 时钟模块 (右下角) */
+        #fullscreen-btn:hover { background:#3d7a3a; transform:scale(1.02); }
         .physics-clock {
             position: fixed;
             bottom: 24px;
             right: 24px;
-            background: rgba(30, 47, 60, 0.85);
+            background: rgba(30,47,60,0.85);
             backdrop-filter: blur(8px);
             color: #f5f9ff;
             padding: 8px 18px;
             border-radius: 48px;
-            font-family: 'Courier New', 'Fira Code', monospace;
+            font-family: 'Courier New','Fira Code',monospace;
             font-weight: bold;
             box-shadow: 0 8px 20px rgba(0,0,0,0.25);
             z-index: 1000;
-            border: 1px solid rgba(80, 151, 73, 0.6);
+            border: 1px solid rgba(80,151,73,0.6);
             letter-spacing: 2px;
             transition: all 0.2s ease;
         }
@@ -90,23 +79,8 @@
             font-weight: 700;
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.3), 0 1px 0 rgba(255,255,255,0.1);
         }
-        .colon {
-            margin: 0 2px;
-            animation: blink 1s step-end infinite;
-            font-weight: 700;
-        }
-        .clock-label {
-            font-size: 0.65rem;
-            text-align: right;
-            margin-top: 4px;
-            opacity: 0.8;
-            letter-spacing: 1px;
-        }
-        @keyframes blink {
-            0%,100%{opacity:1;} 50%{opacity:0.4;}
-        }
-
-        /* header & nav */
+        .colon { margin:0 2px; animation: blink 1s step-end infinite; font-weight:700; }
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
         header {
             background: linear-gradient(135deg, #1f3a3f 0%, #2c3e50 100%);
             color: white;
@@ -128,9 +102,7 @@
             list-style: none;
             flex-wrap: wrap;
         }
-        nav ul li {
-            margin: 5px 12px;
-        }
+        nav ul li { margin:5px 12px; }
         nav ul li a {
             color: white;
             text-decoration: none;
@@ -144,7 +116,6 @@
             background-color: var(--accent-color);
             transform: translateY(-2px);
         }
-
         .container {
             max-width: 1280px;
             margin: 25px auto;
@@ -164,10 +135,7 @@
             transition: all 0.2s ease;
             border: 1px solid #e2e8f0;
         }
-        .content-box:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-        }
+        .content-box:hover { transform:translateY(-4px); box-shadow:0 15px 30px rgba(0,0,0,0.1); }
         .physics-section {
             background: white;
             padding: 30px 28px;
@@ -204,17 +172,8 @@
             line-height: 1.5;
             color: #2c3e50;
         }
-        .sub-list {
-            margin-left: 30px;
-            list-style-type: square;
-            color: #2d4a6e;
-        }
-        hr {
-            margin: 18px 0;
-            border: 0;
-            height: 2px;
-            background: linear-gradient(to right, #cbd5e0, transparent);
-        }
+        .sub-list { margin-left:30px; list-style-type:square; color:#2d4a6e; }
+        hr { margin:18px 0; border:0; height:2px; background:linear-gradient(to right, #cbd5e0, transparent); }
         footer {
             background: var(--primary-color);
             color: #e2e8f0;
@@ -237,33 +196,6 @@
             font-size: 0.85rem;
             font-weight: 600;
         }
-        @media (max-width: 768px) {
-            .physics-section {
-                padding: 20px 16px;
-            }
-            .physics-section h2 {
-                font-size: 1.5rem;
-            }
-            .physics-section h3 {
-                font-size: 1.25rem;
-            }
-            nav ul li a {
-                padding: 4px 12px;
-                font-size: 0.9rem;
-            }
-            .time-display {
-                font-size: 1.3rem;
-            }
-            .digit {
-                min-width: 28px;
-                padding: 0 3px;
-            }
-            .physics-clock {
-                bottom: 16px;
-                right: 16px;
-                padding: 5px 12px;
-            }
-        }
         .highlight-block {
             background: #eef9ff;
             border-left: 6px solid #2c7da0;
@@ -280,8 +212,7 @@
             display: inline-block;
             font-weight: bold;
         }
-
-        /* 加载动画 物理气息 */
+        /* 加载动画 (保留) */
         .physics-loader {
             position: fixed;
             top:0; left:0;
@@ -355,15 +286,90 @@
             visibility: hidden;
             transition: opacity 0.5s, visibility 0s 0.5s;
         }
+        /* 自定义弹窗 (访客计数) */
+        .visitor-overlay {
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            animation: fadeIn 0.3s ease;
+        }
+        .visitor-modal {
+            background: #ffffff;
+            max-width: 440px;
+            width: 90%;
+            padding: 32px 28px;
+            border-radius: 48px 20px 48px 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            text-align: center;
+            border: 1px solid #d0dce8;
+            position: relative;
+            animation: scaleIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .visitor-modal .icon-big {
+            font-size: 3.8rem;
+            color: #2c7da0;
+            margin-bottom: 6px;
+        }
+        .visitor-modal h2 {
+            font-size: 1.7rem;
+            color: #1e2f3c;
+            margin: 8px 0 10px 0;
+            font-weight: 700;
+        }
+        .visitor-modal .count-number {
+            font-size: 4.2rem;
+            font-weight: 800;
+            background: linear-gradient(145deg, #1f3a3f, #2c3e50);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            line-height: 1.2;
+        }
+        .visitor-modal .sub-text {
+            font-size: 1rem;
+            color: #3d4f5e;
+            margin: 12px 0 20px 0;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 14px;
+        }
+        .visitor-modal .close-btn {
+            background: var(--accent-color);
+            border: none;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 6px 14px rgba(73, 103, 151, 0.3);
+        }
+        .visitor-modal .close-btn:hover {
+            background: #3a5a7a;
+            transform: scale(1.03);
+        }
+        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        @keyframes scaleIn { 0% { transform:scale(0.7); opacity:0; } 100% { transform:scale(1); opacity:1; } }
+        @media (max-width: 480px) {
+            .visitor-modal { padding: 24px 16px; }
+            .visitor-modal .count-number { font-size: 3.2rem; }
+        }
     </style>
 </head>
 <body>
 
+<!-- 全屏按钮 -->
 <div class="fullscreen-wrapper">
     <button id="fullscreen-btn" aria-label="全屏切换"><i class="fas fa-expand-arrows-alt"></i> 全屏模式</button>
 </div>
 
-<!-- 右下角钟表 (固定在右下角) -->
+<!-- 时钟 -->
 <div class="physics-clock">
     <div class="time-display">
         <span class="digit" id="hour-tens">0</span><span class="digit" id="hour-ones">0</span>
@@ -403,14 +409,13 @@
 
 <div class="container">
     <div class="main-content">
-        <div class="content-box"><h2><i class="fas fa-database"></i>版本</h2><p><strong>v3.0.4</strong></p><p>涵盖声、光、热、力、电、磁、能</p></div>
+        <div class="content-box"><h2><i class="fas fa-database"></i>版本</h2><p><strong>v3.0.5</strong></p><p>涵盖声、光、热、力、电、磁、能</p></div>
         <div class="content-box"><h2><i class="fas fa-chalkboard-teacher"></i>宗旨</h2><p>认真，求实，专注，用心</p></div>
         <div class="content-box"><h2><i class="fas fa-users"></i>团队</h2><p>MB实验室系统建设与开发组</p></div>
     </div>
     
     <section id="physics" class="physics-section">
-        
-        <!-- 力学 完整更新 -->
+        <!-- 力学 -->
         <article id="mechanics">
             <h2>一、力学</h2>
             <h3>机械运动与参照物</h3>
@@ -438,7 +443,7 @@
             <div class="highlight-block"><i class="fas fa-lightbulb"></i> 核心公式：速度v=s/t，密度ρ=m/V，重力G=mg，压强p=F/S，浮力F浮=ρ液gV排，杠杆平衡，功率P=W/t。</div>
         </article>
 
-        <!-- 声现象完整 -->
+        <!-- 声现象 -->
         <article id="acoustics">
             <h2>二、声现象</h2>
             <h3>声音的产生与传播</h3>
@@ -479,7 +484,7 @@
             <h4>• 近视眼（凹透镜矫正），远视眼（凸透镜矫正），显微镜和望远镜基本原理。</h4>
         </article>
 
-        <!-- 电学·电路核心 -->
+        <!-- 电学 -->
         <article id="electricity">
             <h2>五、电流和电路 · 电学核心</h2>
             <h3>电荷与电流</h3>
@@ -514,7 +519,7 @@
             <h4>• 法拉第发现：闭合电路一部分导体切割磁感线产生感应电流。发电机原理，机械能→电能。感应电流方向与磁场方向和切割方向有关。</h4>
         </article>
 
-        <!-- 能源与可持续发展 -->
+        <!-- 能源 -->
         <article id="energy">
             <h2>七、能源与可持续发展</h2>
             <h3>能源分类</h3>
@@ -528,9 +533,8 @@
             <div class="highlight-block">初中物理完整考点覆盖 —— 适用于中考复习&竞赛预备，系统建设持续更新。</div>
         </article>
 
-        <!-- 竞赛拓展 -->
-        <div style="background:#eef2fa; border-radius: 24px; padding: 18px; margin-top: 30px; text-align: center;">
-            <h3 style="color: #1e4a6e;"><i class="fas fa-rocket"></i> 物理竞赛预备模块 · 力学深化 & 电学拓展</h3>
+        <div style="background:#eef2fa; border-radius:24px; padding:18px; margin-top:30px; text-align:center;">
+            <h3 style="color:#1e4a6e;"><i class="fas fa-rocket"></i> 物理竞赛预备模块 · 力学深化 & 电学拓展</h3>
             <p>系统建设与开发组正在筹备：静力学进阶、复杂电路分析、能量综合问题，敬请期待</p>
             <div class="badge-list"><span class="badge">力学竞赛专题</span><span class="badge">电磁感应综合</span><span class="badge">光学设计与实验</span><span class="badge">热学综合</span></div>
         </div>
@@ -542,7 +546,139 @@
     <p>© 2023-2026 MB实验室</p>
 </footer>
 
-<!-- 右下角实时钟表脚本 -->
+<!-- ============================================================ -->
+<!-- 访问计数核心逻辑 (Supabase)                                  -->
+<!-- ============================================================ -->
+<script>
+    (function visitorCounter() {
+        // ---------- 配置 ----------
+        const SUPABASE_URL = 'https://gpbprzremzgmjnhjfwor.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_q1oGOv7zn6_qxYTVU58yKA_o2KU65TS';
+        const TABLE_NAME = 'light_counts';
+
+        // 生成或获取设备指纹 (简单持久化)
+        function getDeviceId() {
+            let id = localStorage.getItem('mb_visitor_id');
+            if (!id) {
+                id = 'v_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+                localStorage.setItem('mb_visitor_id', id);
+            }
+            return id;
+        }
+
+        // 弹窗显示 (访客序号)
+        function showVisitorPopup(count) {
+            // 移除已有弹窗 (避免重复)
+            const old = document.querySelector('.visitor-overlay');
+            if (old) old.remove();
+
+            const overlay = document.createElement('div');
+            overlay.className = 'visitor-overlay';
+            overlay.innerHTML = `
+                <div class="visitor-modal">
+                    <div class="icon-big"><i class="fas fa-user-astronaut"></i></div>
+                    <h2>欢迎访问 MB实验室</h2>
+                    <div class="count-number">${count}</div>
+                    <div class="sub-text">你是第 <strong>${count}</strong> 位访客</div>
+                    <button class="close-btn" id="closeVisitorPopup"><i class="fas fa-check-circle"></i> 开始探索</button>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            document.getElementById('closeVisitorPopup').addEventListener('click', function() {
+                overlay.remove();
+            });
+            // 点击背景也可关闭
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) overlay.remove();
+            });
+        }
+
+        // 核心：请求计数并 +1，然后显示弹窗
+        async function fetchAndIncrement() {
+            try {
+                const deviceId = getDeviceId();
+                // 1. 获取当前总访问量 (从 count 字段)
+                const getUrl = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?select=count&limit=1`;
+                const getResp = await fetch(getUrl, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                if (!getResp.ok) {
+                    console.warn('无法获取计数，使用模拟值');
+                    showVisitorPopup(Math.floor(Math.random() * 100) + 1);
+                    return;
+                }
+                const data = await getResp.json();
+                let currentCount = 0;
+                if (data && data.length > 0 && typeof data[0].count === 'number') {
+                    currentCount = data[0].count;
+                } else {
+                    // 若表为空或字段缺失，默认从0开始
+                    currentCount = 0;
+                }
+
+                const newCount = currentCount + 1;
+
+                // 2. 更新 (upsert) 计数 (使用PATCH更新第一行)
+                const patchUrl = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?count=eq.${currentCount}`;
+                const patchResp = await fetch(patchUrl, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({ count: newCount })
+                });
+
+                if (!patchResp.ok) {
+                    // 如果PATCH失败（可能记录不存在），尝试INSERT
+                    console.warn('PATCH失败，尝试INSERT');
+                    const insertUrl = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}`;
+                    const insertResp = await fetch(insertUrl, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify({ count: newCount })
+                    });
+                    if (!insertResp.ok) {
+                        console.error('插入失败，使用模拟值');
+                        showVisitorPopup(newCount);
+                        return;
+                    }
+                }
+
+                // 3. 显示弹窗
+                showVisitorPopup(newCount);
+
+            } catch (err) {
+                console.error('计数接口错误:', err);
+                // 降级：显示随机数或本地计数
+                const localCount = parseInt(localStorage.getItem('mb_fallback_count') || '0') + 1;
+                localStorage.setItem('mb_fallback_count', String(localCount));
+                showVisitorPopup(localCount);
+            }
+        }
+
+        // 在页面完全加载后执行，并确保加载动画移除后再弹窗
+        window.addEventListener('load', function() {
+            // 稍微延迟，让加载动画过渡
+            setTimeout(() => {
+                fetchAndIncrement();
+            }, 400);
+        });
+    })();
+</script>
+
+<!-- 时钟脚本 -->
 <script>
     function updatePhysicsClock() {
         const now = new Date();
@@ -572,14 +708,12 @@
             if(isFullscreen()) fullBtn.innerHTML = '<i class="fas fa-compress"></i> 窗口模式';
             else fullBtn.innerHTML = '<i class="fas fa-expand-arrows-alt"></i> 全屏模式';
         });
-        document.addEventListener('webkitfullscreenchange', () => {});
     }
 </script>
 
-<!-- 防调试（简单防护） -->
+<!-- 防调试 -->
 <script>
     (function simpleProtect(){
-        // 禁用右键菜单及部分快捷键
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', function(e) {
             if(e.key === 'F12') { e.preventDefault(); return false; }
@@ -589,7 +723,7 @@
     })();
 </script>
 
-<!-- 加载动画移除（保留体验） -->
+<!-- 加载动画移除 -->
 <script>
     window.addEventListener('load',()=>{
         document.body.classList.add('loaded');
