@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MB实验室 · 管理员后台</title>
+    <title>MB实验室入口</title>
     <style>
+        /* 全局重置 & 字体 */
         * {
             margin: 0;
             padding: 0;
@@ -26,6 +27,7 @@
             overflow-x: hidden;
         }
 
+        /* 粒子背景 */
         .bg-particles {
             position: fixed;
             top: 0;
@@ -58,217 +60,194 @@
             }
         }
 
-        .admin-card {
+        /* 主卡片 — 毛玻璃质感 */
+        .verify-card {
             background: rgba(44, 62, 80, 0.92);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-radius: 32px;
-            padding: 2.5rem 2rem;
+            padding: 2rem 1.5rem;
             width: 100%;
-            max-width: 480px;
+            max-width: 420px;
             text-align: center;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(80, 151, 73, 0.2);
             z-index: 10;
             border: 1px solid rgba(80, 151, 73, 0.4);
-            position: relative;
+            transition: transform 0.2s ease;
+            margin: 0 auto;
         }
 
-        .admin-card .icon-big {
-            font-size: 3.5rem;
-            margin-bottom: 4px;
-            display: block;
+        .verify-card:active {
+            transform: scale(0.99);
         }
 
-        .admin-card h2 {
-            color: #fff;
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .admin-card .subtitle {
-            color: #a3b9cc;
-            font-size: 0.9rem;
-            margin-bottom: 24px;
-            border-bottom: 1px solid rgba(80, 151, 73, 0.2);
-            padding-bottom: 16px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-bottom: 28px;
-        }
-
-        .stats-item {
-            background: rgba(30, 46, 59, 0.6);
-            border-radius: 16px;
-            padding: 16px 12px;
-            border: 1px solid rgba(80, 151, 73, 0.15);
-        }
-
-        .stats-item .label {
-            color: #8aa4b8;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .stats-item .value {
-            color: #fff;
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-top: 4px;
-            font-family: 'Courier New', monospace;
-        }
-
-        .stats-item .value.highlight {
-            color: #ffd93d;
-        }
-
-        .action-section {
-            margin-top: 8px;
-        }
-
-        .action-section .section-title {
-            color: #8aa4b8;
-            font-size: 0.85rem;
-            margin-bottom: 14px;
-            text-align: left;
-            font-weight: 500;
-        }
-
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .btn {
-            padding: 14px 24px;
-            border: none;
-            border-radius: 60px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .btn:active {
-            transform: scale(0.97);
-        }
-
-        .btn-reset {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        h2 {
             color: white;
-            box-shadow: 0 4px 16px rgba(231, 76, 60, 0.35);
-        }
-
-        .btn-reset:hover {
-            box-shadow: 0 6px 24px rgba(231, 76, 60, 0.5);
-            transform: translateY(-1px);
-        }
-
-        .btn-reset:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-
-        .btn-back {
-            background: rgba(255, 255, 255, 0.1);
-            color: #c0d0e0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-back:hover {
-            background: rgba(255, 255, 255, 0.18);
-        }
-
-        .toast {
-            margin-top: 16px;
-            padding: 12px 18px;
-            border-radius: 16px;
             font-weight: 500;
-            font-size: 0.9rem;
-            display: none;
-            animation: fadeInUp 0.3s ease;
-        }
-
-        .toast.success {
-            display: block;
-            background: rgba(46, 204, 113, 0.2);
-            color: #55ef9a;
-            border: 1px solid rgba(46, 204, 113, 0.3);
-        }
-
-        .toast.error {
-            display: block;
-            background: rgba(231, 76, 60, 0.2);
-            color: #ff7675;
-            border: 1px solid rgba(231, 76, 60, 0.3);
-        }
-
-        .toast.info {
-            display: block;
-            background: rgba(52, 152, 219, 0.2);
-            color: #74b9ff;
-            border: 1px solid rgba(52, 152, 219, 0.3);
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .footer-links {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .footer-links a {
-            color: #6a8a9e;
-            font-size: 0.8rem;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-        .footer-links a:hover {
-            color: #a3d9a5;
+            margin: 12px 0 10px;
+            font-size: 1.6rem;
         }
 
         .footer-note {
-            margin-top: 16px;
-            font-size: 0.6rem;
-            color: #4a6a7a;
+            margin-top: 24px;
+            font-size: 0.65rem;
+            color: #7f8c8d;
             letter-spacing: 0.5px;
         }
 
-        @media (max-width: 420px) {
-            .admin-card { padding: 1.5rem 1.2rem; }
-            .admin-card h2 { font-size: 1.4rem; }
-            .stats-grid { gap: 10px; }
-            .stats-item .value { font-size: 1.6rem; }
-            .btn { padding: 12px 18px; font-size: 0.9rem; }
-            .admin-card .icon-big { font-size: 2.8rem; }
+        /* ===== 密码输入组 ===== */
+        .password-input-group {
+            margin: 20px 0 16px;
+            text-align: left;
         }
 
-        @media (max-height: 600px) {
-            .admin-card { padding: 1.2rem 1.2rem; }
-            .stats-grid { margin-bottom: 16px; }
-            .stats-item { padding: 10px 8px; }
-            .stats-item .value { font-size: 1.4rem; }
-            .admin-card h2 { font-size: 1.3rem; }
-            .admin-card .subtitle { margin-bottom: 14px; padding-bottom: 10px; font-size: 0.8rem; }
+        .password-label {
+            display: block;
+            color: #b0c4de;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            text-align: left;
+            font-weight: 400;
+        }
+
+        .password-input-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: stretch;
+        }
+
+        .password-input {
+            width: 100%;
+            background: #1e2e3b;
+            border: 1px solid #3a5a6e;
+            border-radius: 60px;
+            padding: 16px 20px;
+            color: white;
+            font-size: 1rem;
+            font-family: monospace;
+            outline: none;
+            transition: all 0.25s ease;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .password-input:focus {
+            border-color: #509749;
+            box-shadow: 0 0 0 3px rgba(80, 151, 73, 0.25);
+        }
+
+        .password-input::placeholder {
+            color: #5a7a8a;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #509749, #3d7335);
+            border: none;
+            border-radius: 60px;
+            padding: 16px 20px;
+            color: white;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            width: 100%;
+            letter-spacing: 0.5px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 6px rgba(80, 151, 73, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 错误信息 */
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            margin-top: 14px;
+            min-height: 28px;
+            text-align: center;
+            font-weight: 400;
+        }
+
+        .contact-link {
+            color: #7f8c8d;
+            font-size: 0.75rem;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .contact-link a {
+            color: #a3d9a5;
+            text-decoration: none;
+            border-bottom: 1px dotted #509749;
+        }
+
+        .contact-link a:active {
+            opacity: 0.7;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (min-width: 480px) {
+            .verify-card {
+                padding: 2.5rem 2rem;
+            }
+            .password-input-wrapper {
+                flex-direction: row;
+                gap: 12px;
+            }
+            .submit-btn {
+                width: auto;
+                padding: 14px 28px;
+                flex-shrink: 0;
+            }
+            .password-input {
+                padding: 14px 20px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .verify-card {
+                padding: 1.5rem 1rem;
+            }
+            h2 {
+                font-size: 1.3rem;
+            }
+            .password-input {
+                padding: 14px 16px;
+                font-size: 0.95rem;
+            }
+            .submit-btn {
+                padding: 14px 16px;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* 横屏优化 */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .verify-card {
+                padding: 1.2rem 1.5rem;
+                max-width: 420px;
+            }
+            h2 {
+                margin: 4px 0 6px;
+                font-size: 1.2rem;
+            }
+            .password-input-group {
+                margin: 10px 0 8px;
+            }
+            .footer-note {
+                margin-top: 12px;
+            }
         }
     </style>
 </head>
@@ -276,38 +255,26 @@
 
 <div class="bg-particles" id="particles-zone"></div>
 
-<div class="admin-card">
-    <h2>管理员后台</h2>
-    <p class="subtitle">MB实验室数据管理</p>
-
-    <div class="stats-grid">
-        <div class="stats-item">
-            <div class="label">当前访问量</div>
-            <div class="value highlight" id="currentCount">--</div>
+<div class="verify-card">
+    <h2>密码验证</h2>
+    
+    <div class="password-input-group">
+        <label class="password-label">请输入访问密码</label>
+        <div class="password-input-wrapper">
+            <input type="password" class="password-input" id="passwordInput" placeholder="输入密码" autocomplete="off" inputmode="text">
+            <button class="submit-btn" id="submitBtn">验证</button>
         </div>
-        <div class="stats-item">
-            <div class="label">最后更新</div>
-            <div class="value" id="lastUpdate" style="font-size:1rem; font-weight:400; color:#a3b9cc;">--</div>
+        <div class="error-message" id="errorMsg"></div>
+        <div class="contact-link">
+            <a href="mailto:sdeymb@163.com?subject=网站登录密码申请&body=登录密码是什么？">
+                联系管理员
+            </a>
         </div>
     </div>
-
-    <div class="action-section">
-        <div class="section-title">管理操作</div>
-        <div class="btn-group">
-            <button class="btn btn-reset" id="resetBtn">
-                重置访客计数为 0
-            </button>
-            <button class="btn btn-back" id="backBtn">
-                返回首页
-            </button>
-        </div>
-        <div class="toast" id="toastMsg"></div>
+    
+    <div class="footer-note">
+        MB实验室 © 2026
     </div>
-
-    <div class="footer-links">
-        <a href="#" id="refreshLink">刷新数据</a>
-    </div>
-    <div class="footer-note">MB实验室 © 2026</div>
 </div>
 
 <script>
@@ -315,222 +282,168 @@
         "use strict";
 
         // ============================================================
-        // 📦 Supabase 配置（与入口页一致）
+        // 密码配置区 - 在这里修改密码和跳转地址
         // ============================================================
-        const SUPABASE_URL = 'https://gpbprzremzgmjnhjfwor.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_q1oGOv7zn6_qxYTVU58yKA_o2KU65TS';
-        const TABLE_NAME = 'light_counts';
+        const PASSWORD_CONFIG = {
+            // 用户密码 → 跳转到普通用户页面
+            user: {
+                password: 'SDeY@github_666',
+                targetUrl: 'https://sdey666.github.io/mb/main.html'
+            },
+            // 管理员密码 → 跳转到管理员后台页面
+            admin: {
+                password: 'sundeyao0315',
+                targetUrl: 'https://sdey666.github.io/mb/管理员.html'
+            }
+        };
 
         // ============================================================
-        // 🔒 防护
+        // 防护：右键 / 拖拽 / 选择
         // ============================================================
-        document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }, { passive: false, capture: true });
+        window.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        document.oncontextmenu = function() { return false; };
+
+        // 键盘快捷键屏蔽
         document.onkeydown = function(e) {
-            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
-                (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S'))) {
+            const key = e.key;
+            if (key === 'F12') {
                 e.preventDefault();
                 return false;
             }
-            return true;
-        };
-        document.addEventListener('dragstart', e => { e.preventDefault(); return false; });
-        document.addEventListener('selectstart', e => { e.preventDefault(); return false; });
-
-        if (window.self !== window.top) {
-            try { window.top.location.href = window.location.href; } catch(e) {}
-        }
-
-        // ============================================================
-        // 📊 数据操作（与入口页保持完全一致的风格）
-        // ============================================================
-
-        // 获取当前计数
-        async function getCurrentCount() {
-            try {
-                const resp = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}?select=count&limit=1`, {
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    }
-                });
-                if (!resp.ok) return null;
-                const data = await resp.json();
-                if (data && data.length > 0 && typeof data[0].count === 'number') {
-                    return data[0].count;
-                }
-                return 0;
-            } catch (e) {
-                console.error('获取计数失败:', e);
-                return null;
-            }
-        }
-
-        // ============================================================
-        // 🎯 重置计数（与入口页保持完全一致的风格）
-        // ============================================================
-        async function resetCounter() {
-            try {
-                // 第一步：先获取当前计数（用于匹配）
-                const current = await getCurrentCount();
-                console.log('当前计数:', current);
-
-                if (current === null) {
-                    // 获取失败，尝试直接插入
-                    console.log('无法获取当前计数，尝试直接插入...');
-                    const insertResp = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}`, {
-                        method: 'POST',
-                        headers: {
-                            'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                            'Content-Type': 'application/json',
-                            'Prefer': 'return=minimal'
-                        },
-                        body: JSON.stringify({ count: 0 })
-                    });
-                    return insertResp.ok;
-                }
-
-                // 第二步：使用 PATCH 更新（与入口页逻辑一致）
-                const patchUrl = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?count=eq.${current}`;
-                const patchResp = await fetch(patchUrl, {
-                    method: 'PATCH',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify({ count: 0 })
-                });
-
-                console.log('PATCH 状态:', patchResp.status);
-
-                if (patchResp.ok) {
-                    console.log('PATCH 更新成功');
-                    return true;
-                }
-
-                // 第三步：PATCH 失败，尝试 DELETE + INSERT
-                console.log('PATCH 失败，尝试 DELETE + INSERT...');
-
-                // 先删除所有记录
-                await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}?count=gte.0`, {
-                    method: 'DELETE',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    }
-                });
-
-                // 再插入
-                const insertResp = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify({ count: 0 })
-                });
-
-                console.log('INSERT 状态:', insertResp.status);
-                return insertResp.ok;
-
-            } catch (e) {
-                console.error('重置异常:', e);
+            if (e.ctrlKey && e.shiftKey && (key === 'I' || key === 'J' || key === 'C')) {
+                e.preventDefault();
                 return false;
             }
-        }
-
-        // ============================================================
-        // 🖥️ UI 渲染
-        // ============================================================
-        const countEl = document.getElementById('currentCount');
-        const updateEl = document.getElementById('lastUpdate');
-        const resetBtn = document.getElementById('resetBtn');
-        const backBtn = document.getElementById('backBtn');
-        const toastEl = document.getElementById('toastMsg');
-        const refreshLink = document.getElementById('refreshLink');
-
-        function showToast(message, type = 'info') {
-            toastEl.className = 'toast ' + type;
-            toastEl.textContent = message;
-            clearTimeout(toastEl._hideTimer);
-            toastEl._hideTimer = setTimeout(() => {
-                toastEl.className = 'toast';
-            }, 5000);
-        }
-
-        async function updateDisplay() {
-            const count = await getCurrentCount();
-            if (count !== null) {
-                countEl.textContent = count;
-                const now = new Date();
-                updateEl.textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
-            } else {
-                countEl.textContent = '获取失败';
-                updateEl.textContent = '--';
-                showToast('无法连接数据库，请检查网络', 'error');
+            if (e.ctrlKey && (key === 'u' || key === 'U')) {
+                e.preventDefault();
+                return false;
             }
-        }
+            if (e.ctrlKey && e.shiftKey && key === 'K') {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && (key === 's' || key === 'S')) {
+                e.preventDefault();
+                return false;
+            }
+            // 回车键提交密码
+            if (key === 'Enter') {
+                const passwordInput = document.getElementById('passwordInput');
+                if (document.activeElement === passwordInput) {
+                    e.preventDefault();
+                    verifyPassword();
+                }
+            }
+            return true;
+        };
 
-        async function handleReset() {
-            resetBtn.disabled = true;
-            resetBtn.innerHTML = '重置中...';
-            showToast('正在重置计数...', 'info');
+        // 禁止拖拽/选择
+        document.addEventListener('dragstart', function(e) { e.preventDefault(); return false; });
+        document.addEventListener('selectstart', function(e) { e.preventDefault(); return false; });
 
-            const success = await resetCounter();
-            if (success) {
-                showToast('计数已成功重置为 0！', 'success');
-                await updateDisplay();
-            } else {
-                showToast('重置失败，请检查：1. Supabase 表是否创建 2. RLS 是否关闭', 'error');
-                console.error('=== 重置失败诊断 ===');
-                console.error('1. 请在 Supabase SQL Editor 执行: SELECT * FROM light_counts');
-                console.error('2. 如果表不存在，执行: CREATE TABLE light_counts (id SERIAL PRIMARY KEY, count INTEGER DEFAULT 0)');
-                console.error('3. 关闭 RLS: ALTER TABLE light_counts DISABLE ROW LEVEL SECURITY');
-                console.error('4. 插入初始数据: INSERT INTO light_counts (count) VALUES (0)');
+        // 移动端长按菜单禁用
+        let longPressTimer;
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 1) {
+                longPressTimer = setTimeout(() => {
+                    e.preventDefault();
+                }, 600);
+            }
+        }, { passive: true });
+        document.addEventListener('touchend', function() {
+            clearTimeout(longPressTimer);
+        }, { passive: true });
+        document.addEventListener('touchmove', function() {
+            clearTimeout(longPressTimer);
+        }, { passive: true });
+
+        // ============================================================
+        // 密码验证逻辑 - 支持两种密码分别跳转
+        // ============================================================
+        const passwordInput = document.getElementById('passwordInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorMsg = document.getElementById('errorMsg');
+
+        function verifyPassword() {
+            const userPassword = passwordInput.value;
+            errorMsg.style.color = '#ff6b6b';
+
+            if (!userPassword) {
+                errorMsg.innerHTML = '请输入密码';
+                passwordInput.focus();
+                return;
             }
 
-            resetBtn.disabled = false;
-            resetBtn.innerHTML = '重置访客计数为 0';
+            // 🔑 检查是否匹配管理员密码
+            if (userPassword === PASSWORD_CONFIG.admin.password) {
+                errorMsg.style.color = '#509749';
+                errorMsg.innerHTML = '管理员验证成功，正在跳转...';
+                passwordInput.disabled = true;
+                submitBtn.disabled = true;
+                setTimeout(() => {
+                    window.location.href = PASSWORD_CONFIG.admin.targetUrl;
+                }, 500);
+                return;
+            }
+
+            //  检查是否匹配用户密码
+            if (userPassword === PASSWORD_CONFIG.user.password) {
+                errorMsg.style.color = '#509749';
+                errorMsg.innerHTML = '验证成功，正在跳转...';
+                passwordInput.disabled = true;
+                submitBtn.disabled = true;
+                setTimeout(() => {
+                    window.location.href = PASSWORD_CONFIG.user.targetUrl;
+                }, 500);
+                return;
+            }
+
+            // 密码错误
+            errorMsg.innerHTML = '密码错误，请重新输入';
+            passwordInput.value = '';
+            passwordInput.focus();
         }
 
-        // ============================================================
-        // 🎯 事件绑定
-        // ============================================================
-        resetBtn.addEventListener('click', handleReset);
+        // 绑定事件
+        submitBtn.addEventListener('click', verifyPassword);
+        submitBtn.addEventListener('touchstart', function(e) {
+            // 防止重复触发
+        }, { passive: true });
 
-        backBtn.addEventListener('click', function() {
-            if (document.referrer && document.referrer.includes(window.location.hostname)) {
-                window.history.back();
-            } else {
-                window.location.href = 'https://sdey666.github.io/mb/index.html';
+        // 自动聚焦
+        if (window.innerWidth >= 480) {
+            passwordInput.focus();
+        } else {
+            passwordInput.addEventListener('touchstart', function() {
+                this.focus();
+            }, { passive: true });
+        }
+
+        // 输入时清空错误提示
+        passwordInput.addEventListener('input', function() {
+            if (errorMsg.innerHTML !== '') {
+                errorMsg.innerHTML = '';
             }
         });
 
-        refreshLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            showToast('刷新数据中...', 'info');
-            updateDisplay();
-        });
-
         // ============================================================
-        // 🚀 初始化
-        // ============================================================
-        updateDisplay();
-        setInterval(updateDisplay, 60000);
-
-        // ============================================================
-        // ✨ 粒子背景
+        // 粒子背景生成
         // ============================================================
         function generateParticles() {
             const container = document.getElementById('particles-zone');
-            for (let i = 0; i < 40; i++) {
+            const particleCount = 50;
+            for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
-                const size = Math.random() * 5 + 2;
+                const size = Math.random() * 6 + 2;
                 particle.style.width = size + 'px';
                 particle.style.height = size + 'px';
                 particle.style.left = Math.random() * 100 + '%';
@@ -540,16 +453,22 @@
                 container.appendChild(particle);
             }
         }
+
+        window.addEventListener('focus', () => {
+            document.oncontextmenu = function() { return false; };
+            document.addEventListener('contextmenu', (e) => e.preventDefault(), { capture: true });
+        });
+
         generateParticles();
 
-        // 暴露调试接口
-        window.__admin = {
-            getCount: getCurrentCount,
-            reset: resetCounter,
-            refresh: updateDisplay
-        };
-        console.log('管理员后台已加载');
-        console.log('调试命令: __admin.getCount(), __admin.reset(), __admin.refresh()');
+        // iframe 防护
+        if (window.self !== window.top) {
+            try {
+                window.top.location.href = window.location.href;
+            } catch(e) {}
+        }
+
+        window.__verify = verifyPassword;
     })();
 </script>
 </body>
