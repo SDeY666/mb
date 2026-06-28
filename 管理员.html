@@ -26,7 +26,6 @@
             overflow-x: hidden;
         }
 
-        /* 粒子背景 */
         .bg-particles {
             position: fixed;
             top: 0;
@@ -59,7 +58,6 @@
             }
         }
 
-        /* 主卡片 */
         .admin-card {
             background: rgba(44, 62, 80, 0.92);
             backdrop-filter: blur(12px);
@@ -96,7 +94,6 @@
             padding-bottom: 16px;
         }
 
-        /* 统计信息 */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -130,7 +127,6 @@
             color: #ffd93d;
         }
 
-        /* 操作按钮区 */
         .action-section {
             margin-top: 8px;
         }
@@ -196,7 +192,6 @@
             background: rgba(255, 255, 255, 0.18);
         }
 
-        /* Toast 提示 */
         .toast {
             margin-top: 16px;
             padding: 12px 18px;
@@ -229,17 +224,10 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 返回顶部链接 */
         .footer-links {
             margin-top: 20px;
             display: flex;
@@ -265,50 +253,22 @@
             letter-spacing: 0.5px;
         }
 
-        /* 响应式 */
         @media (max-width: 420px) {
-            .admin-card {
-                padding: 1.5rem 1.2rem;
-            }
-            .admin-card h2 {
-                font-size: 1.4rem;
-            }
-            .stats-grid {
-                gap: 10px;
-            }
-            .stats-item .value {
-                font-size: 1.6rem;
-            }
-            .btn {
-                padding: 12px 18px;
-                font-size: 0.9rem;
-            }
-            .admin-card .icon-big {
-                font-size: 2.8rem;
-            }
+            .admin-card { padding: 1.5rem 1.2rem; }
+            .admin-card h2 { font-size: 1.4rem; }
+            .stats-grid { gap: 10px; }
+            .stats-item .value { font-size: 1.6rem; }
+            .btn { padding: 12px 18px; font-size: 0.9rem; }
+            .admin-card .icon-big { font-size: 2.8rem; }
         }
 
         @media (max-height: 600px) {
-            .admin-card {
-                padding: 1.2rem 1.2rem;
-            }
-            .stats-grid {
-                margin-bottom: 16px;
-            }
-            .stats-item {
-                padding: 10px 8px;
-            }
-            .stats-item .value {
-                font-size: 1.4rem;
-            }
-            .admin-card h2 {
-                font-size: 1.3rem;
-            }
-            .admin-card .subtitle {
-                margin-bottom: 14px;
-                padding-bottom: 10px;
-                font-size: 0.8rem;
-            }
+            .admin-card { padding: 1.2rem 1.2rem; }
+            .stats-grid { margin-bottom: 16px; }
+            .stats-item { padding: 10px 8px; }
+            .stats-item .value { font-size: 1.4rem; }
+            .admin-card h2 { font-size: 1.3rem; }
+            .admin-card .subtitle { margin-bottom: 14px; padding-bottom: 10px; font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -317,11 +277,9 @@
 <div class="bg-particles" id="particles-zone"></div>
 
 <div class="admin-card">
-    <span class="icon-big"></span>
     <h2>管理员后台</h2>
-    <p class="subtitle">MB实验室后台管理</p>
+    <p class="subtitle">MB实验室数据管理</p>
 
-    <!-- 统计面板 -->
     <div class="stats-grid">
         <div class="stats-item">
             <div class="label">当前访问量</div>
@@ -333,15 +291,14 @@
         </div>
     </div>
 
-    <!-- 操作区 -->
     <div class="action-section">
         <div class="section-title">管理操作</div>
         <div class="btn-group">
             <button class="btn btn-reset" id="resetBtn">
-                <i class="icon"></i>重置访客计数为 0
+                重置访客计数为 0
             </button>
             <button class="btn btn-back" id="backBtn">
-                <i class="icon">←</i> 返回首页
+                返回首页
             </button>
         </div>
         <div class="toast" id="toastMsg"></div>
@@ -350,7 +307,7 @@
     <div class="footer-links">
         <a href="#" id="refreshLink">刷新数据</a>
     </div>
-    <div class="footer-note">MB实验室 © 2026 · 管理员会话</div>
+    <div class="footer-note">MB实验室 © 2026</div>
 </div>
 
 <script>
@@ -358,61 +315,42 @@
         "use strict";
 
         // ============================================================
-        // 📦 配置 - 与主站保持一致
+        // 📦 Supabase 配置（与入口页一致）
         // ============================================================
-        const SUPABASE_CONFIG = {
-            url: 'https://gpbprzremzgmjnhjfwor.supabase.co',
-            anonKey: 'sb_publishable_q1oGOv7zn6_qxYTVU58yKA_o2KU65TS',
-            table: 'light_counts'
-        };
+        const SUPABASE_URL = 'https://gpbprzremzgmjnhjfwor.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_q1oGOv7zn6_qxYTVU58yKA_o2KU65TS';
+        const TABLE_NAME = 'light_counts';
 
         // ============================================================
         // 🔒 防护
         // ============================================================
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-            return false;
-        });
-
+        document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
         document.onkeydown = function(e) {
-            if (e.key === 'F12') { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
-                e.preventDefault();
-                return false;
-            }
-            if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
-                e.preventDefault();
-                return false;
-            }
-            if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+                (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S'))) {
                 e.preventDefault();
                 return false;
             }
             return true;
         };
+        document.addEventListener('dragstart', e => { e.preventDefault(); return false; });
+        document.addEventListener('selectstart', e => { e.preventDefault(); return false; });
 
-        document.addEventListener('dragstart', function(e) { e.preventDefault(); return false; });
-        document.addEventListener('selectstart', function(e) { e.preventDefault(); return false; });
-
-        // iframe 防护
         if (window.self !== window.top) {
-            try {
-                window.top.location.href = window.location.href;
-            } catch(e) {}
+            try { window.top.location.href = window.location.href; } catch(e) {}
         }
 
         // ============================================================
-        // 📊 Supabase 数据操作
+        // 📊 数据操作（与入口页保持完全一致的风格）
         // ============================================================
-        const { url, anonKey, table } = SUPABASE_CONFIG;
 
         // 获取当前计数
         async function getCurrentCount() {
             try {
-                const resp = await fetch(`${url}/rest/v1/${table}?select=count&limit=1`, {
+                const resp = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}?select=count&limit=1`, {
                     headers: {
-                        'apikey': anonKey,
-                        'Authorization': `Bearer ${anonKey}`
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
                     }
                 });
                 if (!resp.ok) return null;
@@ -427,30 +365,80 @@
             }
         }
 
-        // 重置计数为 0
+        // ============================================================
+        // 🎯 重置计数（与入口页保持完全一致的风格）
+        // ============================================================
         async function resetCounter() {
             try {
-                // 1. 删除所有记录
-                await fetch(`${url}/rest/v1/${table}?count=gte.0`, {
-                    method: 'DELETE',
+                // 第一步：先获取当前计数（用于匹配）
+                const current = await getCurrentCount();
+                console.log('当前计数:', current);
+
+                if (current === null) {
+                    // 获取失败，尝试直接插入
+                    console.log('无法获取当前计数，尝试直接插入...');
+                    const insertResp = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify({ count: 0 })
+                    });
+                    return insertResp.ok;
+                }
+
+                // 第二步：使用 PATCH 更新（与入口页逻辑一致）
+                const patchUrl = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?count=eq.${current}`;
+                const patchResp = await fetch(patchUrl, {
+                    method: 'PATCH',
                     headers: {
-                        'apikey': anonKey,
-                        'Authorization': `Bearer ${anonKey}`
-                    }
-                });
-                // 2. 插入 count = 0
-                const insertResp = await fetch(`${url}/rest/v1/${table}`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': anonKey,
-                        'Authorization': `Bearer ${anonKey}`,
-                        'Content-Type': 'application/json'
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
                     },
                     body: JSON.stringify({ count: 0 })
                 });
+
+                console.log('PATCH 状态:', patchResp.status);
+
+                if (patchResp.ok) {
+                    console.log('PATCH 更新成功');
+                    return true;
+                }
+
+                // 第三步：PATCH 失败，尝试 DELETE + INSERT
+                console.log('PATCH 失败，尝试 DELETE + INSERT...');
+
+                // 先删除所有记录
+                await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}?count=gte.0`, {
+                    method: 'DELETE',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+
+                // 再插入
+                const insertResp = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({ count: 0 })
+                });
+
+                console.log('INSERT 状态:', insertResp.status);
                 return insertResp.ok;
+
             } catch (e) {
-                console.error('重置失败:', e);
+                console.error('重置异常:', e);
                 return false;
             }
         }
@@ -465,18 +453,15 @@
         const toastEl = document.getElementById('toastMsg');
         const refreshLink = document.getElementById('refreshLink');
 
-        // 显示 Toast 消息
         function showToast(message, type = 'info') {
             toastEl.className = 'toast ' + type;
             toastEl.textContent = message;
-            // 5秒后自动隐藏
             clearTimeout(toastEl._hideTimer);
             toastEl._hideTimer = setTimeout(() => {
                 toastEl.className = 'toast';
             }, 5000);
         }
 
-        // 更新显示数据
         async function updateDisplay() {
             const count = await getCurrentCount();
             if (count !== null) {
@@ -490,7 +475,6 @@
             }
         }
 
-        // 执行重置
         async function handleReset() {
             resetBtn.disabled = true;
             resetBtn.innerHTML = '重置中...';
@@ -501,7 +485,12 @@
                 showToast('计数已成功重置为 0！', 'success');
                 await updateDisplay();
             } else {
-                showToast('重置失败，请检查数据库连接', 'error');
+                showToast('重置失败，请检查：1. Supabase 表是否创建 2. RLS 是否关闭', 'error');
+                console.error('=== 重置失败诊断 ===');
+                console.error('1. 请在 Supabase SQL Editor 执行: SELECT * FROM light_counts');
+                console.error('2. 如果表不存在，执行: CREATE TABLE light_counts (id SERIAL PRIMARY KEY, count INTEGER DEFAULT 0)');
+                console.error('3. 关闭 RLS: ALTER TABLE light_counts DISABLE ROW LEVEL SECURITY');
+                console.error('4. 插入初始数据: INSERT INTO light_counts (count) VALUES (0)');
             }
 
             resetBtn.disabled = false;
@@ -511,22 +500,16 @@
         // ============================================================
         // 🎯 事件绑定
         // ============================================================
-
-        // 重置按钮
         resetBtn.addEventListener('click', handleReset);
 
-        // 返回首页
         backBtn.addEventListener('click', function() {
-            // 从入口页跳转过来时，可以返回
             if (document.referrer && document.referrer.includes(window.location.hostname)) {
                 window.history.back();
             } else {
-                // 否则跳转到主站
                 window.location.href = 'https://sdey666.github.io/mb/main.html';
             }
         });
 
-        // 刷新数据
         refreshLink.addEventListener('click', function(e) {
             e.preventDefault();
             showToast('刷新数据中...', 'info');
@@ -537,19 +520,14 @@
         // 🚀 初始化
         // ============================================================
         updateDisplay();
-
-        // 每60秒自动刷新一次
-        setInterval(() => {
-            updateDisplay();
-        }, 60000);
+        setInterval(updateDisplay, 60000);
 
         // ============================================================
         // ✨ 粒子背景
         // ============================================================
         function generateParticles() {
             const container = document.getElementById('particles-zone');
-            const particleCount = 40;
-            for (let i = 0; i < particleCount; i++) {
+            for (let i = 0; i < 40; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
                 const size = Math.random() * 5 + 2;
@@ -564,15 +542,14 @@
         }
         generateParticles();
 
-        // 暴露方法给控制台调试
+        // 暴露调试接口
         window.__admin = {
             getCount: getCurrentCount,
             reset: resetCounter,
             refresh: updateDisplay
         };
-
         console.log('管理员后台已加载');
-        console.log('可用命令: __admin.getCount(), __admin.reset(), __admin.refresh()');
+        console.log('调试命令: __admin.getCount(), __admin.reset(), __admin.refresh()');
     })();
 </script>
 </body>
