@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>MB实验室 · 管理员后台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            background: linear-gradient(145deg, #1a2a3a 0%, #0f1a24 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            padding: 16px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 粒子背景 */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(80, 151, 73, 0.25);
+            border-radius: 50%;
+            animation: floatParticle 12s infinite linear;
+            filter: blur(1px);
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.5; }
+            100% {
+                transform: translateY(-20vh) translateX(40px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 主卡片 */
+        .admin-card {
+            background: rgba(44, 62, 80, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 2.5rem 2rem;
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(80, 151, 73, 0.2);
+            z-index: 10;
+            border: 1px solid rgba(80, 151, 73, 0.4);
+            position: relative;
+        }
+
+        .admin-card .icon-big {
+            font-size: 3.5rem;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .admin-card h2 {
+            color: #fff;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .admin-card .subtitle {
+            color: #a3b9cc;
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(80, 151, 73, 0.2);
+            padding-bottom: 16px;
+        }
+
+        /* 统计信息 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .stats-item {
+            background: rgba(30, 46, 59, 0.6);
+            border-radius: 16px;
+            padding: 16px 12px;
+            border: 1px solid rgba(80, 151, 73, 0.15);
+        }
+
+        .stats-item .label {
+            color: #8aa4b8;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stats-item .value {
+            color: #fff;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-top: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stats-item .value.highlight {
+            color: #ffd93d;
+        }
+
+        /* 操作按钮区 */
+        .action-section {
+            margin-top: 8px;
+        }
+
+        .action-section .section-title {
+            color: #8aa4b8;
+            font-size: 0.85rem;
+            margin-bottom: 14px;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            box-shadow: 0 4px 16px rgba(231, 76, 60, 0.35);
+        }
+
+        .btn-reset:hover {
+            box-shadow: 0 6px 24px rgba(231, 76, 60, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .btn-reset:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            color: #c0d0e0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        /* Toast 提示 */
+        .toast {
+            margin-top: 16px;
+            padding: 12px 18px;
+            border-radius: 16px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: none;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .toast.success {
+            display: block;
+            background: rgba(46, 204, 113, 0.2);
+            color: #55ef9a;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
+        .toast.error {
+            display: block;
+            background: rgba(231, 76, 60, 0.2);
+            color: #ff7675;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        .toast.info {
+            display: block;
+            background: rgba(52, 152, 219, 0.2);
+            color: #74b9ff;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 返回顶部链接 */
+        .footer-links {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: #6a8a9e;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #a3d9a5;
+        }
+
+        .footer-note {
+            margin-top: 16px;
+            font-size: 0.6rem;
+            color: #4a6a7a;
+            letter-spacing: 0.5px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 420px) {
+            .admin-card {
+                padding: 1.5rem 1.2rem;
+            }
+            .admin-card h2 {
+                font-size: 1.4rem;
+            }
+            .stats-grid {
+                gap: 10px;
+            }
+            .stats-item .value {
+                font-size: 1.6rem;
+            }
+            .btn {
+                padding: 12px 18px;
+                font-size: 0.9rem;
+            }
+            .admin-card .icon-big {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .admin-card {
+                padding: 1.2rem 1.2rem;
+            }
+            .stats-grid {
+                margin-bottom: 16px;
+            }
+            .stats-item {
+                padding: 10px 8px;
+            }
+            .stats-item .value {
+                font-size: 1.4rem;
+            }
+            .admin-card h2 {
+                font-size: 1.3rem;
+            }
+            .admin-card .subtitle {
+                margin-bottom: 14px;
+                padding-bottom: 10px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-particles" id="particles-zone"></div>
+
+<div class="admin-card">
+    <span class="icon-big"></span>
+    <h2>管理员后台</h2>
+    <p class="subtitle">MB实验室后台管理</p>
+
+    <!-- 统计面板 -->
+    <div class="stats-grid">
+        <div class="stats-item">
+            <div class="label">当前访问量</div>
+            <div class="value highlight" id="currentCount">--</div>
+        </div>
+        <div class="stats-item">
+            <div class="label">最后更新</div>
+            <div class="value" id="lastUpdate" style="font-size:1rem; font-weight:400; color:#a3b9cc;">--</div>
+        </div>
+    </div>
+
+    <!-- 操作区 -->
+    <div class="action-section">
+        <div class="section-title">管理操作</div>
+        <div class="btn-group">
+            <button class="btn btn-reset" id="resetBtn">
+                <i class="icon"></i>重置访客计数为 0
+            </button>
+            <button class="btn btn-back" id="backBtn">
+                <i class="icon">←</i> 返回首页
+            </button>
+        </div>
+        <div class="toast" id="toastMsg"></div>
+    </div>
+
+    <div class="footer-links">
+        <a href="#" id="refreshLink">刷新数据</a>
+    </div>
+    <div class="footer-note">MB实验室 © 2026 · 管理员会话</div>
+</div>
+
+<script>
+    (function() {
+        "use strict";
+
+        // ============================================================
+        // 📦 配置 - 与主站保持一致
+        // ============================================================
+        const SUPABASE_CONFIG = {
+            url: 'https://gpbprzremzgmjnhjfwor.supabase.co',
+            anonKey: 'sb_publishable_q1oGOv7zn6_qxYTVU58yKA_o2KU65TS',
+            table: 'light_counts'
+        };
+
+        // ============================================================
+        // 🔒 防护
+        // ============================================================
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        document.onkeydown = function(e) {
+            if (e.key === 'F12') { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+                return false;
+            }
+            return true;
+        };
+
+        document.addEventListener('dragstart', function(e) { e.preventDefault(); return false; });
+        document.addEventListener('selectstart', function(e) { e.preventDefault(); return false; });
+
+        // iframe 防护
+        if (window.self !== window.top) {
+            try {
+                window.top.location.href = window.location.href;
+            } catch(e) {}
+        }
+
+        // ============================================================
+        // 📊 Supabase 数据操作
+        // ============================================================
+        const { url, anonKey, table } = SUPABASE_CONFIG;
+
+        // 获取当前计数
+        async function getCurrentCount() {
+            try {
+                const resp = await fetch(`${url}/rest/v1/${table}?select=count&limit=1`, {
+                    headers: {
+                        'apikey': anonKey,
+                        'Authorization': `Bearer ${anonKey}`
+                    }
+                });
+                if (!resp.ok) return null;
+                const data = await resp.json();
+                if (data && data.length > 0 && typeof data[0].count === 'number') {
+                    return data[0].count;
+                }
+                return 0;
+            } catch (e) {
+                console.error('获取计数失败:', e);
+                return null;
+            }
+        }
+
+        // 重置计数为 0
+        async function resetCounter() {
+            try {
+                // 1. 删除所有记录
+                await fetch(`${url}/rest/v1/${table}?count=gte.0`, {
+                    method: 'DELETE',
+                    headers: {
+                        'apikey': anonKey,
+                        'Authorization': `Bearer ${anonKey}`
+                    }
+                });
+                // 2. 插入 count = 0
+                const insertResp = await fetch(`${url}/rest/v1/${table}`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': anonKey,
+                        'Authorization': `Bearer ${anonKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ count: 0 })
+                });
+                return insertResp.ok;
+            } catch (e) {
+                console.error('重置失败:', e);
+                return false;
+            }
+        }
+
+        // ============================================================
+        // 🖥️ UI 渲染
+        // ============================================================
+        const countEl = document.getElementById('currentCount');
+        const updateEl = document.getElementById('lastUpdate');
+        const resetBtn = document.getElementById('resetBtn');
+        const backBtn = document.getElementById('backBtn');
+        const toastEl = document.getElementById('toastMsg');
+        const refreshLink = document.getElementById('refreshLink');
+
+        // 显示 Toast 消息
+        function showToast(message, type = 'info') {
+            toastEl.className = 'toast ' + type;
+            toastEl.textContent = message;
+            // 5秒后自动隐藏
+            clearTimeout(toastEl._hideTimer);
+            toastEl._hideTimer = setTimeout(() => {
+                toastEl.className = 'toast';
+            }, 5000);
+        }
+
+        // 更新显示数据
+        async function updateDisplay() {
+            const count = await getCurrentCount();
+            if (count !== null) {
+                countEl.textContent = count;
+                const now = new Date();
+                updateEl.textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
+            } else {
+                countEl.textContent = '获取失败';
+                updateEl.textContent = '--';
+                showToast('无法连接数据库，请检查网络', 'error');
+            }
+        }
+
+        // 执行重置
+        async function handleReset() {
+            resetBtn.disabled = true;
+            resetBtn.innerHTML = '重置中...';
+            showToast('正在重置计数...', 'info');
+
+            const success = await resetCounter();
+            if (success) {
+                showToast('计数已成功重置为 0！', 'success');
+                await updateDisplay();
+            } else {
+                showToast('重置失败，请检查数据库连接', 'error');
+            }
+
+            resetBtn.disabled = false;
+            resetBtn.innerHTML = '重置访客计数为 0';
+        }
+
+        // ============================================================
+        // 🎯 事件绑定
+        // ============================================================
+
+        // 重置按钮
+        resetBtn.addEventListener('click', handleReset);
+
+        // 返回首页
+        backBtn.addEventListener('click', function() {
+            // 从入口页跳转过来时，可以返回
+            if (document.referrer && document.referrer.includes(window.location.hostname)) {
+                window.history.back();
+            } else {
+                // 否则跳转到主站
+                window.location.href = 'https://sdey666.github.io/mb/main.html';
+            }
+        });
+
+        // 刷新数据
+        refreshLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            showToast('刷新数据中...', 'info');
+            updateDisplay();
+        });
+
+        // ============================================================
+        // 🚀 初始化
+        // ============================================================
+        updateDisplay();
+
+        // 每60秒自动刷新一次
+        setInterval(() => {
+            updateDisplay();
+        }, 60000);
+
+        // ============================================================
+        // ✨ 粒子背景
+        // ============================================================
+        function generateParticles() {
+            const container = document.getElementById('particles-zone');
+            const particleCount = 40;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const size = Math.random() * 5 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = Math.random() * 10 + 8 + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.opacity = Math.random() * 0.4 + 0.1;
+                container.appendChild(particle);
+            }
+        }
+        generateParticles();
+
+        // 暴露方法给控制台调试
+        window.__admin = {
+            getCount: getCurrentCount,
+            reset: resetCounter,
+            refresh: updateDisplay
+        };
+
+        console.log('管理员后台已加载');
+        console.log('可用命令: __admin.getCount(), __admin.reset(), __admin.refresh()');
+    })();
+</script>
+</body>
+</html>
