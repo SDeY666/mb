@@ -130,6 +130,8 @@
             transition: all 0.25s ease;
             -webkit-appearance: none;
             appearance: none;
+            /* 防止移动端自动缩放 */
+            font-size: 16px;
         }
 
         .password-input:focus {
@@ -167,6 +169,7 @@
             opacity: 0.5;
             transform: none;
             box-shadow: none;
+            cursor: not-allowed;
         }
 
         /* 错误信息 */
@@ -194,6 +197,18 @@
 
         .contact-link a:active {
             opacity: 0.7;
+        }
+
+        /* 状态提示 - 显示当前模式 */
+        .mode-indicator {
+            margin-top: 12px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            display: inline-block;
+            background: rgba(80, 151, 73, 0.15);
+            color: #8aa4b8;
+            border: 1px solid rgba(80, 151, 73, 0.1);
         }
 
         /* ===== 响应式 ===== */
@@ -266,15 +281,14 @@
         </div>
         <div class="error-message" id="errorMsg"></div>
         <div class="contact-link">
-            <a href="mailto:sdeymb@163.com?subject=网站登录密码申请&body=登录密码是什么？">
+            <a href="mailto:sdeymb@163.com?subject=网站登录密码询问&body=登录密码是什么？">
                 联系管理员
             </a>
         </div>
     </div>
     
-    <div class="footer-note">
-        MB实验室 © 2026
-    </div>
+    <div class="mode-indicator" id="modeIndicator">--</div>
+    <div class="footer-note">MB实验室 © 2026</div>
 </div>
 
 <script>
@@ -282,15 +296,13 @@
         "use strict";
 
         // ============================================================
-        // 密码配置区 - 在这里修改密码和跳转地址
+        // 🎯 密码配置区
         // ============================================================
         const PASSWORD_CONFIG = {
-            // 用户密码 → 跳转到普通用户页面
             user: {
                 password: 'SDeY@github_666',
                 targetUrl: 'https://sdey666.github.io/mb/main.html'
             },
-            // 管理员密码 → 跳转到管理员后台页面
             admin: {
                 password: 'sundeyao0315',
                 targetUrl: 'https://sdey666.github.io/mb/管理员.html'
@@ -298,7 +310,50 @@
         };
 
         // ============================================================
-        // 防护：右键 / 拖拽 / 选择
+        // DOM 引用
+        // ============================================================
+        const passwordInput = document.getElementById('passwordInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorMsg = document.getElementById('errorMsg');
+        const modeIndicator = document.getElementById('modeIndicator');
+
+        // ============================================================
+        // 🔄 重置页面状态（核心修复函数）
+        // ============================================================
+        function resetPageState() {
+            // 1. 启用所有控件
+            passwordInput.disabled = false;
+            submitBtn.disabled = false;
+            
+            // 2. 清空输入框
+            passwordInput.value = '';
+            
+            // 3. 重置错误信息
+            errorMsg.innerHTML = '';
+            errorMsg.style.color = '#ff6b6b';
+            
+            // 4. 重置模式指示器
+            modeIndicator.textContent = '--';
+            modeIndicator.style.color = '#8aa4b8';
+            
+            // 5. 移除所有内联样式和类（如果有）
+            passwordInput.style.borderColor = '';
+            passwordInput.style.boxShadow = '';
+            
+            // 6. 聚焦输入框（延迟执行以确保 DOM 完全就绪）
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    passwordInput.focus();
+                }, 100);
+            });
+            
+            // 7. 清理任何待处理的定时器（如果有）
+            // 注意：这里我们无法清理 setTimeout，因为它们是匿名的
+            // 但我们可以通过标志来控制
+        }
+
+        // ============================================================
+        // 🔒 防护
         // ============================================================
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
@@ -311,7 +366,6 @@
         });
         document.oncontextmenu = function() { return false; };
 
-        // 键盘快捷键屏蔽
         document.onkeydown = function(e) {
             const key = e.key;
             if (key === 'F12') {
@@ -334,7 +388,6 @@
                 e.preventDefault();
                 return false;
             }
-            // 回车键提交密码
             if (key === 'Enter') {
                 const passwordInput = document.getElementById('passwordInput');
                 if (document.activeElement === passwordInput) {
@@ -345,11 +398,9 @@
             return true;
         };
 
-        // 禁止拖拽/选择
         document.addEventListener('dragstart', function(e) { e.preventDefault(); return false; });
         document.addEventListener('selectstart', function(e) { e.preventDefault(); return false; });
 
-        // 移动端长按菜单禁用
         let longPressTimer;
         document.addEventListener('touchstart', function(e) {
             if (e.touches.length === 1) {
@@ -366,26 +417,30 @@
         }, { passive: true });
 
         // ============================================================
-        // 密码验证逻辑 - 支持两种密码分别跳转
+        // 🎯 密码验证逻辑
         // ============================================================
-        const passwordInput = document.getElementById('passwordInput');
-        const submitBtn = document.getElementById('submitBtn');
-        const errorMsg = document.getElementById('errorMsg');
+        let isVerifying = false;
 
         function verifyPassword() {
+            // 防止重复提交
+            if (isVerifying) return;
+            
             const userPassword = passwordInput.value;
             errorMsg.style.color = '#ff6b6b';
 
             if (!userPassword) {
-                errorMsg.innerHTML = '请输入密码';
+                errorMsg.innerHTML = '--';
                 passwordInput.focus();
                 return;
             }
 
-            // 🔑 检查是否匹配管理员密码
+            // 检查管理员密码
             if (userPassword === PASSWORD_CONFIG.admin.password) {
+                isVerifying = true;
                 errorMsg.style.color = '#509749';
                 errorMsg.innerHTML = '管理员验证成功，正在跳转...';
+                modeIndicator.textContent = '管理员模式';
+                modeIndicator.style.color = '#ffd93d';
                 passwordInput.disabled = true;
                 submitBtn.disabled = true;
                 setTimeout(() => {
@@ -394,10 +449,13 @@
                 return;
             }
 
-            //  检查是否匹配用户密码
+            // 检查用户密码
             if (userPassword === PASSWORD_CONFIG.user.password) {
+                isVerifying = true;
                 errorMsg.style.color = '#509749';
                 errorMsg.innerHTML = '验证成功，正在跳转...';
+                modeIndicator.textContent = '用户模式';
+                modeIndicator.style.color = '#74b9ff';
                 passwordInput.disabled = true;
                 submitBtn.disabled = true;
                 setTimeout(() => {
@@ -410,32 +468,83 @@
             errorMsg.innerHTML = '密码错误，请重新输入';
             passwordInput.value = '';
             passwordInput.focus();
+            // 抖动效果（可选）
+            passwordInput.style.borderColor = '#ff6b6b';
+            setTimeout(() => {
+                passwordInput.style.borderColor = '';
+            }, 500);
         }
 
-        // 绑定事件
-        submitBtn.addEventListener('click', verifyPassword);
-        submitBtn.addEventListener('touchstart', function(e) {
-            // 防止重复触发
-        }, { passive: true });
-
-        // 自动聚焦
-        if (window.innerWidth >= 480) {
-            passwordInput.focus();
-        } else {
-            passwordInput.addEventListener('touchstart', function() {
-                this.focus();
-            }, { passive: true });
-        }
-
-        // 输入时清空错误提示
-        passwordInput.addEventListener('input', function() {
-            if (errorMsg.innerHTML !== '') {
-                errorMsg.innerHTML = '';
+        // ============================================================
+        // 🔄 页面可见性检测 - 从后台返回时重置状态
+        // ============================================================
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible') {
+                console.log('页面可见，重置状态');
+                // 重置验证标志
+                isVerifying = false;
+                resetPageState();
             }
         });
 
         // ============================================================
-        // 粒子背景生成
+        // 🔄 页面加载和恢复事件（关键修复！）
+        // ============================================================
+        // 1. 页面首次加载
+        window.addEventListener('load', function() {
+            console.log('页面加载，重置状态');
+            isVerifying = false;
+            resetPageState();
+        });
+
+        // 2. 从 bfcache 恢复（用户点击返回按钮）
+        window.addEventListener('pageshow', function(event) {
+            console.log('pageshow 事件触发, persisted:', event.persisted);
+            // 无论是否从缓存恢复，都重置状态
+            isVerifying = false;
+            resetPageState();
+        });
+
+        // 3. 额外的安全措施：在页面卸载前清理状态
+        window.addEventListener('pagehide', function() {
+            // 页面隐藏时，可以做一些清理工作
+            console.log('页面隐藏');
+        });
+
+        // ============================================================
+        // 🎯 事件绑定
+        // ============================================================
+        submitBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            verifyPassword();
+        });
+
+        // 输入时清空错误提示
+        passwordInput.addEventListener('input', function() {
+            if (errorMsg.innerHTML !== '' && !errorMsg.innerHTML.includes('成功')) {
+                errorMsg.innerHTML = '';
+                // 重置边框颜色
+                this.style.borderColor = '';
+                this.style.boxShadow = '';
+            }
+        });
+
+        // 输入框获得焦点时重置状态
+        passwordInput.addEventListener('focus', function() {
+            if (errorMsg.innerHTML === '密码错误，请重新输入') {
+                errorMsg.innerHTML = '';
+            }
+            this.style.borderColor = '';
+            this.style.boxShadow = '';
+        });
+
+        // 触摸优化 - 点击输入框时聚焦
+        passwordInput.addEventListener('touchstart', function() {
+            this.focus();
+        }, { passive: true });
+
+        // ============================================================
+        // ✨ 粒子背景
         // ============================================================
         function generateParticles() {
             const container = document.getElementById('particles-zone');
@@ -454,21 +563,29 @@
             }
         }
 
-        window.addEventListener('focus', () => {
-            document.oncontextmenu = function() { return false; };
-            document.addEventListener('contextmenu', (e) => e.preventDefault(), { capture: true });
-        });
-
         generateParticles();
 
-        // iframe 防护
+        // ============================================================
+        // 🛡️ iframe 防护
+        // ============================================================
         if (window.self !== window.top) {
             try {
                 window.top.location.href = window.location.href;
             } catch(e) {}
         }
 
-        window.__verify = verifyPassword;
+        // ============================================================
+        // 🔧 调试接口
+        // ============================================================
+        window.__login = {
+            reset: resetPageState,
+            verify: verifyPassword,
+            config: PASSWORD_CONFIG
+        };
+        
+        console.log('入口页面已加载');
+        console.log('从管理员页面返回后会自动重置状态');
+        console.log('使用 window.__login.reset() 手动重置');
     })();
 </script>
 </body>
