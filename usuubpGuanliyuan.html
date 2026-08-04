@@ -502,23 +502,11 @@
         // ============================================================
         resetBtn.addEventListener('click', handleReset);
 
-        // 【修改】返回首页 - 添加随机参数强制刷新
         backBtn.addEventListener('click', function() {
-            // 生成随机时间戳作为参数，强制浏览器刷新页面
-            const timestamp = Date.now();
-            const refreshUrl = `https://sdey666.github.io/mb/index.html?_t=${timestamp}`;
-            
-            // 如果当前页面有 referrer 且是本站，用 history.back()，否则强制刷新跳转
             if (document.referrer && document.referrer.includes(window.location.hostname)) {
-                // 如果是本站内跳转，用 history.back() 后刷新
                 window.history.back();
-                // 延迟 100ms 后强制刷新当前页面（如果历史回退后仍在此页）
-                setTimeout(() => {
-                    window.location.reload(true);
-                }, 100);
             } else {
-                // 直接跳转并带时间戳参数，强制刷新目标页面
-                window.location.href = refreshUrl;
+                window.location.href = 'https://sdey666.github.io/mb/index.html';
             }
         });
 
