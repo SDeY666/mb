@@ -1,440 +1,311 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <meta name="description" content="MB实验室官方网站 - 初中物理知识点汇总 - For physics, never give up.">
-    <title>MB实验室</title>
-    <!-- Font Awesome (CDN保留，仅为图标，无API/URL服务依赖) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <style>
-        /* ===== 基础样式 ===== */
-        * { margin:0; padding:0; box-sizing:border-box; }
-        :root {
-            --primary-color: #1e2f3c;
-            --secondary-color: #2c3e50;
-            --accent-color: #496797;
-            --text-color: #1e2a36;
-            --light-color: #f0f4f8;
-            --white: #ffffff;
-            --warning-color: #c0392b;
-            --physics-highlight: #1f6392;
-        }
-        body {
-            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-            background-color: var(--light-color);
-            color: var(--text-color);
-            line-height: 1.55;
-            scroll-behavior: smooth;
-        }
-        .fullscreen-wrapper {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-        #fullscreen-btn {
-            background: var(--accent-color);
-            border: none;
-            color: white;
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-weight: bold;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.2);
-            transition: 0.2s;
-            cursor: pointer;
-            font-size: 0.9rem;
-            backdrop-filter: blur(2px);
-        }
-        #fullscreen-btn:hover { background:#3d7a3a; transform:scale(1.02); }
-        .physics-clock {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: rgba(30,47,60,0.85);
-            backdrop-filter: blur(8px);
-            color: #f5f9ff;
-            padding: 8px 18px;
-            border-radius: 48px;
-            font-family: 'Courier New','Fira Code',monospace;
-            font-weight: bold;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-            z-index: 1000;
-            border: 1px solid rgba(80,151,73,0.6);
-            letter-spacing: 2px;
-            transition: all 0.2s ease;
-        }
-        .time-display {
-            display: flex;
-            align-items: baseline;
-            gap: 4px;
-            font-size: 1.7rem;
-        }
-        .digit {
-            background: #000000aa;
-            padding: 0 6px;
-            border-radius: 12px;
-            min-width: 38px;
-            text-align: center;
-            font-weight: 700;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.3), 0 1px 0 rgba(255,255,255,0.1);
-        }
-        .colon { margin:0 2px; animation: blink 1s step-end infinite; font-weight:700; }
-        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
-        header {
-            background: linear-gradient(135deg, #1f3a3f 0%, #2c3e50 100%);
-            color: white;
-            padding: 28px 20px;
-            text-align: center;
-            border-bottom: 4px solid var(--accent-color);
-        }
-        nav {
-            background-color: var(--secondary-color);
-            padding: 10px 0;
-            position: sticky;
-            top: 0;
-            z-index: 99;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            flex-wrap: wrap;
-        }
-        nav ul li { margin:5px 12px; }
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-weight: 500;
-            transition: 0.2s;
-            background-color: rgba(255,255,255,0.1);
-        }
-        nav ul li a:hover {
-            background-color: var(--accent-color);
-            transform: translateY(-2px);
-        }
-        .container {
-            max-width: 1280px;
-            margin: 25px auto;
-            padding: 0 24px;
-        }
-        .main-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
-        }
-        .content-box {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            padding: 22px;
-            transition: all 0.2s ease;
-            border: 1px solid #e2e8f0;
-        }
-        .content-box:hover { transform:translateY(-4px); box-shadow:0 15px 30px rgba(0,0,0,0.1); }
-        .physics-section {
-            background: white;
-            padding: 30px 28px;
-            border-radius: 28px;
-            margin: 30px 0;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-        }
-        .physics-section h1 {
-            color: var(--warning-color);
-            font-size: 2rem;
-            margin-bottom: 25px;
-            border-bottom: 3px dashed #ffb347;
-            display: inline-block;
-            padding-bottom: 6px;
-        }
-        .physics-section h2 {
-            color: #c45c1a;
-            font-size: 1.8rem;
-            margin: 28px 0 12px 0;
-            background: #fef5e7;
-            display: inline-block;
-            padding: 0 12px 0 0;
-            border-radius: 0 20px 20px 0;
-        }
-        .physics-section h3 {
-            color: var(--accent-color);
-            margin: 20px 0 10px 0;
-            font-size: 1.4rem;
-            font-weight: 600;
-        }
-        .physics-section h4 {
-            margin: 8px 0 4px 16px;
-            font-weight: 500;
-            line-height: 1.5;
-            color: #2c3e50;
-        }
-        .sub-list { margin-left:30px; list-style-type:square; color:#2d4a6e; }
-        hr { margin:18px 0; border:0; height:2px; background:linear-gradient(to right, #cbd5e0, transparent); }
-        footer {
-            background: var(--primary-color);
-            color: #e2e8f0;
-            text-align: center;
-            padding: 28px 20px;
-            margin-top: 50px;
-            font-size: 0.9rem;
-        }
-        .badge-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 15px;
-        }
-        .badge {
-            background: #ecfdf5;
-            color: #047857;
-            padding: 5px 14px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .highlight-block {
-            background: #eef9ff;
-            border-left: 6px solid #2c7da0;
-            padding: 12px 18px;
-            border-radius: 16px;
-            margin: 15px 0;
-        }
-        .formula {
-            font-family: monospace;
-            background: #1f2937;
-            color: #facc15;
-            padding: 4px 10px;
-            border-radius: 12px;
-            display: inline-block;
-            font-weight: bold;
-        }
-        /* 加载动画 */
-        .physics-loader {
-            position: fixed;
-            top:0; left:0;
-            width:100%;
-            height:100%;
-            background: #14222b;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            color: white;
-            transition: opacity 0.6s;
-        }
-        .pendulum {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            margin-bottom: 20px;
-        }
-        .string {
-            position: absolute;
-            top:0;
-            left:50%;
-            width:2px;
-            height:100px;
-            background: #cbd5e0;
-            transform-origin: top center;
-            animation: swing 1.8s ease-in-out infinite alternate;
-        }
-        .ball {
-            position: absolute;
-            top:100px;
-            left:50%;
-            width:32px;
-            height:32px;
-            margin-left:-16px;
-            background:#61b84c;
-            border-radius:50%;
-            box-shadow:0 0 12px #7fdb6a;
-        }
-        .shadow {
-            position: absolute;
-            bottom:0;
-            left:50%;
-            width:34px;
-            height:8px;
-            margin-left:-17px;
-            background:rgba(0,0,0,0.4);
-            border-radius:50%;
-            filter:blur(3px);
-            animation: shadowAnim 1.8s ease-in-out infinite alternate;
-        }
-        @keyframes swing {
-            0% { transform: rotate(28deg); }
-            100% { transform: rotate(-28deg); }
-        }
-        @keyframes shadowAnim {
-            0% { transform: translateX(18px) scale(0.7); opacity:0.6; }
-            100% { transform: translateX(-18px) scale(0.7); opacity:0.6; }
-        }
-        .loading-text {
-            font-size: 1.3rem;
-            letter-spacing: 2px;
-            background: rgba(0,0,0,0.5);
-            padding: 8px 20px;
-            border-radius: 40px;
-        }
-        body.loaded .physics-loader {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s, visibility 0s 0.5s;
-        }
-        /* 自定义弹窗 (访客计数) */
-        .visitor-overlay {
-            position: fixed;
-            top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.55);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            animation: fadeIn 0.3s ease;
-        }
-        .visitor-modal {
-            background: #ffffff;
-            max-width: 440px;
-            width: 90%;
-            padding: 32px 28px;
-            border-radius: 48px 20px 48px 20px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-            text-align: center;
-            border: 1px solid #d0dce8;
-            position: relative;
-            animation: scaleIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .visitor-modal .icon-big {
-            font-size: 3.8rem;
-            color: #2c7da0;
-            margin-bottom: 6px;
-        }
-        .visitor-modal h2 {
-            font-size: 1.7rem;
-            color: #1e2f3c;
-            margin: 8px 0 10px 0;
-            font-weight: 700;
-        }
-        .visitor-modal .count-number {
-            font-size: 4.2rem;
-            font-weight: 800;
-            background: linear-gradient(145deg, #1f3a3f, #2c3e50);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: 3px;
-            line-height: 1.2;
-        }
-        .visitor-modal .sub-text {
-            font-size: 1rem;
-            color: #3d4f5e;
-            margin: 12px 0 20px 0;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 14px;
-        }
-        .visitor-modal .close-btn {
-            background: var(--accent-color);
-            border: none;
-            color: white;
-            padding: 12px 32px;
-            border-radius: 60px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 6px 14px rgba(73, 103, 151, 0.3);
-        }
-        .visitor-modal .close-btn:hover {
-            background: #3a5a7a;
-            transform: scale(1.03);
-        }
-        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-        @keyframes scaleIn { 0% { transform:scale(0.7); opacity:0; } 100% { transform:scale(1); opacity:1; } }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="description" content="MB实验室官方网站 - 初中物理知识点汇总 - For physics, never give up.">
+<title>MB实验室</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+        --primary-color: #1e2f3c;
+        --secondary-color: #2c3e50;
+        --accent-color: #496797;
+        --text-color: #1e2a36;
+        --light-color: #f0f4f8;
+        --white: #ffffff;
+        --warning-color: #c0392b;
+        --physics-highlight: #1f6392;
+    }
+    body {
+        font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+        background-color: var(--light-color);
+        color: var(--text-color);
+        line-height: 1.55;
+        scroll-behavior: smooth;
+    }
+    /* 全屏按钮 */
+    .fullscreen-wrapper { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+    #fullscreen-btn {
+        background: var(--accent-color); border: none; color: white;
+        padding: 8px 18px; border-radius: 40px; font-weight: bold;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.2); transition: 0.2s;
+        cursor: pointer; font-size: 0.9rem; backdrop-filter: blur(2px);
+    }
+    #fullscreen-btn:hover { background:#3d7a3a; transform:scale(1.02); }
 
-        /* ===== 管理员重置面板 ===== */
-        .admin-reset-panel {
-            position: fixed;
-            bottom: 100px;
-            right: 24px;
-            z-index: 1001;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-            pointer-events: none;
-        }
-        .admin-reset-panel.visible {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-        }
-        .admin-reset-btn {
-            background: #8b2e2e;
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 60px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(139, 46, 46, 0.5);
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid rgba(255, 200, 200, 0.3);
-            backdrop-filter: blur(6px);
-        }
-        .admin-reset-btn:hover {
-            background: #a83232;
-            transform: scale(1.03);
-            box-shadow: 0 8px 26px rgba(139, 46, 46, 0.7);
-        }
-        .admin-reset-btn i {
-            font-size: 1.1rem;
-        }
-        /* 重置确认提示 */
-        .admin-toast {
-            position: fixed;
-            bottom: 170px;
-            right: 24px;
-            background: #1e2f3c;
-            color: #e2e8f0;
-            padding: 10px 22px;
-            border-radius: 40px;
-            font-size: 0.9rem;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            z-index: 1001;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.4s, visibility 0.4s;
-            border-left: 4px solid #61b84c;
-            font-weight: 500;
-        }
-        .admin-toast.show {
-            opacity: 1;
-            visibility: visible;
-        }
+    /* 云人员计数徽章 */
+    .cloud-counter-badge {
+        position: fixed; top: 20px; right: 170px; z-index: 1002;
+        background: rgba(30,47,60,0.9); backdrop-filter: blur(8px);
+        color: #e2f0fa; padding: 8px 20px; border-radius: 40px;
+        font-family: 'Courier New', monospace; font-weight: 700;
+        font-size: 1.1rem; box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        border: 1px solid rgba(100, 180, 255, 0.5);
+        display: flex; align-items: center; gap: 8px;
+        letter-spacing: 1px; transition: all 0.2s;
+        pointer-events: none;
+    }
+    .cloud-counter-badge i { color: #7ac7ff; font-size: 1rem; animation: pulseGlow 2s infinite; }
+    .cloud-counter-badge .count-num {
+        color: #b3e4ff; text-shadow: 0 0 8px rgba(100, 200, 255, 0.6);
+        min-width: 40px; text-align: center;
+        background: #00000044; padding: 0 6px; border-radius: 20px;
+    }
+    @keyframes pulseGlow {
+        0% { opacity: 1; text-shadow: 0 0 4px #7ac7ff; }
+        50% { opacity: 0.6; text-shadow: 0 0 12px #b3e4ff; }
+        100% { opacity: 1; text-shadow: 0 0 4px #7ac7ff; }
+    }
+    @media (max-width: 600px) {
+        .cloud-counter-badge { top: 16px; right: 140px; padding: 6px 12px; font-size: 0.9rem; }
+    }
+    @media (max-width: 400px) { .cloud-counter-badge { display: none; } }
 
-        @media (max-width: 480px) {
-            .visitor-modal { padding: 24px 16px; }
-            .visitor-modal .count-number { font-size: 3.2rem; }
-            .admin-reset-panel { bottom: 90px; right: 16px; }
-            .admin-reset-btn { padding: 8px 16px; font-size: 0.85rem; }
-            .admin-toast { bottom: 150px; right: 16px; font-size: 0.8rem; padding: 8px 16px; }
-        }
-    </style>
+    /* 时钟 */
+    .physics-clock {
+        position: fixed; bottom: 24px; right: 24px;
+        background: rgba(30,47,60,0.85); backdrop-filter: blur(8px);
+        color: #f5f9ff; padding: 8px 18px; border-radius: 48px;
+        font-family: 'Courier New','Fira Code',monospace; font-weight: bold;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.25); z-index: 1000;
+        border: 1px solid rgba(80,151,73,0.6); letter-spacing: 2px;
+    }
+    .time-display { display: flex; align-items: baseline; gap: 4px; font-size: 1.7rem; }
+    .digit {
+        background: #000000aa; padding: 0 6px; border-radius: 12px;
+        min-width: 38px; text-align: center; font-weight: 700;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.3), 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .colon { margin:0 2px; animation: blink 1s step-end infinite; font-weight:700; }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+    header {
+        background: linear-gradient(135deg, #1f3a3f 0%, #2c3e50 100%);
+        color: white; padding: 28px 20px; text-align: center;
+        border-bottom: 4px solid var(--accent-color);
+    }
+    nav {
+        background-color: var(--secondary-color); padding: 10px 0;
+        position: sticky; top: 0; z-index: 99;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    nav ul { display: flex; justify-content: center; list-style: none; flex-wrap: wrap; }
+    nav ul li { margin:5px 12px; }
+    nav ul li a {
+        color: white; text-decoration: none; padding: 6px 14px;
+        border-radius: 30px; font-weight: 500; transition: 0.2s;
+        background-color: rgba(255,255,255,0.1);
+    }
+    nav ul li a:hover { background-color: var(--accent-color); transform: translateY(-2px); }
+    .container { max-width: 1280px; margin: 25px auto; padding: 0 24px; }
+    .main-content {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+        gap: 24px; margin-bottom: 40px;
+    }
+    .content-box {
+        background: white; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        padding: 22px; transition: all 0.2s ease; border: 1px solid #e2e8f0;
+    }
+    .content-box:hover { transform:translateY(-4px); box-shadow:0 15px 30px rgba(0,0,0,0.1); }
+    .physics-section {
+        background: white; padding: 30px 28px; border-radius: 28px;
+        margin: 30px 0; box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .physics-section h1 {
+        color: var(--warning-color); font-size: 2rem; margin-bottom: 25px;
+        border-bottom: 3px dashed #ffb347; display: inline-block; padding-bottom: 6px;
+    }
+    .physics-section h2 {
+        color: #c45c1a; font-size: 1.8rem; margin: 28px 0 12px 0;
+        background: #fef5e7; display: inline-block; padding: 0 12px 0 0;
+        border-radius: 0 20px 20px 0;
+    }
+    .physics-section h3 { color: var(--accent-color); margin: 20px 0 10px 0; font-size: 1.4rem; font-weight: 600; }
+    .physics-section h4 { margin: 8px 0 4px 16px; font-weight: 500; line-height: 1.5; color: #2c3e50; }
+    footer {
+        background: var(--primary-color); color: #e2e8f0; text-align: center;
+        padding: 28px 20px; margin-top: 50px; font-size: 0.9rem;
+    }
+    .badge-list { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px; }
+    .badge {
+        background: #ecfdf5; color: #047857; padding: 5px 14px;
+        border-radius: 50px; font-size: 0.85rem; font-weight: 600;
+    }
+    .highlight-block {
+        background: #eef9ff; border-left: 6px solid #2c7da0;
+        padding: 12px 18px; border-radius: 16px; margin: 15px 0;
+    }
+    .formula {
+        font-family: monospace; background: #1f2937; color: #facc15;
+        padding: 4px 10px; border-radius: 12px; display: inline-block; font-weight: bold;
+    }
+    /* 加载动画 */
+    .physics-loader {
+        position: fixed; top:0; left:0; width:100%; height:100%;
+        background: #14222b; display: flex; flex-direction: column;
+        justify-content: center; align-items: center; z-index: 9999;
+        color: white; transition: opacity 0.6s;
+    }
+    .pendulum { position: relative; width: 200px; height: 200px; margin-bottom: 20px; }
+    .string {
+        position: absolute; top:0; left:50%; width:2px; height:100px;
+        background: #cbd5e0; transform-origin: top center;
+        animation: swing 1.8s ease-in-out infinite alternate;
+    }
+    .ball {
+        position: absolute; top:100px; left:50%; width:32px; height:32px;
+        margin-left:-16px; background:#61b84c; border-radius:50%;
+        box-shadow:0 0 12px #7fdb6a;
+    }
+    .shadow {
+        position: absolute; bottom:0; left:50%; width:34px; height:8px;
+        margin-left:-17px; background:rgba(0,0,0,0.4); border-radius:50%;
+        filter:blur(3px); animation: shadowAnim 1.8s ease-in-out infinite alternate;
+    }
+    @keyframes swing { 0% { transform: rotate(28deg); } 100% { transform: rotate(-28deg); } }
+    @keyframes shadowAnim {
+        0% { transform: translateX(18px) scale(0.7); opacity:0.6; }
+        100% { transform: translateX(-18px) scale(0.7); opacity:0.6; }
+    }
+    .loading-text {
+        font-size: 1.3rem; letter-spacing: 2px;
+        background: rgba(0,0,0,0.5); padding: 8px 20px; border-radius: 40px;
+    }
+    body.loaded .physics-loader {
+        opacity: 0; visibility: hidden;
+        transition: opacity 0.5s, visibility 0s 0.5s;
+    }
+    /* 访客弹窗 */
+    .visitor-overlay {
+        position: fixed; top:0; left:0; width:100%; height:100%;
+        background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+        display: flex; align-items: center; justify-content: center;
+        z-index: 99999; animation: fadeIn 0.3s ease;
+    }
+    .visitor-modal {
+        background: #ffffff; max-width: 440px; width: 90%;
+        padding: 32px 28px; border-radius: 48px 20px 48px 20px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.5); text-align: center;
+        border: 1px solid #d0dce8; position: relative;
+        animation: scaleIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .visitor-modal h2 { font-size: 1.7rem; color: #1e2f3c; margin: 8px 0 10px 0; font-weight: 700; }
+    .visitor-modal .count-number {
+        font-size: 4.2rem; font-weight: 800;
+        background: linear-gradient(145deg, #1f3a3f, #2c3e50);
+        -webkit-background-clip: text; background-clip: text;
+        color: transparent; letter-spacing: 3px; line-height: 1.2;
+    }
+    .visitor-modal .sub-text {
+        font-size: 1rem; color: #3d4f5e; margin: 12px 0 20px 0;
+        border-top: 1px solid #e2e8f0; padding-top: 14px;
+    }
+    .visitor-modal .close-btn {
+        background: var(--accent-color); border: none; color: white;
+        padding: 12px 32px; border-radius: 60px; font-weight: 600;
+        font-size: 1rem; cursor: pointer; transition: 0.2s;
+        box-shadow: 0 6px 14px rgba(73, 103, 151, 0.3);
+    }
+    .visitor-modal .close-btn:hover { background: #3a5a7a; transform: scale(1.03); }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+    @keyframes scaleIn { 0% { transform:scale(0.7); opacity:0; } 100% { transform:scale(1); opacity:1; } }
+
+    /* 管理员面板 */
+    .admin-reset-panel {
+        position: fixed; bottom: 100px; right: 24px; z-index: 1001;
+        opacity: 0; visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s; pointer-events: none;
+    }
+    .admin-reset-panel.visible { opacity: 1; visibility: visible; pointer-events: auto; }
+    .admin-reset-btn {
+        background: #8b2e2e; color: white; border: none;
+        padding: 10px 24px; border-radius: 60px; font-weight: bold;
+        font-size: 1rem; cursor: pointer;
+        box-shadow: 0 6px 20px rgba(139, 46, 46, 0.5);
+        transition: 0.2s; display: flex; align-items: center; gap: 8px;
+        border: 1px solid rgba(255, 200, 200, 0.3); backdrop-filter: blur(6px);
+    }
+    .admin-reset-btn:hover { background: #a83232; transform: scale(1.03); }
+    .admin-toast {
+        position: fixed; bottom: 170px; right: 24px;
+        background: #1e2f3c; color: #e2e8f0;
+        padding: 10px 22px; border-radius: 40px; font-size: 0.9rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3); z-index: 1001;
+        opacity: 0; visibility: hidden;
+        transition: opacity 0.4s, visibility 0.4s;
+        border-left: 4px solid #61b84c; font-weight: 500;
+    }
+    .admin-toast.show { opacity: 1; visibility: visible; }
+    @media (max-width: 480px) {
+        .visitor-modal { padding: 24px 16px; }
+        .visitor-modal .count-number { font-size: 3.2rem; }
+        .admin-reset-panel { bottom: 90px; right: 16px; }
+        .admin-reset-btn { padding: 8px 16px; font-size: 0.85rem; }
+        .admin-toast { bottom: 150px; right: 16px; font-size: 0.8rem; padding: 8px 16px; }
+    }
+
+    /* 更多下拉 */
+    .more-dropdown { position: fixed; top: 20px; left: 20px; z-index: 1001; }
+    .more-trigger {
+        background: var(--accent-color); color: white; border: none;
+        padding: 10px 24px; border-radius: 40px; font-weight: bold;
+        font-size: 0.95rem; cursor: pointer;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.2); transition: 0.2s;
+        display: flex; align-items: center; gap: 8px; backdrop-filter: blur(2px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    .more-trigger:hover { background: #3a5a7a; transform: scale(1.02); }
+    .more-dropdown.open .more-trigger i { transform: rotate(180deg); }
+    .more-trigger i { transition: transform 0.25s ease; }
+    .more-panel {
+        position: absolute; top: 58px; left: 0; min-width: 260px;
+        background: #ffffff; border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+        padding: 8px 0; overflow: hidden; opacity: 0; visibility: hidden;
+        transform: translateY(-8px) scale(0.96); transform-origin: top left;
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s 0.2s;
+        pointer-events: none; border: 1px solid #e2e8f0;
+    }
+    .more-dropdown.open .more-panel {
+        opacity: 1; visibility: visible; transform: translateY(0) scale(1);
+        pointer-events: auto;
+        transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.1), visibility 0s 0s;
+    }
+    .more-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; color: #1e2a36; }
+    .more-table th {
+        text-align: left; padding: 14px 18px 8px; font-weight: 600;
+        font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.6px;
+        color: #64748b; border-bottom: 1px solid #e9edf2;
+    }
+    .more-table td { padding: 12px 18px; border-bottom: 1px solid #f1f5f9; }
+    .more-table tr:last-child td { border-bottom: none; }
+    .more-table tr:hover td { background: #f8fafc; }
+    .more-link {
+        display: flex; align-items: center; gap: 12px;
+        text-decoration: none; color: #1e2f3c; font-weight: 500;
+    }
+    .more-link i { font-size: 1.2rem; width: 22px; text-align: center; color: var(--accent-color); }
+    .more-note {
+        padding: 12px 18px 8px; font-size: 0.7rem; color: #94a3b8;
+        border-top: 1px solid #eef2f6; margin-top: 4px;
+        display: flex; align-items: center; gap: 6px; background: #fcfdff;
+    }
+</style>
 </head>
 <body>
 
 <!-- 全屏按钮 -->
 <div class="fullscreen-wrapper">
     <button id="fullscreen-btn" aria-label="全屏切换"><i class="fas fa-expand-arrows-alt"></i> 全屏模式</button>
+</div>
+
+<!-- 云人员计数徽章 -->
+<div class="cloud-counter-badge" id="cloudCounterBadge">
+    <i class="fas fa-cloud-upload-alt"></i>
+    <span>人员计数</span>
+    <span class="count-num" id="cloudCountValue">--</span>
 </div>
 
 <!-- 时钟 -->
@@ -448,15 +319,45 @@
     </div>
 </div>
 
-<!-- 管理员重置面板 (Alt+W 唤出) -->
+<!-- 管理员重置面板 (Alt+W) -->
 <div class="admin-reset-panel" id="adminResetPanel">
     <button class="admin-reset-btn" id="adminResetBtn">
-        <i class="fas fa-undo-alt"></i> 重置访客计数
+        <i class="fas fa-undo-alt"></i> 重置云端计数为 0
     </button>
 </div>
-<!-- 重置提示 toast -->
 <div class="admin-toast" id="adminToast">
-    <i class="fas fa-check-circle" style="color:#61b84c; margin-right:8px;"></i> 访客计数已重置为 0
+    <i class="fas fa-check-circle" style="color:#61b84c; margin-right:8px;"></i> 云端计数已重置为 0
+</div>
+
+<!-- 更多下拉 -->
+<div class="more-dropdown" id="moreDropdown">
+    <button class="more-trigger" id="moreTrigger" aria-expanded="false">
+        <i class="fas fa-chevron-down"></i> 更多
+    </button>
+    <div class="more-panel" id="morePanel">
+        <table class="more-table">
+            <thead><tr><th colspan="2">扩展资源</th></tr></thead>
+            <tbody>
+                <tr><td colspan="2" style="padding:0;">
+                    <a href="https://sdey666.github.io/mb/GuoQing2026.html" class="more-link"
+                       target="_blank" rel="noopener noreferrer"
+                       style="padding:12px 18px; display:flex; align-items:center; gap:12px; text-decoration:none; color:#1e2f3c; font-weight:500;">
+                        <i class="fas fa-flag-checkered"></i>
+                        <span>GuoQing2026 · 国庆专题</span>
+                        <i class="fas fa-external-link-alt" style="margin-left:auto; font-size:0.7rem; color:#94a3b8;"></i>
+                    </a>
+                </td></tr>
+                <tr><td colspan="2" style="padding:0;">
+                    <a href="#" class="more-link"
+                       style="padding:12px 18px; display:flex; align-items:center; gap:12px; text-decoration:none; color:#94a3b8; font-weight:400; pointer-events:none; opacity:0.7;">
+                        <i class="fas fa-clock"></i>
+                        <span>更多资源 · 即将上线</span>
+                    </a>
+                </td></tr>
+            </tbody>
+        </table>
+        <div class="more-note"><i class="fas fa-info-circle"></i> 点击链接将在新标签页打开</div>
+    </div>
 </div>
 
 <!-- 加载动画 -->
@@ -488,135 +389,120 @@
 
 <div class="container">
     <div class="main-content">
-        <div class="content-box"><h2><i class="fas fa-database"></i>版本</h2><p><strong>v3.1.5</strong></p><p>涵盖声、光、热、力、电、磁、能</p></div>
+        <div class="content-box"><h2><i class="fas fa-database"></i>版本</h2><p><strong>v3.2.0</strong></p><p>涵盖声、光、热、力、电、磁、能</p></div>
         <div class="content-box"><h2><i class="fas fa-chalkboard-teacher"></i>宗旨</h2><p>认真，求实，专注，用心</p></div>
         <div class="content-box"><h2><i class="fas fa-users"></i>团队</h2><p>MB实验室系统建设与开发组</p></div>
     </div>
-    
+
     <section id="physics" class="physics-section">
-        <!-- 力学 -->
         <article id="mechanics">
             <h2>一、力学</h2>
             <h3>机械运动与参照物</h3>
             <h4>• 机械运动：物体位置随时间的变化。参照物：判断运动的标准物体。运动和静止相对性。</h4>
             <h3>速度与平均速度</h3>
-            <h4>• 速度公式：<span class="formula">v=s/t</span>，单位m/s，1m/s=3.6km/h。匀速直线运动与变速运动，平均速度粗略描述。</h4>
+            <h4>• 速度公式：<span class="formula">v=s/t</span>，单位m/s，1m/s=3.6km/h。</h4>
             <h3>质量与密度</h3>
-            <h4>• 质量(m)：物体所含物质的多少，国际单位kg。密度<span class="formula">ρ=m/V</span>，单位kg/m³，鉴别物质，测量方法。</h4>
+            <h4>• 质量(m)：国际单位kg。密度<span class="formula">ρ=m/V</span>，单位kg/m³。</h4>
             <h3>力与相互作用</h3>
-            <h4>• 力是物体对物体的作用，单位牛顿(N)。力的作用效果：形变 & 改变运动状态。相互作用力：大小相等、方向相反、同一直线、不同物体。</h4>
+            <h4>• 力是物体对物体的作用，单位牛顿(N)。相互作用力：大小相等、方向相反、同一直线、不同物体。</h4>
             <h3>重力、弹力、摩擦力</h3>
-            <h4>• 重力G = mg (g=9.8N/kg)；弹力：发生弹性形变产生；摩擦力：滑动摩擦力与压力、粗糙程度有关，<span class="formula">f = μN</span> (初中定性)。静摩擦力与动摩擦，增大减小摩擦方法。</h4>
+            <h4>• 重力G = mg (g=9.8N/kg)；滑动摩擦力与压力、粗糙程度有关。</h4>
             <h3>牛顿第一定律 与 惯性</h3>
-            <h4>• 一切物体在没有受到外力作用时，总保持静止或匀速直线运动状态。惯性是物体固有属性，只与质量有关。</h4>
-            <h3>二力平衡 与 合力</h3>
-            <h4>• 同一直线二力合成，平衡条件：大小相等、方向相反、同一直线、同一物体。</h4>
+            <h4>• 一切物体在没有受到外力作用时，总保持静止或匀速直线运动状态。</h4>
+            <h3>二力平衡</h3>
+            <h4>• 平衡条件：大小相等、方向相反、同一直线、同一物体。</h4>
             <h3>压强</h3>
-            <h4>• 压强<span class="formula">p=F/S</span>，单位帕斯卡(Pa)。增大/减小压强方法。液体压强p=ρgh，大气压强(托里拆利实验)，标准大气压1.013×10⁵Pa。</h4>
+            <h4>• 压强<span class="formula">p=F/S</span>，单位帕斯卡(Pa)。液体压强p=ρgh，标准大气压1.013×10⁵Pa。</h4>
             <h3>浮力</h3>
-            <h4>• 浮力产生原因：上下表面压力差。阿基米德原理：<span class="formula">F浮=G排=ρ液gV排</span>，物体的浮沉条件（漂浮、悬浮、沉底），密度计原理。</h4>
-            <h3>简单机械：杠杆、滑轮、斜面</h3>
-            <h4>• 杠杆平衡条件：F₁·L₁=F₂·L₂；定滑轮、动滑轮、滑轮组。机械效率η=W有/W总，斜面省力原理。</h4>
+            <h4>• 阿基米德原理：<span class="formula">F浮=G排=ρ液gV排</span>。</h4>
+            <h3>简单机械</h3>
+            <h4>• 杠杆平衡条件：F₁·L₁=F₂·L₂；机械效率η=W有/W总。</h4>
             <h3>功和功率 机械能</h3>
-            <h4>• 功W=F·s(J)，功率<span class="formula">P=W/t=Fv</span>。动能、重力势能、弹性势能，机械能守恒初步（忽略阻力）。</h4>
-            <div class="highlight-block"><i class="fas fa-lightbulb"></i> 核心公式：速度v=s/t，密度ρ=m/V，重力G=mg，压强p=F/S，浮力F浮=ρ液gV排，杠杆平衡，功率P=W/t。</div>
+            <h4>• 功W=F·s(J)，功率<span class="formula">P=W/t=Fv</span>。</h4>
+            <div class="highlight-block"><i class="fas fa-lightbulb"></i> 核心公式：v=s/t，ρ=m/V，G=mg，p=F/S，F浮=ρ液gV排，P=W/t。</div>
         </article>
 
-        <!-- 声现象 -->
         <article id="acoustics">
             <h2>二、声现象</h2>
             <h3>声音的产生与传播</h3>
-            <h4>• 振动产生声音，介质（固、液、气）传播，真空不能传声。声速：空气340m/s (15℃)，固体液体中更快。</h4>
+            <h4>• 振动产生声音，介质传播，真空不能传声。声速：空气340m/s (15℃)。</h4>
             <h3>声音三特性</h3>
-            <h4>• <strong>音调</strong>：频率决定，频率高音调高；<strong>响度</strong>：振幅决定，振幅大响度大；<strong>音色</strong>：材料与结构，辨别不同乐器。</h4>
+            <h4>• <strong>音调</strong>：频率决定；<strong>响度</strong>：振幅决定；<strong>音色</strong>：材料与结构。</h4>
             <h3>超声波与次声波</h3>
-            <h4>• 高于20000Hz超声波（B超、声呐），低于20Hz次声波（地震预警）。</h4>
+            <h4>• 高于20000Hz超声波，低于20Hz次声波。</h4>
             <h3>噪声防治</h3>
-            <h4>• 声源处减弱、传播过程中减弱、人耳处减弱。</h4>
+            <h4>• 声源处、传播过程中、人耳处减弱。</h4>
         </article>
 
-        <!-- 物态变化 -->
         <article id="thermodynamics">
             <h2>三、物态变化</h2>
             <h3>温度与温度计</h3>
-            <h4>• 摄氏温度规定，液体热胀冷缩原理，使用规则。</h4>
+            <h4>• 摄氏温度规定，液体热胀冷缩原理。</h4>
             <h3>六种物态变化</h3>
-            <h4>• <strong>熔化</strong>：固态→液态（吸热）如冰融水；<strong>凝固</strong>：液态→固态（放热）如水结冰。</h4>
-            <h4>• <strong>汽化</strong>：液态→气态（吸热）蒸发与沸腾；沸点与气压关系。<strong>液化</strong>：气→液（放热）露珠、白气。</h4>
-            <h4>• <strong>升华</strong>：固→气（吸热）干冰升华、冰冻衣服变干。<strong>凝华</strong>：气→固（放热）霜、雾凇。</h4>
+            <h4>• 熔化(吸热)、凝固(放热)、汽化(吸热)、液化(放热)、升华(吸热)、凝华(放热)。</h4>
             <h3>晶体与非晶体</h3>
-            <h4>• 晶体有固定熔点（如海波、冰），非晶体无固定熔点（玻璃、蜡）。</h4>
+            <h4>• 晶体有固定熔点，非晶体无固定熔点。</h4>
         </article>
 
-        <!-- 光学 -->
         <article id="optics">
             <h2>四、光学</h2>
             <h3>光的直线传播</h3>
-            <h4>• 同种均匀介质沿直线传播，例子：小孔成像、日食月食、影子。光速真空中3×10⁸m/s。</h4>
+            <h4>• 同种均匀介质沿直线传播，光速真空中3×10⁸m/s。</h4>
             <h3>光的反射</h3>
-            <h4>• 反射定律：三线共面，两线分居，反射角等于入射角。镜面反射与漫反射。平面镜成像：等大、等距、虚像、对称。</h4>
+            <h4>• 反射定律：三线共面，两线分居，反射角等于入射角。</h4>
             <h3>光的折射</h3>
-            <h4>• 光从空气斜射入水中折射角＜入射角；池水变浅、筷子弯折。色散：牛顿三棱镜分解七色光。</h4>
+            <h4>• 光从空气斜射入水中折射角＜入射角。</h4>
             <h3>透镜及其应用</h3>
-            <h4>• 凸透镜会聚光线，凹透镜发散光线。凸透镜成像规律：u>2f成倒立缩小实像(f&lt;v&lt;2f)；f&lt;u&lt;2f倒立放大实像(v>2f)；u&lt;f正立放大虚像(同侧)。照相机、投影仪、放大镜。</h4>
+            <h4>• 凸透镜成像规律：u>2f倒立缩小实像；f&lt;u&lt;2f倒立放大实像；u&lt;f正立放大虚像。</h4>
             <h3>眼睛与光学仪器</h3>
-            <h4>• 近视眼（凹透镜矫正），远视眼（凸透镜矫正），显微镜和望远镜基本原理。</h4>
+            <h4>• 近视眼（凹透镜矫正），远视眼（凸透镜矫正）。</h4>
         </article>
 
-        <!-- 电学 -->
         <article id="electricity">
             <h2>五、电流和电路 · 电学核心</h2>
             <h3>电荷与电流</h3>
-            <h4>• 两种电荷：正电荷（丝绸玻璃棒）、负电荷（毛皮橡胶棒）。同种相斥异种相吸。电流方向：正电荷定向移动方向，金属中自由电子反向移动。</h4>
+            <h4>• 两种电荷，同种相斥异种相吸。电流方向：正电荷定向移动方向。</h4>
             <h3>电路组成</h3>
-            <h4>• 电源、用电器、开关、导线。通路、断路、短路（危险）。串联电流路径唯一，并联互不影响。</h4>
+            <h4>• 电源、用电器、开关、导线。串联电流路径唯一，并联互不影响。</h4>
             <h3>电流强度</h3>
-            <h4>• 电流I单位安培(A)，测量用电流表（串联，正进负出）。公式I=Q/t。</h4>
+            <h4>• 电流I单位安培(A)，公式I=Q/t。</h4>
             <h3>电压</h3>
-            <h4>• 电压U单位伏特(V)，常见电压：一节干电池1.5V，家庭电路220V。电压表（并联测量）。</h4>
+            <h4>• 电压U单位伏特(V)，一节干电池1.5V，家庭电路220V。</h4>
             <h3>电阻</h3>
-            <h4>• 电阻R单位欧姆(Ω)，导体电阻与材料、长度、横截面积、温度有关。变阻器（滑动变阻器原理改变电阻丝长度）。</h4>
+            <h4>• 电阻R单位欧姆(Ω)，与材料、长度、横截面积、温度有关。</h4>
             <h3>欧姆定律（核心）</h3>
-            <h4>• <span class="formula">I=U/R</span>，导体中的电流与两端电压成正比，与电阻成反比。串并联电阻规律：串联R总=R1+R2，并联1/R总=1/R1+1/R2。</h4>
+            <h4>• <span class="formula">I=U/R</span>，串联R总=R1+R2，并联1/R总=1/R1+1/R2。</h4>
             <h3>电功与电功率</h3>
-            <h4>• 电功W=UIt(J)，常用单位千瓦时(度)。电功率<span class="formula">P=UI=I²R=U²/R</span>，额定电压与实际功率。焦耳定律：Q=I²Rt(电热)。</h4>
-            <div class="highlight-block">家庭电路：火线零线地线，保险丝（电阻大熔点低），安全用电原则：不接触低压带电体，不靠近高压带电体。</div>
+            <h4>• 电功W=UIt(J)，电功率<span class="formula">P=UI=I²R=U²/R</span>，焦耳定律Q=I²Rt。</h4>
+            <div class="highlight-block">家庭电路：火线零线地线，安全用电原则：不接触低压带电体，不靠近高压带电体。</div>
         </article>
 
-        <!-- 电与磁 -->
         <article id="magnetism">
             <h2>六、电与磁</h2>
             <h3>磁现象</h3>
-            <h4>• 磁体两极：N极和S极，同名相斥异名相吸。磁化。地磁场（地理南极附近地磁北极）。</h4>
+            <h4>• 磁体两极：N极和S极，同名相斥异名相吸。</h4>
             <h3>电流的磁效应</h3>
-            <h4>• 奥斯特实验：通电导线周围存在磁场。通电螺线管磁场类似条形磁铁，安培定则（右手螺旋定则）判断极性。</h4>
+            <h4>• 奥斯特实验：通电导线周围存在磁场。安培定则判断极性。</h4>
             <h3>电磁铁与电磁继电器</h3>
-            <h4>• 电磁铁磁性强弱与电流大小、线圈匝数有关，应用：电磁起重机、电铃。</h4>
+            <h4>• 电磁铁磁性强弱与电流大小、线圈匝数有关。</h4>
             <h3>磁场对电流的作用</h3>
-            <h4>• 电动机原理：通电导体在磁场中受力，将电能转化为机械能。换向器使线圈持续转动。</h4>
+            <h4>• 电动机原理：通电导体在磁场中受力，将电能转化为机械能。</h4>
             <h3>电磁感应</h3>
-            <h4>• 法拉第发现：闭合电路一部分导体切割磁感线产生感应电流。发电机原理，机械能→电能。感应电流方向与磁场方向和切割方向有关。</h4>
+            <h4>• 法拉第发现：闭合电路一部分导体切割磁感线产生感应电流。</h4>
         </article>
 
-        <!-- 能源 -->
         <article id="energy">
             <h2>七、能源与可持续发展</h2>
             <h3>能源分类</h3>
-            <h4>• 一次能源（煤、石油、天然气、太阳能、风能），二次能源（电能）。可再生能源 vs 不可再生能源。</h4>
+            <h4>• 一次能源，二次能源。可再生能源 vs 不可再生能源。</h4>
             <h3>核能</h3>
-            <h4>• 裂变（原子弹、核电站），聚变（氢弹、太阳）。</h4>
+            <h4>• 裂变（核电站），聚变（太阳）。</h4>
             <h3>能量守恒定律</h3>
-            <h4>• 能量既不会凭空消失也不会凭空产生，只会转移或转化，总量保持不变。</h4>
+            <h4>• 能量既不会凭空消失也不会凭空产生，只会转移或转化。</h4>
             <h3>热机</h3>
-            <h4>• 四冲程汽油机：吸气、压缩、做功、排气冲程。热机效率，燃料热值q，Q放=mq。</h4>
-            <div class="highlight-block">初中物理完整考点覆盖 —— 适用于中考复习&竞赛预备，系统建设持续更新。</div>
+            <h4>• 四冲程汽油机：吸气、压缩、做功、排气冲程。</h4>
+            <div class="highlight-block">初中物理完整考点覆盖 —— 适用于中考复习&竞赛预备。</div>
         </article>
-
-        <div style="background:#eef2fa; border-radius:24px; padding:18px; margin-top:30px; text-align:center;">
-            <h3 style="color:#1e4a6e;"><i class="fas fa-rocket"></i> 物理竞赛预备模块 · 力学深化 & 电学拓展</h3>
-            <p>系统建设与开发组正在筹备：静力学进阶、复杂电路分析、能量综合问题，敬请期待</p>
-            <div class="badge-list"><span class="badge">力学竞赛专题</span><span class="badge">电磁感应综合</span><span class="badge">光学设计与实验</span><span class="badge">热学综合</span></div>
-        </div>
     </section>
 </div>
 
@@ -625,850 +511,285 @@
     <p>© 2023-2026 MB实验室</p>
 </footer>
 
-<!-- ============================================================ -->
-<!-- 访客计数 (本地存储，无API) + 管理员重置功能                   -->
-<!-- ============================================================ -->
+<!-- ============================================================
+     Supabase 云计数模块
+     ============================================================ -->
 <script>
-    (function visitorCounterLocal() {
-        const STORAGE_KEY = 'mb_visitor_count';
+(function supabaseCounter() {
+    'use strict';
 
-        // 读取当前计数（不增加）
-        function getCurrentCount() {
-            let count = localStorage.getItem(STORAGE_KEY);
-            if (count === null) {
-                return 0; // 初始状态
+    // ============================================================
+    // 【请修改 1/3】你的 Supabase anon 公钥
+    //   位置：Supabase 后台 → Settings → API → Project API keys
+    //   复制 anon 那一行的 key（很长的一串）
+    // ============================================================
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwYnByenJlbXpnbWpuaGpmd29yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2MzE2NTksImV4cCI6MjA5ODIwNzY1OX0.JT_c4syLtO6xhy0TrBPfEEWO2QFQe_tmbIYHb1EpOa8';
+
+    // ============================================================
+    // 【请修改 2/3】表名（如果你建表时没用 counter，请改这里）
+    // ============================================================
+    const TABLE_NAME = 'light_counts';
+
+    // ============================================================
+    // 【请修改 3/3】字段名（如果字段不是 count，请改这里）
+    // ============================================================
+    const COUNT_COLUMN = 'count';
+
+    // 固定：Supabase URL 和 行 ID（我们只存一行，id=1）
+    const SUPABASE_URL = 'https://gpbprzremzgmjnhjfwor.supabase.co';
+    const ROW_ID = 1;
+
+    // ---------- 内部工具 ----------
+    const headers = {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json'
+    };
+
+    function updateBadge(n) {
+        const el = document.getElementById('cloudCountValue');
+        if (el) el.textContent = n;
+    }
+    function showError(msg) {
+        const el = document.getElementById('cloudCountValue');
+        if (el) { el.textContent = '⚡'; el.title = msg || '云计数不可用'; }
+        console.warn('[云计数]', msg);
+    }
+
+    // 读取当前计数
+    async function fetchCount() {
+        try {
+            const url = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?id=eq.${ROW_ID}&select=${COUNT_COLUMN}`;
+            const res = await fetch(url, { headers });
+            if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+                return Number(data[0][COUNT_COLUMN]);
             }
-            return parseInt(count, 10) || 0;
+            throw new Error('未找到 id=1 的行，请检查是否插入了初始数据');
+        } catch (e) {
+            showError(e.message);
+            return null;
         }
+    }
 
-        // 增加访客计数并返回新值
-        function incrementAndGetCount() {
-            let current = getCurrentCount();
-            let newCount = current + 1;
-            localStorage.setItem(STORAGE_KEY, newCount);
-            return newCount;
-        }
-
-        // 重置计数为 0
-        function resetCount() {
-            localStorage.setItem(STORAGE_KEY, 0);
-        }
-
-        // 弹窗显示 (访客序号)
-        function showVisitorPopup(count) {
-            const old = document.querySelector('.visitor-overlay');
-            if (old) old.remove();
-
-            const overlay = document.createElement('div');
-            overlay.className = 'visitor-overlay';
-            overlay.innerHTML = `
-                <div class="visitor-modal">
-                    <h2>欢迎访问 MB实验室</h2>
-                    <div class="count-number">${count}</div>
-                    <div class="sub-text">你是第 <strong>${count}</strong> 位访客</div>
-                    <button class="close-btn" id="closeVisitorPopup"><i class="fas fa-check-circle"></i> 好的 </button>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-
-            document.getElementById('closeVisitorPopup').addEventListener('click', function() {
-                overlay.remove();
+    // 更新计数为指定值
+    async function setCount(value) {
+        try {
+            const url = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?id=eq.${ROW_ID}`;
+            const res = await fetch(url, {
+                method: 'PATCH',
+                headers: { ...headers, 'Prefer': 'return=representation' },
+                body: JSON.stringify({ [COUNT_COLUMN]: value })
             });
-            overlay.addEventListener('click', function(e) {
-                if (e.target === overlay) overlay.remove();
-            });
+            if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+                return Number(data[0][COUNT_COLUMN]);
+            }
+            return value;
+        } catch (e) {
+            showError(e.message);
+            return null;
         }
+    }
 
-        // 页面加载后显示访客计数弹窗（自动+1）
-        window.addEventListener('load', function() {
-            setTimeout(() => {
-                const newCount = incrementAndGetCount();
-                showVisitorPopup(newCount);
-            }, 400);
-        });
+    // 页面加载：读 → +1 → 写 → 显示
+    async function initAndIncrement() {
+        const current = await fetchCount();
+        if (current === null) return;
+        const newValue = current + 1;
+        const finalValue = await setCount(newValue);
+        if (finalValue !== null) updateBadge(finalValue);
+    }
 
-        // ===== 管理员重置功能 (Alt+W) =====
-        const adminPanel = document.getElementById('adminResetPanel');
-        const adminResetBtn = document.getElementById('adminResetBtn');
-        const adminToast = document.getElementById('adminToast');
-        let toastTimer = null;
+    // 暴露给管理员重置按钮使用
+    window.__setCloudCount = setCount;
+    window.__fetchCloudCount = fetchCount;
+    window.__updateCloudBadge = updateBadge;
 
-        // 显示重置提示 toast
-        function showAdminToast() {
-            if (toastTimer) clearTimeout(toastTimer);
-            adminToast.classList.add('show');
-            toastTimer = setTimeout(() => {
-                adminToast.classList.remove('show');
-            }, 2200);
-        }
+    // 启动
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAndIncrement);
+    } else {
+        initAndIncrement();
+    }
 
-        // 隐藏管理员面板（点击按钮后自动隐藏，或点击其他地方）
-        function hideAdminPanel() {
-            adminPanel.classList.remove('visible');
-        }
-
-        // Alt+W 唤出/隐藏管理员面板
-        document.addEventListener('keydown', function(e) {
-            // Alt + W (keyCode 87 或 key === 'w' / 'W')
-            if (e.altKey && (e.key === 'w' || e.key === 'W' || e.keyCode === 87)) {
-                e.preventDefault(); // 避免浏览器可能默认行为
-                adminPanel.classList.toggle('visible');
-                // 如果变为可见，加一点小反馈（可选）
-                if (adminPanel.classList.contains('visible')) {
-                    // 可聚焦按钮 (无障碍)
-                    adminResetBtn.focus();
-                }
-            }
-            // 按 Escape 可以关闭面板
-            if (e.key === 'Escape' && adminPanel.classList.contains('visible')) {
-                hideAdminPanel();
-            }
-        });
-
-        // 重置按钮点击处理
-        adminResetBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            resetCount();                 // localStorage 中 count 置 0
-            showAdminToast();             // 显示提示
-            hideAdminPanel();             // 隐藏面板
-
-            // 可选：如果当前有访客弹窗，将其更新为显示“已重置”或关闭？为保持界面干净，关闭现有弹窗
-            const existingOverlay = document.querySelector('.visitor-overlay');
-            if (existingOverlay) {
-                existingOverlay.remove();
-            }
-            // 也可以立即刷新一个弹窗显示 0，但为了不打扰，选择不显示
-        });
-
-        // 点击面板外部关闭 (点击页面其他地方)
-        document.addEventListener('click', function(e) {
-            if (adminPanel.classList.contains('visible')) {
-                // 如果点击的不是面板内部，也不是重置按钮，则关闭面板
-                if (!adminPanel.contains(e.target) && e.target !== adminResetBtn) {
-                    hideAdminPanel();
-                }
-            }
-        });
-
-        // 防止面板内点击冒泡导致关闭
-        adminPanel.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-
-        // 额外：如果用户点击重置按钮后，可能想再次打开弹窗？不处理，重置计数后下次刷新页面就会从1开始
-        // 但注意：重置后 localStorage 为 0，下次刷新页面会从 1 开始。
-
-        // 为方便测试，把一些方法暴露到 window（非必须）
-        window.__mbResetVisitorCount = resetCount;
-    })();
+    // 每 30 秒刷新显示（只读，不 +1）
+    setInterval(async () => {
+        const c = await fetchCount();
+        if (c !== null) updateBadge(c);
+    }, 30000);
+})();
 </script>
 
-<!-- 时钟脚本 -->
+<!-- ============================================================
+     本地访客弹窗（每次刷新 +1）+ 管理员重置面板
+     ============================================================ -->
 <script>
-    function updatePhysicsClock() {
+(function localVisitor() {
+    'use strict';
+    const STORAGE_KEY = 'mb_local_visits';
+
+    function getLocal() {
+        const v = localStorage.getItem(STORAGE_KEY);
+        return v === null ? 0 : (parseInt(v, 10) || 0);
+    }
+    function incLocal() {
+        const n = getLocal() + 1;
+        localStorage.setItem(STORAGE_KEY, n);
+        return n;
+    }
+
+    function showPopup(count) {
+        const old = document.querySelector('.visitor-overlay');
+        if (old) old.remove();
+        const overlay = document.createElement('div');
+        overlay.className = 'visitor-overlay';
+        overlay.innerHTML = `
+            <div class="visitor-modal">
+                <h2>欢迎访问 MB实验室</h2>
+                <div class="count-number">${count}</div>
+                <div class="sub-text">你是本机第 <strong>${count}</strong> 次访问</div>
+                <button class="close-btn" id="closeVisitorPopup"><i class="fas fa-check-circle"></i> 好的</button>
+            </div>`;
+        document.body.appendChild(overlay);
+        document.getElementById('closeVisitorPopup').onclick = () => overlay.remove();
+        overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+    }
+
+    window.addEventListener('load', () => {
+        setTimeout(() => showPopup(incLocal()), 400);
+    });
+
+    // 管理员面板 Alt+W
+    const panel = document.getElementById('adminResetPanel');
+    const btn = document.getElementById('adminResetBtn');
+    const toast = document.getElementById('adminToast');
+    let t = null;
+    function showToast() {
+        if (t) clearTimeout(t);
+        toast.classList.add('show');
+        t = setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+    function hide() { panel.classList.remove('visible'); }
+
+    document.addEventListener('keydown', e => {
+        if (e.altKey && (e.key === 'w' || e.key === 'W' || e.keyCode === 87)) {
+            e.preventDefault();
+            panel.classList.toggle('visible');
+            if (panel.classList.contains('visible')) btn.focus();
+        }
+        if (e.key === 'Escape' && panel.classList.contains('visible')) hide();
+    });
+
+    btn.addEventListener('click', async e => {
+        e.stopPropagation();
+        // 清本地计数
+        localStorage.setItem(STORAGE_KEY, 0);
+        // 清云端计数（如果已初始化）
+        if (window.__setCloudCount) {
+            const v = await window.__setCloudCount(0);
+            if (v !== null && window.__updateCloudBadge) window.__updateCloudBadge(v);
+        }
+        showToast();
+        hide();
+        const overlay = document.querySelector('.visitor-overlay');
+        if (overlay) overlay.remove();
+    });
+
+    document.addEventListener('click', e => {
+        if (panel.classList.contains('visible')
+            && !panel.contains(e.target) && e.target !== btn) hide();
+    });
+    panel.addEventListener('click', e => e.stopPropagation());
+})();
+</script>
+
+<!-- 时钟 -->
+<script>
+(function clock() {
+    function tick() {
         const now = new Date();
-        const hours = String(now.getHours()).padStart(2,'0');
-        const minutes = String(now.getMinutes()).padStart(2,'0');
-        const seconds = String(now.getSeconds()).padStart(2,'0');
-        document.getElementById('hour-tens').textContent = hours[0];
-        document.getElementById('hour-ones').textContent = hours[1];
-        document.getElementById('min-tens').textContent = minutes[0];
-        document.getElementById('min-ones').textContent = minutes[1];
-        document.getElementById('sec-tens').textContent = seconds[0];
-        document.getElementById('sec-ones').textContent = seconds[1];
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const s = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('hour-tens').textContent = h[0];
+        document.getElementById('hour-ones').textContent = h[1];
+        document.getElementById('min-tens').textContent = m[0];
+        document.getElementById('min-ones').textContent = m[1];
+        document.getElementById('sec-tens').textContent = s[0];
+        document.getElementById('sec-ones').textContent = s[1];
     }
-    updatePhysicsClock();
-    setInterval(updatePhysicsClock, 1000);
+    tick();
+    setInterval(tick, 1000);
+})();
 </script>
 
-<!-- 全屏逻辑 -->
+<!-- 全屏 -->
 <script>
-    function requestFullscreen() { const de = document.documentElement; de.requestFullscreen?.() || de.webkitRequestFullscreen?.() || de.msRequestFullscreen?.(); }
-    function exitFullscreen() { document.exitFullscreen?.() || document.webkitExitFullscreen?.() || document.msExitFullscreen?.(); }
-    function isFullscreen() { return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement); }
-    const fullBtn = document.getElementById('fullscreen-btn');
-    if(fullBtn) {
-        fullBtn.addEventListener('click',()=>{ isFullscreen() ? exitFullscreen() : requestFullscreen(); });
-        document.addEventListener('fullscreenchange', () => {
-            if(isFullscreen()) fullBtn.innerHTML = '<i class="fas fa-compress"></i> 窗口模式';
-            else fullBtn.innerHTML = '<i class="fas fa-expand-arrows-alt"></i> 全屏模式';
-        });
+(function fs() {
+    const de = document.documentElement;
+    function isFs() {
+        return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
     }
-</script>
-
-<script>
-    // ============================================================
-    // 禁止访问源代码 / 禁止开发者工具模块
-    // 说明：此模块通过多种方式增加查看/调试源代码的难度
-    // 注意：无法100%阻止，但可阻挡大部分普通用户
-    // ============================================================
-    (function() {
-        'use strict';
-
-        // 1. 禁用右键菜单
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-            // 可选：显示一个轻提示（不干扰页面）
-            // console.log('右键菜单已禁用');
-            return false;
-        }, { capture: true });
-
-        // 2. 禁用开发者工具快捷键 & 查看源代码快捷键
-        document.addEventListener('keydown', function(e) {
-            // 阻止 F12
-            if (e.key === 'F12' || e.keyCode === 123) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-
-            // 阻止 Ctrl+Shift+I (开发者工具)
-            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-
-            // 阻止 Ctrl+Shift+J (控制台)
-            if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-
-            // 阻止 Ctrl+Shift+C (审查元素)
-            if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-
-            // 阻止 Ctrl+U (查看源代码)
-            if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-
-            // 阻止 Ctrl+S (保存页面)
-            if (e.ctrlKey && (e.key === 'S' || e.key === 's' || e.keyCode === 83)) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-
-            // 阻止 Alt+W 冲突? 原功能保留，不干扰
-            // 阻止 Ctrl+Shift+K (Firefox 控制台)
-            if (e.ctrlKey && e.shiftKey && (e.key === 'K' || e.key === 'k' || e.keyCode === 75)) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-
-            // 阻止 Ctrl+Shift+E (网络面板)
-            if (e.ctrlKey && e.shiftKey && (e.key === 'E' || e.key === 'e' || e.keyCode === 69)) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-        }, { capture: true });
-
-        // 3. 开发者工具检测（基于调试器时间差 / 窗口尺寸差异）
-        //    当检测到开发者工具可能打开时，用遮罩覆盖页面并提示
-        let devtoolsDetected = false;
-        const overlayId = 'devtools-block-overlay';
-
-        // 创建遮罩元素（隐藏，检测到才显示）
-        function createOverlay() {
-            if (document.getElementById(overlayId)) return;
-
-            const overlay = document.createElement('div');
-            overlay.id = overlayId;
-            overlay.style.cssText = `
-                position: fixed;
-                inset: 0;
-                z-index: 999999;
-                background: #1a0a0a;
-                display: none;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                color: #ffe9b0;
-                font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
-                text-align: center;
-                padding: 40px;
-                letter-spacing: 2px;
-                pointer-events: all;
-                user-select: none;
-            `;
-            overlay.innerHTML = `
-                <div style="font-size: 4rem; margin-bottom: 20px;"></div>
-                <div style="font-size: 2rem; font-weight: 800; text-shadow: 0 4px 0 #9e0000, 0 8px 18px #ffaa00;">
-                    请关闭开发者工具
-                </div>
-                <div style="font-size: 1.2rem; margin-top: 16px; color: #ffcc88; max-width: 600px; line-height: 1.8;">
-                    本页面禁止查看或调试源代码。<br>
-                    请关闭浏览器开发者工具后刷新页面继续访问。
-                </div>
-                <div style="font-size: 0.9rem; margin-top: 30px; opacity: 0.7;">
-                    感谢配合 MB实验室
-                </div>
-            `;
-            document.body.appendChild(overlay);
-        }
-
-        // 显示遮罩
-        function showOverlay() {
-            if (devtoolsDetected) return;
-            devtoolsDetected = true;
-            createOverlay();
-            const overlay = document.getElementById(overlayId);
-            if (overlay) {
-                overlay.style.display = 'flex';
-            }
-            // 同时禁用滚动
-            document.body.style.overflow = 'hidden';
-        }
-
-        // 隐藏遮罩（如果开发者工具关闭）
-        function hideOverlay() {
-            if (!devtoolsDetected) return;
-            devtoolsDetected = false;
-            const overlay = document.getElementById(overlayId);
-            if (overlay) {
-                overlay.style.display = 'none';
-            }
-            document.body.style.overflow = '';
-        }
-
-        // 检测方式1：窗口尺寸差异（打开开发者工具通常会改变窗口内尺寸）
-        function checkWindowSize() {
-            const widthThreshold = 160;  // 宽度差阈值
-            const heightThreshold = 160; // 高度差阈值
-
-            const widthDiff = window.outerWidth - window.innerWidth;
-            const heightDiff = window.outerHeight - window.innerHeight;
-
-            if (widthDiff > widthThreshold || heightDiff > heightThreshold) {
-                showOverlay();
-            } else {
-                // 如果之前检测到，现在关闭了，则隐藏
-                if (devtoolsDetected) {
-                    hideOverlay();
-                }
-            }
-        }
-
-        // 检测方式2：调试器时间差检测（通过 debugger 语句）
-        function checkDebugger() {
-            const startTime = performance.now();
-            // 使用 debugger 语句，如果开发者工具打开，会在此处暂停
-            // 但为了不真正打断用户，我们使用 setInterval + debugger 的变体？
-            // 更好的方式：利用 console.log 的 getter 或 toString 检测
-            // 这里使用一个经典的检测方法：重写 toString 并检查
-            // 但为了避免误伤，我们仅作为辅助
-
-            // 简单方式：如果开发者工具打开，performance.now() 会因为断点而出现大延迟
-            // 但 debugger 会实际暂停，影响体验。我们改用基于 console 的检测：
-            const element = new Image();
-            Object.defineProperty(element, 'id', {
-                get: function() {
-                    // 当开发者工具控制台尝试打印此元素时触发
-                    showOverlay();
-                    return 'devtools-detected';
-                }
-            });
-            // 在控制台输出这个元素会触发 getter，但普通用户不会输出
-            // 我们主动 console.log 一下？会干扰控制台。不主动输出。
-            // 更好的方案：使用正则检测 /devtools/i 等
-        }
-
-        // 实际可用的检测：使用 devtools-detect 库的简化版（基于窗口尺寸 + 定时器）
-        // 以及基于 debugger 的检测（但会暂停，不适合）
-
-        // 我们采用窗口尺寸检测 + 一个隐藏的 debugger 定时检测（延迟检测，不暂停主线程）
-        // 使用 setInterval 周期性检查窗口尺寸
-
-        // 4. 额外的防护：检测到控制台打开时，重定向或显示遮罩
-        //    通过 console.log 的 getter 检测（在控制台打开时，可能会触发某些属性的读取）
-        //    但容易误伤，暂不使用。
-
-        // 启动窗口尺寸检测
-        let sizeCheckInterval = null;
-
-        function startSizeDetection() {
-            if (sizeCheckInterval) clearInterval(sizeCheckInterval);
-            sizeCheckInterval = setInterval(checkWindowSize, 800);
-            // 立即执行一次
-            checkWindowSize();
-        }
-
-        // 当窗口大小改变时也检测
-        window.addEventListener('resize', function() {
-            checkWindowSize();
-        });
-
-        // 页面加载完成后启动检测
-        if (document.readyState === 'complete') {
-            startSizeDetection();
+    const btn = document.getElementById('fullscreen-btn');
+    btn.addEventListener('click', () => {
+        if (isFs()) {
+            (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document);
         } else {
-            window.addEventListener('load', startSizeDetection);
+            (de.requestFullscreen || de.webkitRequestFullscreen || de.msRequestFullscreen).call(de);
         }
+    });
+    document.addEventListener('fullscreenchange', () => {
+        btn.innerHTML = isFs()
+            ? '<i class="fas fa-compress"></i> 窗口模式'
+            : '<i class="fas fa-expand-arrows-alt"></i> 全屏模式';
+    });
+})();
+</script>
 
-        // 5. 禁用文本选择（可选，防止复制源代码）
-        // 原页面已有 user-select: none，此处不再重复
-
-        // 6. 防止通过 iframe 嵌入查看源代码（可选）
-        if (window.self !== window.top) {
-            // 如果页面被嵌入 iframe，可以尝试禁止
-            // 但为了不影响正常使用，仅作提示
-            // try { window.top.location = window.self.location; } catch(e) {}
+<!-- 更多下拉 -->
+<script>
+(function more() {
+    const dd = document.getElementById('moreDropdown');
+    const tr = document.getElementById('moreTrigger');
+    const pn = document.getElementById('morePanel');
+    if (!dd || !tr || !pn) return;
+    function toggle(force) {
+        const open = dd.classList.contains('open');
+        const shouldOpen = force !== undefined ? force : !open;
+        dd.classList.toggle('open', shouldOpen);
+        tr.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+    }
+    tr.addEventListener('click', e => { e.stopPropagation(); toggle(); });
+    pn.addEventListener('click', e => {
+        const a = e.target.closest('a');
+        if (a && a.getAttribute('href') && a.getAttribute('href') !== '#') {
+            toggle(false);
+            return;
         }
-
-        // 7. 清除控制台（可选，但会干扰调试，谨慎使用）
-        // 不自动清除，以免影响用户体验 
-
-        // 8. 检测到开发者工具时，还可以阻止某些操作
-        // 这里不做额外限制
-
-        // 记录日志（仅用于调试，发布时可注释）
-        // console.log('源代码保护模块已启用');
-
-        // 9. 防止通过 document.documentElement.outerHTML 获取（无法完全防止）
-        // 仅增加难度
-
-        // 10. 针对键盘快捷键的补充：阻止 Alt 键组合（除了 Alt+W 保留）
-        // 已经在 keydown 中处理
-
-        // 11. 针对移动端长按菜单等
-        document.addEventListener('touchstart', function(e) {
-            // 不阻止正常触摸，但可以阻止长按菜单（通过 contextmenu 已处理）
-        }, { passive: true });
-
-        // 12. 禁用拖拽查看源码（如图片拖拽）
-        document.addEventListener('dragstart', function(e) {
-            e.preventDefault();
-            return false;
-        });
-
-        // 13. 禁用复制（可选，但会影响正常使用，如复制文字）
-        // 不全局禁用，仅针对代码区域（但源码本身无法复制）
-
-        // 14. 最终：如果检测到开发者工具，遮罩会覆盖页面
-        //     并且每 1.5 秒检测一次，若关闭则隐藏遮罩
-
-        // 为了更精准，我们结合多种检测方式：
-        // - 窗口尺寸差
-        // - 控制台打开时 console.log 的 getter 检测（使用一个特殊对象）
-        // - debugger 检测（不采用，因为会暂停）
-
-        // 使用 console 检测（高级）：
-        (function() {
-            const devtools = {
-                isOpen: false,
-                orientation: undefined
-            };
-
-            const threshold = 160;
-
-            const emitEvent = (isOpen, orientation) => {
-                // 如果状态改变，更新遮罩
-                if (isOpen && !devtools.isOpen) {
-                    showOverlay();
-                } else if (!isOpen && devtools.isOpen) {
-                    hideOverlay();
-                }
-                devtools.isOpen = isOpen;
-                devtools.orientation = orientation;
-            };
-
-            const check = () => {
-                const widthDiff = window.outerWidth - window.innerWidth;
-                const heightDiff = window.outerHeight - window.innerHeight;
-
-                // 水平方向
-                if (widthDiff > threshold) {
-                    emitEvent(true, 'vertical');
-                    return;
-                }
-                // 垂直方向
-                if (heightDiff > threshold) {
-                    emitEvent(true, 'horizontal');
-                    return;
-                }
-
-                // 额外：如果窗口尺寸非常小，也可能是开发者工具停靠
-                if (window.innerWidth < 400 || window.innerHeight < 300) {
-                    // 可能移动端，忽略
-                }
-
-                emitEvent(false, undefined);
-            };
-
-            // 定期检查
-            setInterval(check, 1000);
-            check();
-
-            // 暴露给全局？不需要
-        })();
-
-        // 注意：以上检测可能因浏览器和操作系统而异，但能覆盖大部分情况
-
-    })();
+        e.stopPropagation();
+    });
+    document.addEventListener('click', e => {
+        if (dd.classList.contains('open') && !dd.contains(e.target)) toggle(false);
+    });
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && dd.classList.contains('open')) { toggle(false); tr.focus(); }
+    });
+})();
 </script>
 
 <!-- 加载动画移除 -->
 <script>
-    window.addEventListener('load',()=>{
-        document.body.classList.add('loaded');
-        setTimeout(()=>{
-            const loaderEl = document.querySelector('.physics-loader');
-            if(loaderEl && loaderEl.parentNode) loaderEl.remove();
-        }, 600);
-    });
+window.addEventListener('load', () => {
+    document.body.classList.add('loaded');
+    setTimeout(() => {
+        const l = document.querySelector('.physics-loader');
+        if (l && l.parentNode) l.remove();
+    }, 600);
+});
 </script>
-<!-- ===== 左上角“更多”下拉扩展 ===== -->
-<style>
-    /* 更多下拉容器 — 定位左上角，与全屏按钮不冲突 */
-    .more-dropdown {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 1001;  /* 比全屏按钮稍高一点，但同一层级 */
-        font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-    }
 
-    /* 触发按钮 */
-    .more-trigger {
-        background: var(--accent-color);
-        color: white;
-        border: none;
-        padding: 10px 24px;
-        border-radius: 40px;
-        font-weight: bold;
-        font-size: 0.95rem;
-        cursor: pointer;
-        box-shadow: 0 3px 12px rgba(0,0,0,0.2);
-        transition: 0.2s;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        backdrop-filter: blur(2px);
-        border: 1px solid rgba(255,255,255,0.2);
-        letter-spacing: 0.5px;
-    }
-
-    .more-trigger i {
-        font-size: 0.9rem;
-        transition: transform 0.25s ease;
-    }
-
-    .more-trigger:hover {
-        background: #3a5a7a;
-        transform: scale(1.02);
-    }
-
-    /* 当菜单打开时，箭头旋转 */
-    .more-dropdown.open .more-trigger i {
-        transform: rotate(180deg);
-    }
-
-    /* 下拉表格面板 */
-    .more-panel {
-        position: absolute;
-        top: 58px;          /* 触发器下方 */
-        left: 0;
-        min-width: 260px;
-        background: #ffffff;
-        border-radius: 24px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.03);
-        padding: 8px 0;
-        overflow: hidden;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(-8px) scale(0.96);
-        transform-origin: top left;
-        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s 0.2s;
-        pointer-events: none;
-        border: 1px solid #e2e8f0;
-    }
-
-    .more-dropdown.open .more-panel {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0) scale(1);
-        pointer-events: auto;
-        transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.1), visibility 0s 0s;
-    }
-
-    /* 表格样式 */
-    .more-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.92rem;
-        color: #1e2a36;
-    }
-
-    .more-table th {
-        text-align: left;
-        padding: 14px 18px 8px 18px;
-        font-weight: 600;
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
-        color: #64748b;
-        background: transparent;
-        border-bottom: 1px solid #e9edf2;
-    }
-
-    .more-table td {
-        padding: 12px 18px;
-        border-bottom: 1px solid #f1f5f9;
-        vertical-align: middle;
-        transition: background 0.15s;
-    }
-
-    .more-table tr:last-child td {
-        border-bottom: none;
-    }
-
-    .more-table tr:hover td {
-        background: #f8fafc;
-    }
-
-    /* 链接样式 */
-    .more-link {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        text-decoration: none;
-        color: #1e2f3c;
-        font-weight: 500;
-        transition: color 0.15s;
-    }
-
-    .more-link i {
-        font-size: 1.2rem;
-        width: 22px;
-        text-align: center;
-        color: var(--accent-color);
-        transition: transform 0.2s;
-    }
-
-    .more-link:hover {
-        color: #1f6392;
-    }
-
-    .more-link:hover i {
-        transform: scale(1.1);
-        color: #1f6392;
-    }
-
-    /* 链接右侧的小箭头（指示外部链接） */
-    .more-link .external-icon {
-        margin-left: auto;
-        font-size: 0.7rem;
-        color: #94a3b8;
-        transition: transform 0.2s, color 0.2s;
-    }
-
-    .more-link:hover .external-icon {
-        transform: translate(2px, -2px);
-        color: var(--accent-color);
-    }
-
-    /* 备注小字 */
-    .more-note {
-        padding: 12px 18px 8px 18px;
-        font-size: 0.7rem;
-        color: #94a3b8;
-        border-top: 1px solid #eef2f6;
-        margin-top: 4px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        background: #fcfdff;
-    }
-
-    .more-note i {
-        font-size: 0.8rem;
-        color: #b0c4de;
-    }
-
-    /* 移动端调整 */
-    @media (max-width: 480px) {
-        .more-dropdown {
-            top: 16px;
-            left: 16px;
-        }
-
-        .more-trigger {
-            padding: 8px 16px;
-            font-size: 0.85rem;
-        }
-
-        .more-panel {
-            min-width: 240px;
-            top: 50px;
-        }
-
-        .more-table td {
-            padding: 10px 16px;
-        }
-
-        .more-link {
-            font-size: 0.88rem;
-            gap: 10px;
-        }
-    }
-
-    /* 与全屏按钮协调 — 确保全屏按钮不被遮挡（已在右侧，无冲突） */
-    .fullscreen-wrapper {
-        z-index: 1000; /* 比更多面板低一点，但互不重叠 */
-    }
-
-    /* 防止点击面板内部触发页面其他点击事件（如关闭管理员面板） */
-    .more-panel {
-        user-select: none; /* 表格内文字可选中？保留默认，但防止拖拽 */
-    }
-</style>
-
-<!-- 更多下拉的 HTML 结构 -->
-<div class="more-dropdown" id="moreDropdown">
-    <button class="more-trigger" id="moreTrigger" aria-expanded="false" aria-haspopup="true">
-        <i class="fas fa-chevron-down"></i> 更多
-    </button>
-    <div class="more-panel" id="morePanel" role="menu">
-        <table class="more-table">
-            <thead>
-                <tr>
-                    <th colspan="2">扩展资源</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="2" style="padding: 0;">
-                        <!-- 使用链接包裹整行，让点击区域更大 -->
-                        <a href="https://sdey666.github.io/mb/GuoQing2026.html" 
-                           class="more-link" 
-                           target="_blank" 
-                           rel="noopener noreferrer"
-                           style="padding: 12px 18px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: #1e2f3c; font-weight: 500; transition: background 0.15s;"
-                           onmouseover="this.style.background='#f8fafc'" 
-                           onmouseout="this.style.background='transparent'">
-                            <i class="fas fa-flag-checkered"></i>
-                            <span>2026国庆专题</span>
-                            <i class="fas fa-external-link-alt external-icon" style="margin-left: auto; font-size: 0.7rem; color: #94a3b8;"></i>
-                        </a>
-                    </td>
-                </tr>
-                <!-- 可在此添加更多条目（复制上面 <tr> 块即可） -->
-                <tr>
-                    <td colspan="2" style="padding: 0;">
-                        <a href="#" class="more-link" style="padding: 12px 18px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: #94a3b8; font-weight: 400; pointer-events: none; opacity: 0.7;">
-                            <i class="fas fa-clock"></i>
-                            <span>更多资源 · 即将上线</span>
-                            <i class="fas fa-hourglass-half external-icon" style="margin-left: auto; font-size: 0.7rem;"></i>
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="more-note">
-            <i class="fas fa-info-circle"></i> 点击链接将在新标签页打开
-        </div>
-    </div>
-</div>
-
-<script>
-    (function() {
-        'use strict';
-
-        const dropdown = document.getElementById('moreDropdown');
-        const trigger = document.getElementById('moreTrigger');
-        const panel = document.getElementById('morePanel');
-
-        if (!dropdown || !trigger || !panel) return;
-
-        // 切换下拉菜单
-        function toggleDropdown(forceOpen) {
-            const isOpen = dropdown.classList.contains('open');
-            const shouldOpen = (forceOpen !== undefined) ? forceOpen : !isOpen;
-
-            if (shouldOpen) {
-                dropdown.classList.add('open');
-                trigger.setAttribute('aria-expanded', 'true');
-            } else {
-                dropdown.classList.remove('open');
-                trigger.setAttribute('aria-expanded', 'false');
-            }
-        }
-
-        // 点击触发器切换
-        trigger.addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleDropdown();
-        });
-
-        // 点击面板内部不关闭（但点击链接会跳转，链接的点击不阻止）
-        panel.addEventListener('click', function(e) {
-            // 如果点击的是链接，不停止传播，让默认行为发生，但关闭下拉（可选）
-            const link = e.target.closest('a');
-            if (link && link.getAttribute('href') && link.getAttribute('href') !== '#') {
-                // 关闭下拉菜单，但允许链接默认行为
-                toggleDropdown(false);
-                // 注意：不阻止事件，链接正常跳转
-                return;
-            }
-            // 否则阻止冒泡，避免触发页面点击关闭其他面板
-            e.stopPropagation();
-        });
-
-        // 点击页面其他地方关闭下拉
-        document.addEventListener('click', function(e) {
-            // 如果下拉是打开的，且点击目标不在下拉容器内，则关闭
-            if (dropdown.classList.contains('open')) {
-                if (!dropdown.contains(e.target)) {
-                    toggleDropdown(false);
-                }
-            }
-        });
-
-        // 按 Escape 键关闭下拉
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && dropdown.classList.contains('open')) {
-                toggleDropdown(false);
-                trigger.focus();
-            }
-        });
-
-        // 防止点击触发器时冒泡到 document 导致立即关闭（已 stopPropagation）
-        // 另外，如果点击面板内的非链接区域，不关闭，但也不让事件传播到 document
-        // 已经通过 panel 的 click 处理
-
-        // 确保点击管理员重置面板或其他区域不影响
-        // 可选：如果点击了管理员面板，也关闭下拉（但不影响功能）
-        // 不额外处理
-
-        // 无障碍：如果焦点移出，不自动关闭，但 Esc 可关闭
-
-        // 如果用户点击了“更多”按钮，先关闭管理员面板（如果有打开）以避免视觉杂乱
-        // 使用简单的自定义事件通知
-        trigger.addEventListener('click', function() {
-            // 触发一个自定义事件，让管理员面板可以监听并关闭（但非必须）
-            // 实际上我们通过样式管理，不处理也可
-        });
-
-        // 将下拉菜单的 z-index 确保高于时钟（时钟 z-index 1000，下拉是 1001）
-        // 已设置
-
-        // 处理移动端触摸：点击外部关闭
-        // document 的 click 在移动端也触发，所以没问题
-
-        // 确保面板内表格中的链接打开新窗口（已设置 target="_blank"）
-
-        console.log('更多下拉菜单已初始化');
-    })();
-</script>
 </body>
 </html>
