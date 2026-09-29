@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🇨🇳 共同点亮红旗 · 国庆欢庆</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #2b0a0a 0%, #4a1010 40%, #6b1a1a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 静态星空背景（无模糊） */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(2px 2px at 20px 30px, #ffd966, transparent),
+                              radial-gradient(2px 2px at 40px 70px, #fff9c4, transparent),
+                              radial-gradient(3px 3px at 120px 200px, #ffe082, transparent),
+                              radial-gradient(1px 1px at 300px 100px, #ffffff, transparent),
+                              radial-gradient(2px 2px at 400px 300px, #ffecb3, transparent),
+                              radial-gradient(3px 3px at 700px 150px, #ffd54f, transparent);
+            background-repeat: repeat;
+            background-size: 600px 400px;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .main-card {
+            background: #1a0a0a; /* 纯色背景，无模糊 */
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            border-radius: 48px;
+            padding: 32px 28px 40px;
+            box-shadow: 0 30px 45px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(255, 215, 0, 0.2) inset;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 720px;
+            width: 100%;
+            transition: box-shadow 0.4s;
+        }
+
+        /* 去除hover模糊/光晕效果，保留轻微阴影变化 */
+        .main-card:hover {
+            box-shadow: 0 35px 55px rgba(0, 0, 0, 0.8), 0 0 0 2px rgba(255, 215, 0, 0.3) inset;
+        }
+
+        .title {
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            color: #fff5d1;
+            text-shadow: 0 4px 0 #9e0000, 0 8px 18px #ffaa00;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .title span {
+            font-size: 2.8rem;
+            filter: none; /* 去除滤镜 */
+        }
+
+        .subhead {
+            font-size: 1rem;
+            color: #ffe9b0;
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+            border-bottom: 1px dashed rgba(255, 215, 0, 0.5);
+            padding-bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        /* 红旗容器 */
+        .flag-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3 / 2;
+            background: #3a3a3a;
+            border-radius: 16px;
+            box-shadow: 0 0 0 4px #ffbb33, 0 25px 35px -8px black;
+            margin-bottom: 28px;
+            overflow: hidden;
+            border: 1px solid #ffcc33;
+            background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 8.33% 16.66%;
+        }
+
+        /* 五角星图层 */
+        .star-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .big-star {
+            position: absolute;
+            width: 18%;
+            left: 8.33%;
+            top: 16.66%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+        }
+        .small-star-1 {
+            position: absolute;
+            width: 6%;
+            left: 19%;
+            top: 10.5%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+        }
+        .small-star-2 {
+            position: absolute;
+            width: 6%;
+            left: 25%;
+            top: 18%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+        }
+        .small-star-3 {
+            position: absolute;
+            width: 6%;
+            left: 25%;
+            top: 33%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+        }
+        .small-star-4 {
+            position: absolute;
+            width: 6%;
+            left: 19%;
+            top: 41%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+        }
+
+        .star-svg-dark {
+            width: 100%;
+            height: 100%;
+            display: block;
+            fill: #555555;
+            filter: none; /* 去除阴影 */
+            stroke: #666;
+            stroke-width: 0.5px;
+            transition: fill 0.3s ease;
+        }
+
+        /* 亮起的区块 */
+        .tile-grid {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .tile {
+            background: transparent;
+            border: 0.5px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        /* 点亮后 - 无模糊光晕，仅保留清晰渐变 */
+        .tile.lit {
+            background: radial-gradient(circle at center, #ffd966 0%, #ffb347 60%, rgba(255, 180, 0, 0.9) 100%);
+            box-shadow: none; /* 去除光晕 */
+            border: 1px solid #ffcc33;
+            z-index: 5;
+        }
+
+        @keyframes tileFlash {
+            0% { opacity: 0.2; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .tile.lit {
+            animation: tileFlash 0.4s ease-out;
+        }
+
+        /* 控制区 */
+        .control-panel {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn-light {
+            background: linear-gradient(145deg, #f5b042, #e68a00);
+            border: none;
+            border-radius: 60px;
+            padding: 18px 36px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #3d1e00;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 12px 0 #8b4e00, 0 15px 25px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            transition: all 0.08s linear;
+            text-transform: uppercase;
+            border: 1px solid #ffdc9a;
+            transform: translateY(0);
+            flex: 0 0 auto;
+        }
+
+        .btn-light:active {
+            transform: translateY(6px);
+            box-shadow: 0 6px 0 #8b4e00, 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-light:disabled {
+            opacity: 0.5;
+            transform: translateY(6px);
+            box-shadow: 0 6px 0 #6b3e00, 0 8px 12px rgba(0, 0, 0, 0.4);
+            cursor: not-allowed;
+            pointer-events: none;
+            filter: grayscale(0.6);
+        }
+
+        .btn-light .star-icon {
+            font-size: 2rem;
+            filter: none;
+        }
+
+        .counter-box {
+            background: #1a0a0a; /* 纯色，无模糊 */
+            border-radius: 60px;
+            padding: 10px 30px;
+            border: 1px solid #ffbb33;
+            box-shadow: none; /* 去除内发光 */
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 1.4rem;
+            color: #ffecb3;
+            font-weight: 600;
+        }
+
+        .counter-box span:first-child {
+            font-size: 1rem;
+            letter-spacing: 1px;
+            color: #ffd966;
+        }
+
+        .counter-number {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #fff3c9;
+            text-shadow: none; /* 去除发光 */
+            min-width: 70px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* 管理员重置按钮 - 默认隐藏，只有Alt+W唤出 */
+        .reset-btn {
+            display: none; /* 默认隐藏 */
+            background: rgba(255, 255, 255, 0.1);
+            border: 1.5px solid #ffb347;
+            color: #ffe8b0;
+            border-radius: 40px;
+            padding: 10px 28px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+            backdrop-filter: none; /* 去除模糊 */
+            align-items: center;
+            gap: 8px;
+            box-shadow: none;
+            flex: 0 0 auto;
+        }
+
+        /* 管理员模式显示重置按钮 */
+        .reset-btn.visible {
+            display: flex;
+        }
+
+        .reset-btn:hover {
+            background: rgba(255, 215, 0, 0.25);
+            border-color: #ffd966;
+            color: #fff5d1;
+        }
+
+        .reset-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* 设备提示 */
+        .device-hint {
+            font-size: 0.95rem;
+            color: #ffcc88;
+            background: #1a0a0a;
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 200, 0, 0.4);
+            letter-spacing: 0.5px;
+            display: inline-block;
+            margin-top: 6px;
+        }
+
+        /* 活动截止提示（10.7后显示） */
+        .expired-hint {
+            font-size: 0.95rem;
+            color: #ffaa88;
+            background: #2a0a0a;
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 100, 50, 0.6);
+            letter-spacing: 0.5px;
+            display: none; /* 默认隐藏，由JS控制显示 */
+            margin-top: 6px;
+        }
+
+        /* 底部小提示（可选） */
+        .footer-note {
+            margin-top: 16px;
+            font-size: 0.8rem;
+            color: #ffdd99;
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            .main-card {
+                padding: 20px 16px 32px;
+                border-radius: 32px;
+            }
+            .title {
+                font-size: 1.7rem;
+            }
+            .title span {
+                font-size: 2rem;
+            }
+            .btn-light {
+                font-size: 1.2rem;
+                padding: 14px 22px;
+            }
+            .counter-box {
+                padding: 6px 16px;
+            }
+            .counter-number {
+                font-size: 1.7rem;
+                min-width: 50px;
+            }
+            .big-star { width: 20%; }
+            .small-star-1, .small-star-2, .small-star-3, .small-star-4 {
+                width: 7%;
+            }
+            .device-hint {
+                font-size: 0.8rem;
+                padding: 6px 14px;
+            }
+            .reset-btn {
+                font-size: 0.95rem;
+                padding: 8px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-card">
+        <div class="title">
+            点亮红旗
+        </div>
+        <div class="subhead">汇聚星光，祝福祖国</div>
+
+        <!-- 红旗区域 -->
+        <div class="flag-wrapper" id="flagWrapper">
+            <div class="star-layer">
+                <div class="big-star">
+                    <svg class="star-svg-dark" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                        <polygon points="50,5 61,38 95,38 68,57 79,91 50,70 21,91 32,57 5,38 39,38" />
+                    </svg>
+                </div>
+                <div class="small-star-1">
+                    <svg class="star-svg-dark" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                        <polygon points="50,5 61,38 95,38 68,57 79,91 50,70 21,91 32,57 5,38 39,38" transform="rotate(35, 50, 50)" />
+                    </svg>
+                </div>
+                <div class="small-star-2">
+                    <svg class="star-svg-dark" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                        <polygon points="50,5 61,38 95,38 68,57 79,91 50,70 21,91 32,57 5,38 39,38" transform="rotate(10, 50, 50)" />
+                    </svg>
+                </div>
+                <div class="small-star-3">
+                    <svg class="star-svg-dark" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                        <polygon points="50,5 61,38 95,38 68,57 79,91 50,70 21,91 32,57 5,38 39,38" transform="rotate(-10, 50, 50)" />
+                    </svg>
+                </div>
+                <div class="small-star-4">
+                    <svg class="star-svg-dark" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                        <polygon points="50,5 61,38 95,38 68,57 79,91 50,70 21,91 32,57 5,38 39,38" transform="rotate(-35, 50, 50)" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="tile-grid" id="tileGrid"></div>
+        </div>
+
+        <!-- 控制区 -->
+        <div class="control-panel">
+            <button class="btn-light" id="lightBtn">
+                <span class="star-icon"></span> 点亮红旗
+            </button>
+            <div class="counter-box">
+                <span>已点亮</span>
+                <span class="counter-number" id="counterDisplay">0</span>
+                <span>/24</span>
+            </div>
+            <!-- 管理员重置按钮（默认隐藏） -->
+            <button class="reset-btn" id="resetBtn">
+                <span></span> 重置
+            </button>
+        </div>
+
+        <!-- 设备提示 -->
+        <div class="device-hint" id="deviceHint" style="margin-top: 18px;">本设备已参与</div>
+        <!-- 活动结束提示（10.7后显示） -->
+        <div class="expired-hint" id="expiredHint" style="margin-top: 18px;">⏰ 活动已于2026年10月7日结束，感谢参与</div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- 配置 ----------
+            const TOTAL_TILES = 24; // 6列 x 4行
+            const API_STORAGE_KEY = 'flag_light_dots_v3';
+            const DEVICE_KEY = 'flag_device_lit_v3';
+
+            // 活动截止日期：2026年10月7日 23:59:59 (本地时间)
+            const END_DATE = new Date(2026, 9, 7, 23, 59, 59); // 月份从0开始，9 = 十月
+
+            // ---------- 全局状态 ----------
+            let litTiles = [];
+            let deviceAlreadyLit = false;
+            let isExpired = false; // 活动是否已截止
+
+            // DOM 元素
+            const tileGrid = document.getElementById('tileGrid');
+            const lightBtn = document.getElementById('lightBtn');
+            const counterDisplay = document.getElementById('counterDisplay');
+            const deviceHint = document.getElementById('deviceHint');
+            const resetBtn = document.getElementById('resetBtn');
+            const expiredHint = document.getElementById('expiredHint');
+
+            // ---------- 检查活动是否截止 ----------
+            function checkExpired() {
+                const now = new Date();
+                isExpired = now > END_DATE;
+                return isExpired;
+            }
+
+            // ---------- 模拟 API ----------
+            function fetchLitTilesFromAPI() {
+                const saved = localStorage.getItem(API_STORAGE_KEY);
+                if (saved) {
+                    try {
+                        const arr = JSON.parse(saved);
+                        if (Array.isArray(arr)) {
+                            return arr.filter(idx => Number.isInteger(idx) && idx >= 0 && idx < TOTAL_TILES);
+                        }
+                    } catch (e) {}
+                }
+                return [];
+            }
+
+            function saveLitTilesToAPI(tiles) {
+                localStorage.setItem(API_STORAGE_KEY, JSON.stringify(tiles));
+            }
+
+            function fetchDeviceStatusFromAPI() {
+                return localStorage.getItem(DEVICE_KEY) === 'true';
+            }
+
+            function setDeviceLitInAPI() {
+                localStorage.setItem(DEVICE_KEY, 'true');
+            }
+
+            function resetAll() {
+                localStorage.removeItem(API_STORAGE_KEY);
+                localStorage.removeItem(DEVICE_KEY);
+                litTiles = [];
+                deviceAlreadyLit = false;
+                renderLitTiles();
+            }
+
+            // ---------- 网格 ----------
+            function buildTileGrid() {
+                tileGrid.innerHTML = '';
+                for (let i = 0; i < TOTAL_TILES; i++) {
+                    const tile = document.createElement('div');
+                    tile.className = 'tile';
+                    tile.dataset.index = i;
+                    tileGrid.appendChild(tile);
+                }
+            }
+
+            function renderLitTiles() {
+                const tiles = tileGrid.children;
+                for (let i = 0; i < tiles.length; i++) {
+                    const tile = tiles[i];
+                    if (litTiles.includes(i)) {
+                        tile.classList.add('lit');
+                    } else {
+                        tile.classList.remove('lit');
+                    }
+                }
+                const count = litTiles.length;
+                counterDisplay.textContent = count;
+
+                // 按钮禁用逻辑：已满 / 已点亮 / 活动已截止
+                if (count >= TOTAL_TILES) {
+                    lightBtn.disabled = true;
+                } else if (deviceAlreadyLit) {
+                    lightBtn.disabled = true;
+                } else if (isExpired) {
+                    lightBtn.disabled = true;
+                } else {
+                    lightBtn.disabled = false;
+                }
+
+                // 设备提示
+                if (deviceAlreadyLit) {
+                    deviceHint.innerHTML = '本设备已参与';
+                } else {
+                    deviceHint.innerHTML = '本设备尚未参与';
+                }
+
+                if (count >= TOTAL_TILES) {
+                    deviceHint.innerHTML = '红旗已点亮，感谢每位参者';
+                    deviceHint.style.color = '#aaffaa';
+                } else {
+                    deviceHint.style.color = '#ffcc88';
+                }
+
+                // 活动截止提示控制
+                if (isExpired) {
+                    expiredHint.style.display = 'inline-block';
+                    deviceHint.style.display = 'none'; // 隐藏设备提示，显示截止提示
+                } else {
+                    expiredHint.style.display = 'none';
+                    deviceHint.style.display = 'inline-block';
+                }
+            }
+
+            function lightRandomTile() {
+                if (litTiles.length >= TOTAL_TILES) {
+                    return false;
+                }
+                const allIndices = Array.from({ length: TOTAL_TILES }, (_, i) => i);
+                const availableIndices = allIndices.filter(idx => !litTiles.includes(idx));
+                if (availableIndices.length === 0) return false;
+                const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+                litTiles.push(randomIndex);
+                litTiles.sort((a, b) => a - b);
+                saveLitTilesToAPI(litTiles);
+                return true;
+            }
+
+            function handleLightUp() {
+                // 首先检查活动是否已截止
+                if (checkExpired()) {
+                    alert('活动已于2026年10月7日结束，感谢您的关注与参与！');
+                    lightBtn.disabled = true;
+                    renderLitTiles();
+                    return;
+                }
+
+                if (deviceAlreadyLit) {
+                    alert('每个设备只能点亮一次哦，感谢你的参与！');
+                    return;
+                }
+                if (litTiles.length >= TOTAL_TILES) {
+                    alert('红旗已点亮，感谢您的参与');
+                    lightBtn.disabled = true;
+                    return;
+                }
+                const success = lightRandomTile();
+                if (success) {
+                    deviceAlreadyLit = true;
+                    setDeviceLitInAPI();
+                    renderLitTiles();
+                    if (litTiles.length >= TOTAL_TILES) {
+                        lightBtn.disabled = true;
+                        setTimeout(() => {
+                            alert('红旗已点亮，感谢您的参与');
+                        }, 100);
+                    }
+                } else {
+                    lightBtn.disabled = true;
+                }
+            }
+
+            // ---------- 管理员入口：Alt+W 唤出重置按钮 ----------
+            function handleAdminShortcut(e) {
+                if (e.altKey && (e.key === 'w' || e.key === 'W' || e.keyCode === 87)) {
+                    e.preventDefault();
+                    resetBtn.classList.toggle('visible');
+                    if (resetBtn.classList.contains('visible')) {
+                        console.log('管理员模式已开启');
+                    } else {
+                        console.log('管理员模式已关闭');
+                    }
+                }
+            }
+
+            function handleReset() {
+                if (confirm('确定要重置所有点亮记录吗？此操作不可撤销。')) {
+                    resetAll();
+                }
+            }
+
+            // ---------- 初始化 ----------
+            function initialize() {
+                // 先检查活动是否截止
+                checkExpired();
+
+                buildTileGrid();
+
+                litTiles = fetchLitTilesFromAPI();
+                litTiles = litTiles.filter(idx => idx >= 0 && idx < TOTAL_TILES);
+                litTiles = [...new Set(litTiles)];
+                litTiles.sort((a, b) => a - b);
+
+                deviceAlreadyLit = fetchDeviceStatusFromAPI();
+
+                renderLitTiles();
+
+                // 最终按钮禁用逻辑（考虑截止）
+                if (litTiles.length >= TOTAL_TILES) {
+                    lightBtn.disabled = true;
+                } else if (deviceAlreadyLit) {
+                    lightBtn.disabled = true;
+                } else if (isExpired) {
+                    lightBtn.disabled = true;
+                } else {
+                    lightBtn.disabled = false;
+                }
+
+                lightBtn.addEventListener('click', handleLightUp);
+                resetBtn.addEventListener('click', handleReset);
+
+                // 注册 Alt+W 快捷键
+                window.addEventListener('keydown', handleAdminShortcut);
+
+                // 如果活动已截止，还可以额外在控制台提醒
+                if (isExpired) {
+                    console.log('活动已于2026年10月7日截止，点亮功能已关闭。');
+                }
+            }
+
+            window.addEventListener('load', initialize);
+
+            if (document.readyState === 'complete') {
+                initialize();
+            } else {
+                document.addEventListener('DOMContentLoaded', initialize);
+            }
+
+        })();
+    </script>
+    <script>
+    // ============================================================
+    // 禁止访问源代码 / 禁止开发者工具模块
+    // 说明：此模块通过多种方式增加查看/调试源代码的难度
+    // 注意：无法100%阻止，但可阻挡大部分普通用户
+    // ============================================================
+    (function() {
+        'use strict';
+
+        // 1. 禁用右键菜单
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            // 可选：显示一个轻提示（不干扰页面）
+            // console.log('右键菜单已禁用');
+            return false;
+        }, { capture: true });
+
+        // 2. 禁用开发者工具快捷键 & 查看源代码快捷键
+        document.addEventListener('keydown', function(e) {
+            // 阻止 F12
+            if (e.key === 'F12' || e.keyCode === 123) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+
+            // 阻止 Ctrl+Shift+I (开发者工具)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+
+            // 阻止 Ctrl+Shift+J (控制台)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+
+            // 阻止 Ctrl+Shift+C (审查元素)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+
+            // 阻止 Ctrl+U (查看源代码)
+            if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+
+            // 阻止 Ctrl+S (保存页面)
+            if (e.ctrlKey && (e.key === 'S' || e.key === 's' || e.keyCode === 83)) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+
+            // 阻止 Alt+W 冲突? 原功能保留，不干扰
+            // 阻止 Ctrl+Shift+K (Firefox 控制台)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'K' || e.key === 'k' || e.keyCode === 75)) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+
+            // 阻止 Ctrl+Shift+E (网络面板)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'E' || e.key === 'e' || e.keyCode === 69)) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        }, { capture: true });
+
+        // 3. 开发者工具检测（基于调试器时间差 / 窗口尺寸差异）
+        //    当检测到开发者工具可能打开时，用遮罩覆盖页面并提示
+        let devtoolsDetected = false;
+        const overlayId = 'devtools-block-overlay';
+
+        // 创建遮罩元素（隐藏，检测到才显示）
+        function createOverlay() {
+            if (document.getElementById(overlayId)) return;
+
+            const overlay = document.createElement('div');
+            overlay.id = overlayId;
+            overlay.style.cssText = `
+                position: fixed;
+                inset: 0;
+                z-index: 999999;
+                background: #1a0a0a;
+                display: none;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                color: #ffe9b0;
+                font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
+                text-align: center;
+                padding: 40px;
+                letter-spacing: 2px;
+                pointer-events: all;
+                user-select: none;
+            `;
+            overlay.innerHTML = `
+                <div style="font-size: 4rem; margin-bottom: 20px;"></div>
+                <div style="font-size: 2rem; font-weight: 800; text-shadow: 0 4px 0 #9e0000, 0 8px 18px #ffaa00;">
+                    请关闭开发者工具
+                </div>
+                <div style="font-size: 1.2rem; margin-top: 16px; color: #ffcc88; max-width: 600px; line-height: 1.8;">
+                    本页面禁止查看或调试源代码。<br>
+                    请关闭浏览器开发者工具后刷新页面继续访问。
+                </div>
+                <div style="font-size: 0.9rem; margin-top: 30px; opacity: 0.7;">
+                    感谢配合 MB实验室
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+
+        // 显示遮罩
+        function showOverlay() {
+            if (devtoolsDetected) return;
+            devtoolsDetected = true;
+            createOverlay();
+            const overlay = document.getElementById(overlayId);
+            if (overlay) {
+                overlay.style.display = 'flex';
+            }
+            // 同时禁用滚动
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 隐藏遮罩（如果开发者工具关闭）
+        function hideOverlay() {
+            if (!devtoolsDetected) return;
+            devtoolsDetected = false;
+            const overlay = document.getElementById(overlayId);
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+            document.body.style.overflow = '';
+        }
+
+        // 检测方式1：窗口尺寸差异（打开开发者工具通常会改变窗口内尺寸）
+        function checkWindowSize() {
+            const widthThreshold = 160;  // 宽度差阈值
+            const heightThreshold = 160; // 高度差阈值
+
+            const widthDiff = window.outerWidth - window.innerWidth;
+            const heightDiff = window.outerHeight - window.innerHeight;
+
+            if (widthDiff > widthThreshold || heightDiff > heightThreshold) {
+                showOverlay();
+            } else {
+                // 如果之前检测到，现在关闭了，则隐藏
+                if (devtoolsDetected) {
+                    hideOverlay();
+                }
+            }
+        }
+
+        // 检测方式2：调试器时间差检测（通过 debugger 语句）
+        function checkDebugger() {
+            const startTime = performance.now();
+            // 使用 debugger 语句，如果开发者工具打开，会在此处暂停
+            // 但为了不真正打断用户，我们使用 setInterval + debugger 的变体？
+            // 更好的方式：利用 console.log 的 getter 或 toString 检测
+            // 这里使用一个经典的检测方法：重写 toString 并检查
+            // 但为了避免误伤，我们仅作为辅助
+
+            // 简单方式：如果开发者工具打开，performance.now() 会因为断点而出现大延迟
+            // 但 debugger 会实际暂停，影响体验。我们改用基于 console 的检测：
+            const element = new Image();
+            Object.defineProperty(element, 'id', {
+                get: function() {
+                    // 当开发者工具控制台尝试打印此元素时触发
+                    showOverlay();
+                    return 'devtools-detected';
+                }
+            });
+            // 在控制台输出这个元素会触发 getter，但普通用户不会输出
+            // 我们主动 console.log 一下？会干扰控制台。不主动输出。
+            // 更好的方案：使用正则检测 /devtools/i 等
+        }
+
+        // 实际可用的检测：使用 devtools-detect 库的简化版（基于窗口尺寸 + 定时器）
+        // 以及基于 debugger 的检测（但会暂停，不适合）
+
+        // 我们采用窗口尺寸检测 + 一个隐藏的 debugger 定时检测（延迟检测，不暂停主线程）
+        // 使用 setInterval 周期性检查窗口尺寸
+
+        // 4. 额外的防护：检测到控制台打开时，重定向或显示遮罩
+        //    通过 console.log 的 getter 检测（在控制台打开时，可能会触发某些属性的读取）
+        //    但容易误伤，暂不使用。
+
+        // 启动窗口尺寸检测
+        let sizeCheckInterval = null;
+
+        function startSizeDetection() {
+            if (sizeCheckInterval) clearInterval(sizeCheckInterval);
+            sizeCheckInterval = setInterval(checkWindowSize, 800);
+            // 立即执行一次
+            checkWindowSize();
+        }
+
+        // 当窗口大小改变时也检测
+        window.addEventListener('resize', function() {
+            checkWindowSize();
+        });
+
+        // 页面加载完成后启动检测
+        if (document.readyState === 'complete') {
+            startSizeDetection();
+        } else {
+            window.addEventListener('load', startSizeDetection);
+        }
+
+        // 5. 禁用文本选择（可选，防止复制源代码）
+        // 原页面已有 user-select: none，此处不再重复
+
+        // 6. 防止通过 iframe 嵌入查看源代码（可选）
+        if (window.self !== window.top) {
+            // 如果页面被嵌入 iframe，可以尝试禁止
+            // 但为了不影响正常使用，仅作提示
+            // try { window.top.location = window.self.location; } catch(e) {}
+        }
+
+        // 7. 清除控制台（可选，但会干扰调试，谨慎使用）
+        // 不自动清除，以免影响用户体验
+
+        // 8. 检测到开发者工具时，还可以阻止某些操作
+        // 这里不做额外限制
+
+        // 记录日志（仅用于调试，发布时可注释）
+        // console.log('源代码保护模块已启用');
+
+        // 9. 防止通过 document.documentElement.outerHTML 获取（无法完全防止）
+        // 仅增加难度
+
+        // 10. 针对键盘快捷键的补充：阻止 Alt 键组合（除了 Alt+W 保留）
+        // 已经在 keydown 中处理
+
+        // 11. 针对移动端长按菜单等
+        document.addEventListener('touchstart', function(e) {
+            // 不阻止正常触摸，但可以阻止长按菜单（通过 contextmenu 已处理）
+        }, { passive: true });
+
+        // 12. 禁用拖拽查看源码（如图片拖拽）
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // 13. 禁用复制（可选，但会影响正常使用，如复制文字）
+        // 不全局禁用，仅针对代码区域（但源码本身无法复制）
+
+        // 14. 最终：如果检测到开发者工具，遮罩会覆盖页面
+        //     并且每 1.5 秒检测一次，若关闭则隐藏遮罩
+
+        // 为了更精准，我们结合多种检测方式：
+        // - 窗口尺寸差
+        // - 控制台打开时 console.log 的 getter 检测（使用一个特殊对象）
+        // - debugger 检测（不采用，因为会暂停）
+
+        // 使用 console 检测（高级）：
+        (function() {
+            const devtools = {
+                isOpen: false,
+                orientation: undefined
+            };
+
+            const threshold = 160;
+
+            const emitEvent = (isOpen, orientation) => {
+                // 如果状态改变，更新遮罩
+                if (isOpen && !devtools.isOpen) {
+                    showOverlay();
+                } else if (!isOpen && devtools.isOpen) {
+                    hideOverlay();
+                }
+                devtools.isOpen = isOpen;
+                devtools.orientation = orientation;
+            };
+
+            const check = () => {
+                const widthDiff = window.outerWidth - window.innerWidth;
+                const heightDiff = window.outerHeight - window.innerHeight;
+
+                // 水平方向
+                if (widthDiff > threshold) {
+                    emitEvent(true, 'vertical');
+                    return;
+                }
+                // 垂直方向
+                if (heightDiff > threshold) {
+                    emitEvent(true, 'horizontal');
+                    return;
+                }
+
+                // 额外：如果窗口尺寸非常小，也可能是开发者工具停靠
+                if (window.innerWidth < 400 || window.innerHeight < 300) {
+                    // 可能移动端，忽略
+                }
+
+                emitEvent(false, undefined);
+            };
+
+            // 定期检查
+            setInterval(check, 1000);
+            check();
+
+            // 暴露给全局？不需要
+        })();
+
+        // 注意：以上检测可能因浏览器和操作系统而异，但能覆盖大部分情况
+
+    })();
+</script>
+</body>
+</html>
