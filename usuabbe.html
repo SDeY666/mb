@@ -63,7 +63,7 @@
     }
     @media (max-width: 400px) { .cloud-counter-badge { display: none; } }
 
-    /* 时钟 */
+    /* ===== 时钟（带隐藏/显示控制） ===== */
     .physics-clock {
         position: fixed; bottom: 24px; right: 24px;
         background: rgba(30,47,60,0.85); backdrop-filter: blur(8px);
@@ -71,7 +71,33 @@
         font-family: 'Courier New','Fira Code',monospace; font-weight: bold;
         box-shadow: 0 8px 20px rgba(0,0,0,0.25); z-index: 1000;
         border: 1px solid rgba(80,151,73,0.6); letter-spacing: 2px;
+        transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+        cursor: pointer; /* 点击隐藏/显示 */
+        user-select: none;
     }
+    .physics-clock:hover { background: rgba(40,65,85,0.95); transform: scale(1.02); }
+    /* 隐藏状态：透明、不可见、无点击 */
+    .physics-clock.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: scale(0.9);
+    }
+    /* 小提示文字（可取消） */
+    .clock-hint {
+        position: fixed; bottom: 88px; right: 24px;
+        background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+        color: #e0eefb; font-size: 0.7rem; padding: 6px 14px;
+        border-radius: 30px; z-index: 999;
+        transition: opacity 0.4s;
+        pointer-events: none;
+        font-family: 'Segoe UI', sans-serif;
+        border-left: 3px solid #61b84c;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        opacity: 0.9;
+    }
+    .clock-hint.hidden { opacity: 0; visibility: hidden; }
+
     .time-display { display: flex; align-items: baseline; gap: 4px; font-size: 1.7rem; }
     .digit {
         background: #000000aa; padding: 0 6px; border-radius: 12px;
@@ -80,6 +106,24 @@
     }
     .colon { margin:0 2px; animation: blink 1s step-end infinite; font-weight:700; }
     @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+    /* 时钟隐藏时，出现一个半透明的小胶囊作为召回按钮（仅移动端/任何端均可点击） */
+    .clock-recall {
+        position: fixed; bottom: 24px; right: 24px;
+        background: rgba(30,47,60,0.4); backdrop-filter: blur(6px);
+        color: #ffffffcc; border: 1px solid #ffffff40;
+        padding: 10px 16px; border-radius: 40px;
+        font-size: 1.2rem; z-index: 1000;
+        cursor: pointer; display: none; /* 默认隐藏，时钟隐藏时显示 */
+        transition: background 0.2s, transform 0.2s;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        align-items: center; gap: 6px;
+        font-weight: 500;
+        letter-spacing: 1px;
+    }
+    .clock-recall i { font-size: 1.1rem; }
+    .clock-recall:hover { background: rgba(60,90,120,0.8); transform: scale(1.02); }
+    .clock-recall.visible { display: flex; }
 
     header {
         background: linear-gradient(135deg, #1f3a3f 0%, #2c3e50 100%);
@@ -292,6 +336,39 @@
         border-top: 1px solid #eef2f6; margin-top: 4px;
         display: flex; align-items: center; gap: 6px; background: #fcfdff;
     }
+
+    /* ===== 移动端适配 ===== */
+    @media (max-width: 768px) {
+        .fullscreen-wrapper { top: 16px; right: 16px; }
+        #fullscreen-btn { padding: 6px 14px; font-size: 0.8rem; }
+        .cloud-counter-badge { top: 16px; right: 120px; font-size: 0.9rem; padding: 6px 12px; }
+        .more-dropdown { top: 16px; left: 16px; }
+        .more-trigger { padding: 8px 16px; font-size: 0.85rem; }
+        .physics-clock { bottom: 16px; right: 16px; padding: 6px 12px; }
+        .time-display { font-size: 1.3rem; }
+        .digit { min-width: 28px; padding: 0 4px; }
+        .clock-hint { bottom: 70px; right: 16px; font-size: 0.65rem; padding: 4px 10px; }
+        .clock-recall { bottom: 16px; right: 16px; padding: 8px 12px; font-size: 1rem; }
+        .container { padding: 0 16px; }
+        .physics-section { padding: 20px 16px; }
+        .physics-section h2 { font-size: 1.5rem; }
+        .physics-section h3 { font-size: 1.2rem; }
+        nav ul li { margin: 4px 6px; }
+        nav ul li a { padding: 5px 10px; font-size: 0.85rem; }
+    }
+
+    @media (max-width: 480px) {
+        .cloud-counter-badge { display: none; }
+        .fullscreen-wrapper { top: 12px; right: 12px; }
+        #fullscreen-btn { padding: 5px 10px; font-size: 0.7rem; }
+        .more-dropdown { top: 12px; left: 12px; }
+        .more-trigger { padding: 6px 12px; font-size: 0.8rem; }
+        .physics-clock { bottom: 12px; right: 12px; padding: 5px 10px; }
+        .time-display { font-size: 1.1rem; }
+        .digit { min-width: 22px; padding: 0 3px; font-size: 1rem; }
+        .clock-hint { display: none; } /* 小屏不显示提示 */
+        .clock-recall { bottom: 12px; right: 12px; padding: 6px 10px; font-size: 0.9rem; }
+    }
 </style>
 </head>
 <body>
@@ -309,7 +386,7 @@
 </div>
 
 <!-- 时钟 -->
-<div class="physics-clock">
+<div class="physics-clock" id="physicsClock" title="点击可隐藏时钟">
     <div class="time-display">
         <span class="digit" id="hour-tens">0</span><span class="digit" id="hour-ones">0</span>
         <span class="colon">:</span>
@@ -317,6 +394,16 @@
         <span class="colon">:</span>
         <span class="digit" id="sec-tens">0</span><span class="digit" id="sec-ones">0</span>
     </div>
+</div>
+
+<!-- 时钟提示文字（点击时钟可隐藏） -->
+<div class="clock-hint" id="clockHint">
+    <i class="fas fa-hand-pointer"></i> 点击时钟可隐藏
+</div>
+
+<!-- 时钟召回按钮（时钟隐藏后显示） -->
+<div class="clock-recall" id="clockRecall" title="显示时钟">
+    <i class="fas fa-clock"></i> 显示时钟
 </div>
 
 <!-- 管理员重置面板 (Alt+W) -->
@@ -518,26 +605,12 @@
 (function supabaseCounter() {
     'use strict';
 
-    // ============================================================
-    // 【请修改 1/3】你的 Supabase anon 公钥
-    // ============================================================
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwYnByenJlbXpnbWpuaGpmd29yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2MzE2NTksImV4cCI6MjA5ODIwNzY1OX0.JT_c4syLtO6xhy0TrBPfEEWO2QFQe_tmbIYHb1EpOa8';
-
-    // ============================================================
-    // 【请修改 2/3】表名
-    // ============================================================
     const TABLE_NAME = 'light_counts';
-
-    // ============================================================
-    // 【请修改 3/3】字段名
-    // ============================================================
     const COUNT_COLUMN = 'count';
-
-    // 固定：Supabase URL 和 行 ID
     const SUPABASE_URL = 'https://gpbprzremzgmjnhjfwor.supabase.co';
     const ROW_ID = 1;
 
-    // ---------- 内部工具 ----------
     const headers = {
         'apikey': SUPABASE_ANON_KEY,
         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
@@ -554,7 +627,6 @@
         console.warn('[云计数]', msg);
     }
 
-    // 读取当前计数
     async function fetchCount() {
         try {
             const url = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?id=eq.${ROW_ID}&select=${COUNT_COLUMN}`;
@@ -571,7 +643,6 @@
         }
     }
 
-    // 更新计数为指定值
     async function setCount(value) {
         try {
             const url = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?id=eq.${ROW_ID}`;
@@ -592,7 +663,6 @@
         }
     }
 
-    // 页面加载：读 → +1 → 写 → 显示
     async function initAndIncrement() {
         const current = await fetchCount();
         if (current === null) return;
@@ -601,19 +671,16 @@
         if (finalValue !== null) updateBadge(finalValue);
     }
 
-    // 暴露给管理员重置按钮使用
     window.__setCloudCount = setCount;
     window.__fetchCloudCount = fetchCount;
     window.__updateCloudBadge = updateBadge;
 
-    // 启动
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initAndIncrement);
     } else {
         initAndIncrement();
     }
 
-    // 每 30 秒刷新显示（只读，不 +1）
     setInterval(async () => {
         const c = await fetchCount();
         if (c !== null) updateBadge(c);
@@ -622,15 +689,13 @@
 </script>
 
 <!-- ============================================================
-     访客弹窗（显示云端全局计数）+ 管理员重置面板
+     访客弹窗 + 管理员重置面板
      ============================================================ -->
 <script>
 (function visitorPopup() {
     'use strict';
 
-    // 等待云端计数初始化完成后再弹窗
     async function showCloudPopup() {
-        // 若云端模块尚未就绪，稍等重试
         let count = null;
         for (let i = 0; i < 20; i++) {
             if (window.__fetchCloudCount) {
@@ -640,7 +705,6 @@
             await new Promise(r => setTimeout(r, 150));
         }
 
-        // 如果云端不可用，则回退显示 "—"
         const displayCount = (count !== null) ? count : '—';
 
         const old = document.querySelector('.visitor-overlay');
@@ -662,10 +726,17 @@
     }
 
     window.addEventListener('load', () => {
-        setTimeout(showCloudPopup, 500);
+        // 轮询等待自增完成
+        const wait = setInterval(async () => {
+            if (window.__myVisitNumber !== undefined) {
+                clearInterval(wait);
+                showCloudPopup(window.__myVisitNumber);
+            }
+        }, 100);
+        // 超时保护
+        setTimeout(() => clearInterval(wait), 5000);
     });
 
-    // 管理员面板 Alt+W
     const panel = document.getElementById('adminResetPanel');
     const btn = document.getElementById('adminResetBtn');
     const toast = document.getElementById('adminToast');
@@ -689,7 +760,6 @@
 
     btn.addEventListener('click', async e => {
         e.stopPropagation();
-        // 清云端计数
         if (window.__setCloudCount) {
             const v = await window.__setCloudCount(0);
             if (v !== null && window.__updateCloudBadge) window.__updateCloudBadge(v);
@@ -708,9 +778,12 @@
 })();
 </script>
 
-<!-- 时钟 -->
+<!-- 时钟 + 隐藏/显示控制 + 移动端适配 -->
 <script>
-(function clock() {
+(function clockControl() {
+    'use strict';
+
+    // ---- 时钟走字 ----
     function tick() {
         const now = new Date();
         const h = String(now.getHours()).padStart(2, '0');
@@ -725,6 +798,74 @@
     }
     tick();
     setInterval(tick, 1000);
+
+    // ---- 隐藏/显示逻辑 ----
+    const clockEl = document.getElementById('physicsClock');
+    const hintEl = document.getElementById('clockHint');
+    const recallEl = document.getElementById('clockRecall');
+
+    // 点击时钟 -> 隐藏时钟 + 显示召回按钮 + 隐藏提示
+    clockEl.addEventListener('click', function(e) {
+        e.stopPropagation();
+        clockEl.classList.add('hidden');
+        hintEl.classList.add('hidden');
+        recallEl.classList.add('visible');
+    });
+
+    // 点击召回按钮 -> 显示时钟 + 隐藏召回按钮 + 显示提示(短暂)
+    recallEl.addEventListener('click', function(e) {
+        e.stopPropagation();
+        clockEl.classList.remove('hidden');
+        recallEl.classList.remove('visible');
+        // 显示提示，2.5秒后自动隐藏（除非用户再次点击时钟隐藏）
+        hintEl.classList.remove('hidden');
+        // 如果之前已经有定时器，清除
+        if (window.__clockHintTimer) clearTimeout(window.__clockHintTimer);
+        window.__clockHintTimer = setTimeout(() => {
+            hintEl.classList.add('hidden');
+        }, 2500);
+    });
+
+    // 点击提示文字也可以隐藏提示（可选）
+    hintEl.addEventListener('click', function() {
+        hintEl.classList.add('hidden');
+    });
+
+    // 移动端适配判断：根据屏幕宽度调整提示文字显示逻辑，无需额外代码，CSS已处理。
+    // 但为了“适配手机端的判断系统”，额外加一个简单的设备判断，用于调整初始状态或行为。
+    // 例如，在极小屏幕上自动隐藏提示（已经在CSS中做了），但JS也可以做点事情。
+    function adaptToMobile() {
+        const isMobile = window.innerWidth <= 768;
+        // 如果是移动端，可以缩短提示显示时间，或者不显示提示? 这里CSS已经控制，但也可以在此添加逻辑
+        // 例如：在移动端，让提示更简洁——但我们已经通过CSS隐藏了<480px的提示，足够
+        // 同时可调整召回按钮的显示样式等，但无需额外操作。
+        // 但我们还是加一个标记类，便于调试
+        if (isMobile) {
+            document.body.classList.add('mobile-device');
+        } else {
+            document.body.classList.remove('mobile-device');
+        }
+    }
+    adaptToMobile();
+    window.addEventListener('resize', adaptToMobile);
+
+    // 页面加载时，确保时钟可见、召回按钮隐藏、提示可见（但CSS控制小屏隐藏）
+    window.addEventListener('load', function() {
+        clockEl.classList.remove('hidden');
+        recallEl.classList.remove('visible');
+        hintEl.classList.remove('hidden');
+        // 延迟隐藏提示（如果非小屏）
+        if (window.innerWidth > 480) {
+            if (window.__clockHintTimer) clearTimeout(window.__clockHintTimer);
+            window.__clockHintTimer = setTimeout(() => {
+                hintEl.classList.add('hidden');
+            }, 5000); // 5秒后自动隐藏提示
+        } else {
+            hintEl.classList.add('hidden'); // 小屏直接隐藏
+        }
+    });
+
+    // 如果用户重新显示时钟后，提示定时器要重新处理，已在recall中处理
 })();
 </script>
 
